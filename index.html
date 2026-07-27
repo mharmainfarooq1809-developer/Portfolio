@@ -1,0 +1,5020 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Muhammad Harmain — Full stack developer building business management systems, dashboards and portals with Laravel, MySQL and REST APIs."
+    />
+    <title>Muhammad Harmain — Full Stack Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+      /* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+      :root {
+        --bg: #050505;
+        --surface: #0d0d0d;
+        --surface-2: #111213;
+        --card: rgba(18, 18, 18, 0.65);
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.16);
+        --accent: #00e676;
+        --accent-2: #00bfa5;
+        --accent-dim: rgba(0, 230, 118, 0.14);
+        --text: #ffffff;
+        --muted: #9ca3af;
+        --muted-2: #6b7280;
+        --danger: #ff5c5c;
+        --font-head: "Space Grotesk", sans-serif;
+        --font-body: "Inter", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+        --ease: cubic-bezier(0.16, 0.84, 0.44, 1);
+      }
+      [data-theme="light"] {
+        --bg: #f7f8f7;
+        --surface: #ffffff;
+        --surface-2: #f0f2f0;
+        --card: rgba(255, 255, 255, 0.75);
+        --border: rgba(10, 20, 15, 0.08);
+        --border-strong: rgba(10, 20, 15, 0.16);
+        --accent: #00a65b;
+        --accent-2: #00897b;
+        --accent-dim: rgba(0, 166, 91, 0.1);
+        --text: #0a0f0c;
+        --muted: #54605a;
+        --muted-2: #7b8880;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        cursor: none;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        overflow-x: hidden;
+        line-height: 1.5;
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+        cursor: none;
+      }
+      @media (hover: none), (pointer: coarse) {
+        body {
+          cursor: auto;
+        }
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      ::selection {
+        background: var(--accent);
+        color: #000;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--font-head);
+        letter-spacing: -0.02em;
+      }
+      button {
+        font-family: var(--font-body);
+        cursor: pointer;
+      }
+      .eyebrow {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 20px;
+        height: 1px;
+        background: var(--accent);
+      }
+      .section {
+        padding: 140px 0;
+        position: relative;
+      }
+      .section-head {
+        max-width: 640px;
+        margin-bottom: 64px;
+      }
+      .section-head h2 {
+        font-size: clamp(32px, 4vw, 48px);
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .section-head p {
+        color: var(--muted);
+        font-size: 17px;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+      .hidden-mobile-cursor {
+        display: none;
+      }
+
+      /* ===== AMBIENT BACKGROUND LAYER ===== */
+      .ambient {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .ambient-grid {
+        position: absolute;
+        inset: -2px;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 64px 64px;
+        opacity: 0.35;
+        mask-image: radial-gradient(
+          ellipse 70% 60% at 50% 20%,
+          black 20%,
+          transparent 75%
+        );
+      }
+      .ambient-mesh {
+        position: absolute;
+        top: -20%;
+        left: -10%;
+        width: 70%;
+        height: 70%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 230, 118, 0.12) 0%,
+          transparent 70%
+        );
+        filter: blur(60px);
+      }
+      .ambient-mesh.two {
+        top: 30%;
+        right: -15%;
+        left: auto;
+        background: radial-gradient(
+          circle,
+          rgba(0, 191, 165, 0.1) 0%,
+          transparent 70%
+        );
+      }
+      .ambient-mesh.three {
+        bottom: -10%;
+        left: 20%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 230, 118, 0.06) 0%,
+          transparent 70%
+        );
+      }
+      .ambient-noise {
+        position: absolute;
+        inset: 0;
+        opacity: 0.025;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      /* Spotlight is now a fixed-size, pre-rendered glow that only ever moves via
+   transform (translate3d) — never repaints a full-viewport gradient on
+   mousemove like a background-position/custom-property approach would. */
+      .spotlight {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 640px;
+        height: 640px;
+        z-index: 1;
+        pointer-events: none;
+        background: radial-gradient(
+          circle,
+          rgba(0, 230, 118, 0.09),
+          transparent 65%
+        );
+        border-radius: 50%;
+        transform: translate3d(-9999px, -9999px, 0);
+        will-change: transform;
+      }
+      main,
+      header,
+      footer {
+        position: relative;
+        z-index: 2;
+      }
+      /* content-visibility lets the browser skip layout/paint work for sections
+   that are off-screen — the single biggest lever for a long, section-heavy
+   page like this one. Hero is excluded so it's always fully rendered. */
+      .section {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 900px;
+      }
+
+      /* ===== CUSTOM CURSOR ===== */
+      .cursor-dot,
+      .cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9998;
+        border-radius: 50%;
+        will-change: transform;
+      }
+      .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+      }
+      .cursor-ring {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--border-strong);
+        transition:
+          width 0.25s var(--ease),
+          height 0.25s var(--ease),
+          border-color 0.25s ease,
+          background 0.25s ease;
+      }
+      .cursor-ring.hovered {
+        width: 56px;
+        height: 56px;
+        border-color: var(--accent);
+        background: var(--accent-dim);
+      }
+      @media (hover: none), (pointer: coarse) {
+        .cursor-dot,
+        .cursor-ring {
+          display: none;
+        }
+      }
+
+      /* ===== LOADER ===== */
+      #loader {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.6s ease,
+          visibility 0.6s ease;
+      }
+      #loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .loader-mark {
+        font-family: var(--font-head);
+        font-size: 15px;
+        letter-spacing: 0.3em;
+        color: var(--muted);
+        margin-bottom: 28px;
+        text-transform: uppercase;
+      }
+      .loader-stage {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent);
+        margin-bottom: 20px;
+        height: 18px;
+      }
+      .loader-bar {
+        width: 240px;
+        height: 1px;
+        background: var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+      .loader-bar span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        background: var(--accent);
+      }
+      .loader-pct {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 16px;
+      }
+
+      /* ===== NAV ===== */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 500;
+        padding: 24px 0;
+        transition:
+          background 0.3s ease,
+          backdrop-filter 0.3s ease,
+          border-color 0.3s ease;
+        border-bottom: 1px solid transparent;
+      }
+      header.scrolled {
+        background: color-mix(in srgb, var(--bg) 78%, transparent);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .logo {
+        font-family: var(--font-head);
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 36px;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 14px;
+        color: var(--muted);
+        transition: color 0.2s ease;
+        position: relative;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+      .icon-btn:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .kbd-hint {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--muted-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 3px 6px;
+      }
+      .nav-cta {
+        font-family: var(--font-body);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px 22px;
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        transition:
+          border-color 0.25s ease,
+          transform 0.25s ease;
+      }
+      .nav-cta:hover {
+        border-color: var(--accent);
+      }
+      .nav-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 20px;
+      }
+
+      /* ===== HERO ===== */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-top: 120px;
+        overflow: hidden;
+      }
+      .hero-bg-word {
+        position: absolute;
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: var(--font-head);
+        font-weight: 800;
+        font-size: min(28vw, 340px);
+        color: var(--text);
+        opacity: 0.03;
+        white-space: nowrap;
+        letter-spacing: -0.04em;
+        pointer-events: none;
+        user-select: none;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 40px;
+        align-items: center;
+        position: relative;
+      }
+      .hero-copy .eyebrow {
+        margin-bottom: 24px;
+      }
+      .hero-copy h1 {
+        font-size: clamp(40px, 5.6vw, 74px);
+        font-weight: 700;
+        line-height: 1.04;
+        margin-bottom: 24px;
+      }
+      .hero-copy h1 .line {
+        display: block;
+        overflow: hidden;
+      }
+      .hero-copy h1 .line span {
+        display: inline-block;
+        transform: translateY(110%);
+      }
+      .hero-copy h1 .accent-text {
+        color: var(--accent);
+      }
+      .hero-rotate {
+        display: inline-flex;
+        position: relative;
+        height: 1.1em;
+        overflow: hidden;
+        vertical-align: bottom;
+        min-width: 1px;
+      }
+      .hero-rotate .rot-word {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+      .hero-sub {
+        font-size: 18px;
+        color: var(--muted);
+        max-width: 480px;
+        margin-bottom: 36px;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 56px;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 15px;
+        padding: 15px 30px;
+        background: var(--accent);
+        color: #04140b;
+        border-radius: 100px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        border: none;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+      }
+      .btn-secondary {
+        font-weight: 500;
+        font-size: 15px;
+        padding: 15px 28px;
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          border-color 0.25s ease,
+          transform 0.3s ease;
+        background: none;
+        color: var(--text);
+      }
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .hero-stats {
+        display: flex;
+        gap: 48px;
+        flex-wrap: wrap;
+      }
+      .hero-stat b {
+        font-family: var(--font-mono);
+        font-size: 30px;
+        font-weight: 500;
+        color: var(--text);
+        display: block;
+      }
+      .hero-stat span {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .hero-visual {
+        position: relative;
+        height: 560px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .portrait-halo {
+        position: absolute;
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        background: conic-gradient(
+          from 0deg,
+          rgba(0, 230, 118, 0.5),
+          rgba(0, 191, 165, 0.05),
+          rgba(0, 230, 118, 0.5)
+        );
+        filter: blur(50px);
+        opacity: 0.55;
+        animation: spin 18s linear infinite;
+        will-change: transform;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .portrait-wrap {
+        position: relative;
+        width: 480px;
+        z-index: 2;
+        will-change: transform;
+      }
+      .portrait-wrap svg {
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 20px 40px rgba(0, 230, 118, 0.22));
+      }
+      .float-tag {
+        position: absolute;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        background: color-mix(in srgb, var(--surface) 80%, transparent);
+        border: 1px solid var(--border);
+        padding: 8px 14px;
+        border-radius: 100px;
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 3;
+        will-change: transform;
+      }
+      .float-tag i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .tag-1 {
+        top: 8%;
+        left: 0;
+      }
+      .tag-2 {
+        bottom: 20%;
+        left: -6%;
+      }
+      .tag-3 {
+        top: 14%;
+        right: -4%;
+      }
+      .tag-4 {
+        bottom: 6%;
+        right: 4%;
+      }
+
+      .scroll-cue {
+        position: absolute;
+        bottom: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+      }
+      .scroll-cue .line {
+        width: 1px;
+        height: 34px;
+        background: linear-gradient(var(--accent), transparent);
+      }
+
+      /* ===== MARQUEE ===== */
+      .marquee-section {
+        padding: 64px 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        overflow: hidden;
+      }
+      .marquee-track {
+        display: flex;
+        gap: 64px;
+        width: max-content;
+        animation: marquee 28s linear infinite;
+        will-change: transform;
+      }
+      .marquee-section:hover .marquee-track {
+        animation-play-state: paused;
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .marquee-item {
+        font-family: var(--font-head);
+        font-size: 22px;
+        color: var(--muted);
+        opacity: 0.6;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .marquee-item b {
+        color: var(--text);
+        opacity: 1;
+      }
+
+      /* ===== ABOUT ===== */
+      .about-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 80px;
+      }
+      .about-copy p {
+        color: var(--muted);
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+      .about-copy p:first-child {
+        color: var(--text);
+        font-size: 19px;
+      }
+      .about-facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 40px;
+      }
+      .fact {
+        border-left: 1px solid var(--border);
+        padding-left: 16px;
+      }
+      .fact b {
+        display: block;
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      .fact span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* ===== TIMELINE (experience) ===== */
+      .timeline {
+        position: relative;
+        padding-left: 40px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        bottom: 6px;
+        width: 1px;
+        background: var(--border);
+      }
+      .t-item {
+        position: relative;
+        padding-bottom: 56px;
+      }
+      .t-item:last-child {
+        padding-bottom: 0;
+      }
+      .t-item::before {
+        content: "";
+        position: absolute;
+        left: -45px;
+        top: 4px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px var(--accent-dim);
+      }
+      .t-year {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent);
+        margin-bottom: 8px;
+        display: block;
+      }
+      .t-item h3 {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+      .t-item p {
+        color: var(--muted);
+        font-size: 15px;
+        max-width: 560px;
+      }
+
+      /* ===== PROCESS TIMELINE (replaces testimonial placeholder) ===== */
+      .process-rail {
+        display: flex;
+        overflow-x: auto;
+        gap: 0;
+        padding-bottom: 24px;
+        scrollbar-width: thin;
+      }
+      .process-step {
+        flex: 0 0 220px;
+        padding: 28px 24px;
+        border-right: 1px solid var(--border);
+        position: relative;
+      }
+      .process-step:last-child {
+        border-right: none;
+      }
+      .process-step .p-num {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 12px;
+        display: block;
+        margin-bottom: 14px;
+      }
+      .process-step h4 {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .process-step p {
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      .process-step::after {
+        content: "→";
+        position: absolute;
+        right: -11px;
+        top: 34px;
+        color: var(--muted-2);
+        font-size: 14px;
+        background: var(--bg);
+      }
+      .process-step:last-child::after {
+        content: "";
+      }
+
+      /* ===== TECH STACK (interactive) ===== */
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+      }
+      .stack-cell {
+        background: var(--surface);
+        padding: 32px 24px;
+        transition: background 0.25s ease;
+      }
+      .stack-cell:hover {
+        background: var(--card);
+      }
+      .stack-cell .cat {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+        display: block;
+      }
+      .stack-cell ul {
+        list-style: none;
+      }
+      .tech-chip {
+        color: var(--muted);
+        font-size: 14px;
+        padding: 6px 0;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px dashed transparent;
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .tech-chip:hover {
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .tech-chip .stars {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent);
+        opacity: 0.7;
+      }
+      .tech-popover {
+        position: absolute;
+        z-index: 60;
+        width: 260px;
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        padding: 18px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(6px);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease,
+          visibility 0.2s;
+      }
+      .tech-popover.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .tech-popover h5 {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      .tech-popover p {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+      .tech-popover .tp-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .tech-popover .tp-chip {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        border: 1px solid var(--border);
+        padding: 3px 8px;
+        border-radius: 100px;
+        color: var(--muted);
+      }
+
+      /* ===== CASE STUDY (embedded preview card) ===== */
+      .case-study {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 64px;
+      }
+      .case-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 48px;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .case-top h3 {
+        font-size: clamp(28px, 3.2vw, 40px);
+      }
+      .case-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        border: 1px solid var(--border);
+        padding: 6px 14px;
+        border-radius: 100px;
+        color: var(--muted);
+      }
+      .case-cols {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-bottom: 48px;
+      }
+      .case-cols h4 {
+        font-size: 14px;
+        color: var(--accent);
+        margin-bottom: 10px;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .case-cols p {
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+      .case-features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      .case-feature {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .case-feature b {
+        display: block;
+        color: var(--text);
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .case-shot {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin-bottom: 48px;
+        background: var(--card);
+      }
+      .case-results {
+        display: flex;
+        gap: 56px;
+        flex-wrap: wrap;
+        margin-bottom: 36px;
+      }
+      .result b {
+        font-family: var(--font-mono);
+        font-size: 26px;
+        color: var(--accent);
+        display: block;
+      }
+      .result span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .case-open-btn {
+        margin-top: 8px;
+      }
+
+      /* ===== MOCKUP (SaaS-style screen, built from CSS not images) ===== */
+      .mockup {
+        padding: 20px;
+      }
+      .mockup-window {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .mockup-topbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .mockup-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--border-strong);
+      }
+      .mockup-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--muted);
+        margin-left: 8px;
+      }
+      .mockup-body {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        min-height: 280px;
+      }
+      .mockup-side {
+        border-right: 1px solid var(--border);
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .mockup-side .m-item {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 8px 10px;
+        border-radius: 6px;
+      }
+      .mockup-side .m-item.active {
+        background: var(--accent-dim);
+        color: var(--accent);
+      }
+      .mockup-main {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .mockup-kpis {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .mockup-kpi {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .mockup-kpi b {
+        display: block;
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 18px;
+      }
+      .mockup-kpi span {
+        font-size: 10.5px;
+        color: var(--muted);
+      }
+      .mockup-chart {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        height: 100px;
+      }
+      .mockup-chart i {
+        flex: 1;
+        background: linear-gradient(180deg, var(--accent), var(--accent-2));
+        border-radius: 3px 3px 0 0;
+        opacity: 0.75;
+      }
+      .mockup-table-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 0.6fr;
+        gap: 8px;
+        font-size: 11px;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        padding: 8px 0;
+      }
+      .mockup-table-row.head {
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .status-pill {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .status-pill.ok {
+        background: var(--accent-dim);
+        color: var(--accent);
+      }
+      .status-pill.wait {
+        background: rgba(255, 193, 7, 0.12);
+        color: #ffc107;
+      }
+
+      /* ===== PROJECTS ===== */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .project-card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 32px;
+        background: var(--card);
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.35s ease,
+          border-color 0.35s ease;
+        cursor: pointer;
+      }
+      .project-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(0, 230, 118, 0.35);
+      }
+      .project-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+      }
+      .project-index {
+        font-family: var(--font-mono);
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .project-card h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      .project-card p {
+        color: var(--muted);
+        font-size: 14.5px;
+        margin-bottom: 20px;
+      }
+      .project-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .tag {
+        font-size: 11.5px;
+        font-family: var(--font-mono);
+        color: var(--accent-2);
+        border: 1px solid var(--border);
+        padding: 4px 10px;
+        border-radius: 100px;
+      }
+      .project-metrics {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+      }
+      .project-metrics .pm {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .project-metrics .pm b {
+        color: var(--accent);
+        font-family: var(--font-mono);
+        display: block;
+        font-size: 16px;
+      }
+      .project-expand {
+        position: absolute;
+        bottom: 20px;
+        right: 24px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ===== SERVICES ===== */
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .service-card {
+        padding: 36px 28px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        transition: border-color 0.3s ease;
+      }
+      .service-card:hover {
+        border-color: rgba(0, 230, 118, 0.3);
+      }
+      .service-num {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 13px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .service-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+      .service-card p {
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+
+      /* ===== PHILOSOPHY ===== */
+      .philosophy {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .phil-card {
+        border-left: 2px solid var(--accent);
+        padding: 8px 0 8px 24px;
+      }
+      .phil-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .phil-card p {
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+
+      /* ===== WHY HIRE ===== */
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+      }
+      .why-cell {
+        background: var(--surface);
+        padding: 36px 24px;
+      }
+      .why-cell b {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 28px;
+        color: var(--accent);
+        margin-bottom: 10px;
+      }
+      .why-cell span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* ===== ACHIEVEMENTS ===== */
+      .achieve-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      .achieve-cell {
+        text-align: center;
+        padding: 32px 16px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      }
+      .achieve-cell b {
+        font-family: var(--font-mono);
+        font-size: 38px;
+        color: var(--accent);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .achieve-cell span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* ===== GITHUB ===== */
+      .github-panel {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 40px;
+        background: var(--surface);
+      }
+      .github-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .github-head h3 {
+        font-size: 20px;
+      }
+      .gh-link {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent);
+        border: 1px solid var(--border);
+        padding: 8px 16px;
+        border-radius: 100px;
+      }
+      .gh-config {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      .gh-config input {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        width: 200px;
+      }
+      .gh-config button {
+        background: var(--accent);
+        color: #04140b;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .gh-stats-row {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+      .gh-stat b {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 22px;
+        display: block;
+      }
+      .gh-stat span {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .repo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .repo-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+      }
+      .repo-card h4 {
+        font-size: 14.5px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .repo-card p {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 12px;
+        min-height: 34px;
+      }
+      .repo-meta {
+        display: flex;
+        gap: 14px;
+        font-size: 12px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+      }
+      .repo-lang-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+        margin-right: 4px;
+      }
+      .heatmap {
+        display: grid;
+        grid-template-columns: repeat(26, 1fr);
+        gap: 4px;
+      }
+      .heatmap span {
+        aspect-ratio: 1;
+        border-radius: 2px;
+        background: var(--border);
+      }
+      .gh-note {
+        color: var(--muted);
+        font-size: 12.5px;
+        margin-top: 20px;
+        font-family: var(--font-mono);
+      }
+      .gh-loading {
+        color: var(--muted);
+        font-size: 13px;
+        font-family: var(--font-mono);
+      }
+
+      /* ===== AI ASSISTANT ===== */
+      .ai-panel {
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .ai-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 22px 28px;
+        border-bottom: 1px solid var(--border);
+      }
+      .ai-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 12px var(--accent);
+      }
+      .ai-header b {
+        font-size: 15px;
+      }
+      .ai-header span {
+        color: var(--muted);
+        font-size: 13px;
+        margin-left: auto;
+        font-family: var(--font-mono);
+      }
+      .ai-provider-select {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        border-radius: 8px;
+        padding: 4px 8px;
+      }
+      .ai-body {
+        min-height: 220px;
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 24px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .ai-msg {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+      .ai-msg.bot {
+        background: var(--card);
+        border: 1px solid var(--border);
+        align-self: flex-start;
+      }
+      .ai-msg.user {
+        background: var(--accent-dim);
+        border: 1px solid rgba(0, 230, 118, 0.3);
+        align-self: flex-end;
+      }
+      .ai-typing {
+        display: flex;
+        gap: 4px;
+        align-self: flex-start;
+        padding: 12px 16px;
+      }
+      .ai-typing span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--muted);
+        animation: blink 1.2s infinite;
+      }
+      .ai-typing span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .ai-typing span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes blink {
+        0%,
+        80%,
+        100% {
+          opacity: 0.2;
+        }
+        40% {
+          opacity: 1;
+        }
+      }
+      .ai-suggestions {
+        display: flex;
+        gap: 10px;
+        padding: 0 28px 20px;
+        flex-wrap: wrap;
+      }
+      .ai-chip {
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        border: 1px solid var(--border);
+        padding: 8px 14px;
+        border-radius: 100px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: none;
+      }
+      .ai-chip:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .ai-input-row {
+        display: flex;
+        border-top: 1px solid var(--border);
+      }
+      .ai-input-row input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: var(--text);
+        padding: 18px 28px;
+        font-family: var(--font-body);
+        font-size: 14.5px;
+      }
+      .ai-input-row input:focus {
+        outline: none;
+      }
+      .ai-input-row button {
+        background: var(--accent);
+        border: none;
+        color: #04140b;
+        padding: 0 26px;
+        font-weight: 600;
+      }
+      .ai-security-note {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--muted-2);
+        padding: 0 28px 18px;
+      }
+
+      /* ===== BLOG ===== */
+      .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .blog-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 26px;
+        transition:
+          border-color 0.3s ease,
+          transform 0.3s ease;
+      }
+      .blog-card:hover {
+        border-color: rgba(0, 230, 118, 0.3);
+        transform: translateY(-4px);
+      }
+      .blog-tag {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 14px;
+        display: block;
+      }
+      .blog-card h3 {
+        font-size: 17px;
+        margin-bottom: 10px;
+        line-height: 1.3;
+      }
+      .blog-card p {
+        color: var(--muted);
+        font-size: 13.5px;
+        margin-bottom: 16px;
+      }
+      .blog-meta {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--muted-2);
+      }
+
+      /* ===== TERMINAL ===== */
+      .terminal {
+        background: #000;
+        border: 1px solid var(--border-strong);
+        border-radius: 14px;
+        overflow: hidden;
+        font-family: var(--font-mono);
+      }
+      [data-theme="light"] .terminal {
+        background: #0d0f0e;
+      }
+      .terminal-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--border);
+      }
+      .terminal-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .terminal-dot.r {
+        background: #ff5f56;
+      }
+      .terminal-dot.y {
+        background: #ffbd2e;
+      }
+      .terminal-dot.g {
+        background: #27c93f;
+      }
+      .terminal-title {
+        color: var(--muted);
+        font-size: 12px;
+        margin-left: 8px;
+      }
+      .terminal-body {
+        padding: 22px;
+        height: 280px;
+        overflow-y: auto;
+        font-size: 13.5px;
+        color: #c9f5d9;
+      }
+      .terminal-line {
+        margin-bottom: 8px;
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+      .terminal-line .prompt {
+        color: var(--accent);
+      }
+      .terminal-input-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .terminal-input-row .prompt {
+        color: var(--accent);
+      }
+      .terminal-input-row input {
+        background: none;
+        border: none;
+        color: #c9f5d9;
+        font-family: var(--font-mono);
+        font-size: 13.5px;
+        flex: 1;
+      }
+      .terminal-input-row input:focus {
+        outline: none;
+      }
+
+      /* ===== DEV TOOLS / INDUSTRIES / LEARNING GRID ===== */
+      .chip-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .chip-grid .chip-item {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        border: 1px solid var(--border);
+        padding: 8px 16px;
+        border-radius: 100px;
+        color: var(--muted);
+      }
+
+      /* ===== AVAILABILITY ===== */
+      .avail-grid {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .avail-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        padding: 8px 14px;
+        border-radius: 100px;
+      }
+      .avail-badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* ===== FAQ ===== */
+      .faq-item {
+        border-bottom: 1px solid var(--border);
+      }
+      .faq-q {
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        color: var(--text);
+        padding: 26px 0;
+        font-family: var(--font-head);
+        font-size: 17px;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+      .faq-q .plus {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        transition: transform 0.3s ease;
+      }
+      .faq-item.open .plus {
+        transform: rotate(45deg);
+      }
+      .faq-a {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+      .faq-a p {
+        color: var(--muted);
+        font-size: 14.5px;
+        padding-bottom: 26px;
+        max-width: 640px;
+      }
+
+      /* ===== CONTACT ===== */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+      .contact-copy h2 {
+        font-size: clamp(32px, 4vw, 52px);
+        margin-bottom: 20px;
+      }
+      .contact-copy p {
+        color: var(--muted);
+        margin-bottom: 32px;
+        max-width: 420px;
+      }
+      .contact-detail {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .contact-detail a {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        color: var(--text);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 14px;
+        display: inline-flex;
+        justify-content: space-between;
+      }
+      .contact-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .contact-meta div {
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--border);
+        padding-top: 10px;
+      }
+      .contact-meta b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .form-row {
+        margin-bottom: 20px;
+      }
+      .form-row label {
+        display: block;
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-bottom: 8px;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .form-row input,
+      .form-row textarea {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 14.5px;
+      }
+      .form-row input:focus,
+      .form-row textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      /* ===== FOOTER ===== */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 56px 0 32px;
+      }
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
+        gap: 32px;
+      }
+      .footer-links {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .footer-col span {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 14px;
+      }
+      .footer-col a {
+        display: block;
+        color: var(--muted);
+        font-size: 14px;
+        padding: 5px 0;
+        transition: color 0.2s ease;
+      }
+      .footer-col a:hover {
+        color: var(--text);
+      }
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+        border-top: 1px solid var(--border);
+        padding-top: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      /* ============================================================
+   COMMAND PALETTE
+   ============================================================ */
+      .cmdk-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 12vh;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.2s ease,
+          visibility 0.2s ease;
+      }
+      .cmdk-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .cmdk-box {
+        width: min(560px, 90vw);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        border-radius: 14px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        transform: translateY(-14px);
+        transition: transform 0.25s var(--ease);
+      }
+      .cmdk-overlay.open .cmdk-box {
+        transform: translateY(0);
+      }
+      .cmdk-input-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .cmdk-input-row input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 15px;
+        font-family: var(--font-body);
+      }
+      .cmdk-input-row input:focus {
+        outline: none;
+      }
+      .cmdk-esc {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--muted-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 3px 6px;
+      }
+      .cmdk-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 8px;
+      }
+      .cmdk-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: var(--muted);
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .cmdk-item.active,
+      .cmdk-item:hover {
+        background: var(--accent-dim);
+        color: var(--text);
+      }
+      .cmdk-item span.k {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--muted-2);
+      }
+      .cmdk-empty {
+        padding: 24px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* ============================================================
+   PROJECT OVERLAY (fullscreen case study)
+   ============================================================ */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1500;
+        background: var(--bg);
+        transform: translateY(100%);
+        transition: transform 0.55s var(--ease);
+        overflow-y: auto;
+      }
+      .overlay.open {
+        transform: translateY(0);
+      }
+      .overlay-close {
+        position: fixed;
+        top: 24px;
+        right: 32px;
+        z-index: 1600;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      
+      .overlay-nav {
+        position: sticky;
+        top: 0;
+        z-index: 1400;
+        background: color-mix(in srgb, var(--bg) 85%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        padding: 0 32px;
+      }
+      .overlay-nav button {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        padding: 18px 16px;
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+      }
+      .overlay-nav button.active {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .overlay-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 64px 32px 120px;
+      }
+      .overlay-hero {
+        margin-bottom: 64px;
+      }
+      .overlay-hero .eyebrow {
+        margin-bottom: 20px;
+      }
+      .overlay-hero h1 {
+        font-size: clamp(36px, 5vw, 60px);
+        margin-bottom: 18px;
+      }
+      .overlay-hero p {
+        color: var(--muted);
+        font-size: 17px;
+        max-width: 640px;
+      }
+      .ov-section {
+        margin-bottom: 72px;
+        scroll-margin-top: 80px;
+      }
+      .ov-section h2 {
+        font-size: 26px;
+        margin-bottom: 20px;
+      }
+      .ov-section p {
+        color: var(--muted);
+        font-size: 15.5px;
+        margin-bottom: 14px;
+        max-width: 720px;
+      }
+      .ov-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .ov-list {
+        list-style: none;
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+      .ov-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 10px;
+      }
+      .ov-list li::before {
+        content: "—";
+        color: var(--accent);
+      }
+      .ov-metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 12px;
+      }
+      .ov-metric {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+      }
+      .ov-metric b {
+        display: block;
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .ov-metric span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .ov-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .ov-gallery-item {
+        aspect-ratio: 16/10;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted-2);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      .ov-links {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .ov-diagram {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        background: var(--surface);
+        overflow-x: auto;
+      }
+      .role-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .role-table th {
+        text-align: left;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        color: var(--accent);
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .role-table td {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+        color: var(--muted);
+      }
+      .timeline-mini {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+      .tm-step {
+        flex: 1 1 140px;
+        padding: 16px 0;
+        border-top: 2px solid var(--border);
+        position: relative;
+      }
+      .tm-step.done {
+        border-color: var(--accent);
+      }
+      .tm-step b {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--accent);
+        margin-bottom: 4px;
+      }
+      .tm-step span {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 900px) {
+        .hero-grid,
+        .about-grid,
+        .case-cols,
+        .case-features,
+        .contact-grid,
+        .ov-grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .stack-grid,
+        .why-grid,
+        .achieve-grid,
+        .repo-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .services-grid,
+        .projects-grid,
+        .philosophy,
+        .blog-grid {
+          grid-template-columns: 1fr;
+        }
+        .ov-metric-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .ov-gallery {
+          grid-template-columns: 1fr;
+        }
+        .nav-links {
+          display: none;
+        }
+        .nav-toggle {
+          display: block;
+        }
+        .hero-visual {
+          height: 400px;
+          margin-top: 40px;
+        }
+        .section {
+          padding: 90px 0;
+        }
+        .case-study {
+          padding: 32px;
+        }
+        body {
+          cursor: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- AMBIENT BACKGROUND -->
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-grid"></div>
+      <div class="ambient-mesh"></div>
+      <div class="ambient-mesh two"></div>
+      <div class="ambient-mesh three"></div>
+      <div class="ambient-noise"></div>
+    </div>
+    <div class="spotlight" id="spotlight" aria-hidden="true"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="loader-mark">Muhammad Harmain</div>
+      <div class="loader-stage" id="loaderStage">Initializing portfolio...</div>
+      <div class="loader-bar"><span id="loaderFill"></span></div>
+      <div class="loader-pct" id="loaderPct">0%</div>
+    </div>
+
+    <header id="siteHeader">
+      <div class="container">
+        <nav>
+          <a href="#home" class="logo">Harmain<span>.</span></a>
+          <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#stack">Stack</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <div class="nav-right">
+            <button
+              class="icon-btn"
+              id="cmdkTrigger"
+              aria-label="Open command palette"
+              title="Command palette (Ctrl+K)"
+            >
+              ⌘
+            </button>
+            <button
+              class="icon-btn"
+              id="themeToggle"
+              aria-label="Toggle theme"
+              title="Toggle theme"
+            >
+              ◐
+            </button>
+            <a href="#contact" class="nav-cta">Start a project</a>
+            <button class="nav-toggle" aria-label="Menu" id="navToggle">
+              ☰
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="home">
+        <div class="hero-bg-word" aria-hidden="true">HARMAIN</div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Full Stack Developer — Pakistan</div>
+            <h1>
+              <span class="line"><span>Software that runs</span></span>
+              <span class="line"><span>businesses, not just</span></span>
+              <span class="line"><span class="accent-text">demos.</span></span>
+            </h1>
+            <p class="hero-sub">
+              I design and build full-stack
+              <span class="hero-rotate" id="heroRotate"
+                ><span class="rot-word">dashboards</span></span
+              >
+              — systems for teams that need software to hold up in production,
+              not just in a pitch.
+            </p>
+            <div class="hero-actions">
+              <a href="#work" class="btn-primary">View Case Study →</a>
+              <a href="#contact" class="btn-secondary">Start a Project</a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <b id="statSystems">0</b><span>Shipped Systems</span>
+              </div>
+              <div class="hero-stat"><b>Laravel</b><span>Core Stack</span></div>
+              <div class="hero-stat">
+                <b>PK → ∞</b><span>Working Globally</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="portrait-halo"></div>
+            <div class="float-tag tag-1"><i></i>Laravel</div>
+            <div class="float-tag tag-2"><i></i>REST APIs</div>
+            <div class="float-tag tag-3"><i></i>MySQL</div>
+            <div class="float-tag tag-4"><i></i>AI Integration</div>
+            <div class="portrait-wrap" id="portrait">
+            <img
+    src="pic.png"
+    alt="Muhammad Harmain"
+    class="hero-image"
+  />
+                <defs>
+                  <radialGradient id="glow" cx="50%" cy="35%" r="65%">
+                    <stop
+                      offset="0%"
+                      stop-color="#00E676"
+                      stop-opacity="0.35"
+                    />
+                    <stop offset="100%" stop-color="#00E676" stop-opacity="0" />
+                  </radialGradient>
+                  <linearGradient id="figure" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1a1a1a" />
+                    <stop offset="100%" stop-color="#0a0a0a" />
+                  </linearGradient>
+                </defs>
+                <ellipse
+                  cx="170"
+                  cy="180"
+                  rx="160"
+                  ry="160"
+                  fill="url(#glow)"
+                />
+                <circle
+                  cx="170"
+                  cy="130"
+                  r="70"
+                  fill="url(#figure)"
+                  stroke="#00E676"
+                  stroke-opacity="0.25"
+                />
+                <path
+                  d="M60 420 C60 300 100 240 170 240 C240 240 280 300 280 420 Z"
+                  fill="url(#figure)"
+                  stroke="#00E676"
+                  stroke-opacity="0.25"
+                />
+              </svg>
+            </div>
+            <!-- NOTE: swap the SVG placeholder above for your transparent PNG.
+           When you do, drop it in unwrapped — no card, no crop, no frame —
+           just the glow + parallax already wired up on #portrait. -->
+          </div>
+        </div>
+        <div class="scroll-cue">
+          <div class="line"></div>
+          SCROLL
+        </div>
+      </section>
+
+      <!-- TRUSTED TECHNOLOGIES -->
+      <section class="marquee-section">
+        <div class="marquee-track" id="marqueeTrack">
+          <div class="marquee-item"><b>PHP</b></div>
+          <div class="marquee-item">Laravel</div>
+          <div class="marquee-item"><b>MySQL</b></div>
+          <div class="marquee-item">JavaScript</div>
+          <div class="marquee-item"><b>REST APIs</b></div>
+          <div class="marquee-item">Bootstrap</div>
+          <div class="marquee-item"><b>HTML5 / CSS3</b></div>
+          <div class="marquee-item">AI Integration</div>
+          <div class="marquee-item"><b>PHP</b></div>
+          <div class="marquee-item">Laravel</div>
+          <div class="marquee-item"><b>MySQL</b></div>
+          <div class="marquee-item">JavaScript</div>
+          <div class="marquee-item"><b>REST APIs</b></div>
+          <div class="marquee-item">Bootstrap</div>
+          <div class="marquee-item"><b>HTML5 / CSS3</b></div>
+          <div class="marquee-item">AI Integration</div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="section" id="about">
+        <div class="container about-grid">
+          <div>
+            <div class="eyebrow">About</div>
+            <h2>
+              I build the systems businesses run on behind the login screen.
+            </h2>
+          </div>
+          <div class="about-copy">
+            <p>
+              Most of my work never faces the public internet — it faces an
+              admin logging in every morning to check shipments, invoices, or
+              stock. That's the software I build: dashboards and portals that
+              hold up under daily, repeated use.
+            </p>
+            <p>
+              I work primarily in PHP and Laravel, with MySQL underneath and a
+              JavaScript layer that keeps interfaces fast and responsive. Every
+              system I ship is designed around one question: what does the
+              person using this every day actually need to see?
+            </p>
+            <p>
+              Based in Pakistan, working with clients wherever the project takes
+              me — logistics, retail, and internal operations tooling are where
+              I've spent the most time.
+            </p>
+            <div class="about-facts">
+              <div class="fact">
+                <b>Focus</b><span>Business management systems</span>
+              </div>
+              <div class="fact">
+                <b>Core Stack</b><span>PHP · Laravel · MySQL</span>
+              </div>
+              <div class="fact">
+                <b>Approach</b><span>Admin-first, data-driven UI</span>
+              </div>
+              <div class="fact">
+                <b>Currently</b><span>Open to new projects</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE TIMELINE -->
+      <section class="section" id="experience">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Experience</div>
+            <h2>How the work has progressed.</h2>
+          </div>
+          <div class="timeline">
+            <div class="t-item">
+              <span class="t-year">Foundation</span>
+              <h3>Core web development</h3>
+              <p>
+                Built a foundation in HTML5, CSS3, and JavaScript, then moved
+                into PHP to understand how the front end actually connects to
+                real data.
+              </p>
+            </div>
+            <div class="t-item">
+              <span class="t-year">Framework Depth</span>
+              <h3>Laravel &amp; structured backends</h3>
+              <p>
+                Adopted Laravel as a primary framework — authentication, role
+                management, and database architecture became the default
+                starting point for every build, not an afterthought.
+              </p>
+            </div>
+            <div class="t-item">
+              <span class="t-year">Systems Work</span>
+              <h3>Multi-role platforms</h3>
+              <p>
+                Shipped systems with separate admin and client experiences — the
+                Union Enterprises logistics platform and an Employee Management
+                System — where dashboards, permissions, and reporting all had to
+                work together.
+              </p>
+            </div>
+            <div class="t-item">
+              <span class="t-year">Current</span>
+              <h3>AI-integrated tooling</h3>
+              <p>
+                Bringing AI-assisted features into dashboards and client-facing
+                tools, alongside continued work on business management
+                platforms.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEVELOPMENT PROCESS (replaces the old testimonial placeholder) -->
+      <section class="section" id="process">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Development Process</div>
+            <h2>What happens between a brief and a launch.</h2>
+            <p>
+              The same ten-stage process behind every system on this page, in
+              order — each stage feeds directly into the next.
+            </p>
+          </div>
+          <div class="process-rail" id="processRail">
+            <div class="process-step">
+              <span class="p-num">01</span>
+              <h4>Discovery</h4>
+              <p>
+                Understand the daily workflow and where it currently breaks
+                down.
+              </p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">02</span>
+              <h4>Planning</h4>
+              <p>Scope modules, roles, and what belongs in v1 versus later.</p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">03</span>
+              <h4>Research</h4>
+              <p>Map what each user type repeatedly needs to see or do.</p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">04</span>
+              <h4>UI Design</h4>
+              <p>Wireframe around the daily user, not the feature list.</p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">05</span>
+              <h4>Architecture</h4>
+              <p>Define the Laravel MVC structure and middleware boundaries.</p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">06</span>
+              <h4>Database Design</h4>
+              <p>Normalize the schema before a single screen is built.</p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">07</span>
+              <h4>Development</h4>
+              <p>
+                Build backend and frontend in parallel against the agreed
+                schema.
+              </p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">08</span>
+              <h4>Testing</h4>
+              <p>
+                Verify roles, permissions, and edge cases against real
+                workflows.
+              </p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">09</span>
+              <h4>Deployment</h4>
+              <p>Ship to production with migrations and rollback in place.</p>
+            </div>
+            <div class="process-step">
+              <span class="p-num">10</span>
+              <h4>Maintenance</h4>
+              <p>Monitor, fix, and extend as the business's needs change.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECH STACK -->
+      <section class="section" id="stack">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Tech Stack</div>
+            <h2>Tools I reach for by default.</h2>
+            <p>Hover or tap any technology for how it's actually been used.</p>
+          </div>
+          <div class="stack-grid" id="stackGrid"></div>
+        </div>
+      </section>
+
+      <!-- FEATURED CASE STUDY -->
+      <section class="section" id="work">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Featured Case Study</div>
+            <h2>Union Enterprises</h2>
+            <p>
+              An import &amp; export logistics management system built to
+              replace spreadsheet-based tracking with a single operational
+              platform.
+            </p>
+          </div>
+          <div class="case-study">
+            <div class="case-top">
+              <h3>Import &amp; Export Logistics Platform</h3>
+              <div class="case-tags">
+                <span class="chip">Laravel</span><span class="chip">MySQL</span
+                ><span class="chip">REST API</span
+                ><span class="chip">Role-Based Access</span>
+              </div>
+            </div>
+            <div class="case-cols">
+              <div>
+                <h4>Problem</h4>
+                <p>
+                  Shipment status, invoices, and client documents were spread
+                  across spreadsheets and email threads, with no single source
+                  of truth for either the internal team or clients.
+                </p>
+              </div>
+              <div>
+                <h4>Research</h4>
+                <p>
+                  Mapped the daily workflow of the operations team and the
+                  information clients repeatedly asked for, to decide what
+                  belonged in the admin dashboard versus the client portal.
+                </p>
+              </div>
+              <div>
+                <h4>Solution</h4>
+                <p>
+                  A two-sided platform: an admin dashboard for internal
+                  operations, and a client portal for shipment visibility —
+                  connected by one database and a consistent permission model.
+                </p>
+              </div>
+            </div>
+            <div class="case-cols">
+              <div>
+                <h4>Architecture</h4>
+                <p>
+                  Laravel MVC structure with role-based middleware separating
+                  admin and client access, REST endpoints powering dynamic
+                  dashboard views.
+                </p>
+              </div>
+              <div>
+                <h4>Database Design</h4>
+                <p>
+                  Normalized MySQL schema linking shipments, invoices, and
+                  documents to clients — built to support reporting without
+                  duplicating data.
+                </p>
+              </div>
+              <div>
+                <h4>Results</h4>
+                <p>
+                  Replaced manual status updates with live tracking and
+                  centralized invoicing and document management in one place.
+                </p>
+              </div>
+            </div>
+            <div class="case-features">
+              <div class="case-feature">
+                <b>Admin Dashboard</b>Operational control center for shipments,
+                invoices, and users.
+              </div>
+              <div class="case-feature">
+                <b>Client Portal</b>Self-serve visibility into shipment status
+                and documents.
+              </div>
+              <div class="case-feature">
+                <b>Shipment Tracking</b>Status updates tied directly to each
+                shipment record.
+              </div>
+              <div class="case-feature">
+                <b>Invoice Management</b>Generation, tracking, and status of
+                client invoices.
+              </div>
+              <div class="case-feature">
+                <b>Document Management</b>Centralized storage for
+                shipment-related paperwork.
+              </div>
+              <div class="case-feature">
+                <b>Analytics Dashboard</b>Operational metrics surfaced for
+                internal decision-making.
+              </div>
+              <div class="case-feature">
+                <b>Authentication</b>Secure login across admin and client roles.
+              </div>
+              <div class="case-feature">
+                <b>Role Management</b>Granular permissions per user type.
+              </div>
+              <div class="case-feature">
+                <b>Modern UI</b>Clean, data-dense interface built for daily use.
+              </div>
+            </div>
+            <div class="case-shot">
+              <div class="mockup">
+                <div class="mockup-window">
+                  <div class="mockup-topbar">
+                    <span class="mockup-dot"></span
+                    ><span class="mockup-dot"></span
+                    ><span class="mockup-dot"></span
+                    ><span class="mockup-title"
+                      >union-enterprises.app / admin / shipments</span
+                    >
+                  </div>
+                  <div class="mockup-body">
+                    <div class="mockup-side">
+                      <div class="m-item active">Dashboard</div>
+                      <div class="m-item">Shipments</div>
+                      <div class="m-item">Invoices</div>
+                      <div class="m-item">Documents</div>
+                      <div class="m-item">Clients</div>
+                      <div class="m-item">Reports</div>
+                    </div>
+                    <div class="mockup-main">
+                      <div class="mockup-kpis">
+                        <div class="mockup-kpi">
+                          <b>128</b><span>Active shipments</span>
+                        </div>
+                        <div class="mockup-kpi">
+                          <b>34</b><span>Pending invoices</span>
+                        </div>
+                        <div class="mockup-kpi">
+                          <b>96%</b><span>On-time delivery</span>
+                        </div>
+                      </div>
+                      <div class="mockup-chart" id="ueChart"></div>
+                      <div class="mockup-table-row head">
+                        <span>Shipment</span><span>Client</span><span>ETA</span
+                        ><span>Status</span>
+                      </div>
+                      <div class="mockup-table-row">
+                        <span>UE-2291</span><span>Al-Falah Traders</span
+                        ><span>Aug 03</span
+                        ><span
+                          ><span class="status-pill ok">On track</span></span
+                        >
+                      </div>
+                      <div class="mockup-table-row">
+                        <span>UE-2288</span><span>Meridian Textiles</span
+                        ><span>Aug 05</span
+                        ><span
+                          ><span class="status-pill wait">Customs</span></span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="case-cols">
+              <div>
+                <h4>Challenges</h4>
+                <p>
+                  Keeping the admin and client views in sync from a single
+                  schema, without leaking internal-only data into the client
+                  portal.
+                </p>
+              </div>
+              <div>
+                <h4>Tech Stack</h4>
+                <p>
+                  PHP, Laravel, MySQL, REST APIs, Bootstrap, role-based
+                  authentication.
+                </p>
+              </div>
+              <div>
+                <h4>Outcome</h4>
+                <p>
+                  A platform that gives operations and clients the same source
+                  of truth, each through the lens they need.
+                </p>
+              </div>
+            </div>
+            <button
+              class="btn-secondary case-open-btn"
+              data-open-project="union"
+            >
+              Open full case study →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS GRID -->
+      <section class="section" id="projects">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Selected Work</div>
+            <h2>More systems, briefly.</h2>
+            <p>Click any card to open the full breakdown.</p>
+          </div>
+          <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="section" id="services">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Services</div>
+            <h2>Where I add the most value.</h2>
+          </div>
+          <div class="services-grid">
+            <div class="service-card">
+              <span class="service-num">01</span>
+              <h3>Business Management Systems</h3>
+              <p>
+                End-to-end platforms for operations — the kind of software a
+                team logs into every day, not a marketing site.
+              </p>
+            </div>
+            <div class="service-card">
+              <span class="service-num">02</span>
+              <h3>Dashboard Development</h3>
+              <p>
+                Admin and analytics dashboards designed around the decisions
+                they need to support, not just the data available.
+              </p>
+            </div>
+            <div class="service-card">
+              <span class="service-num">03</span>
+              <h3>Client Portals</h3>
+              <p>
+                Self-serve interfaces that give external users visibility
+                without exposing internal systems.
+              </p>
+            </div>
+            <div class="service-card">
+              <span class="service-num">04</span>
+              <h3>API Development</h3>
+              <p>
+                REST APIs built to connect internal systems, mobile clients, or
+                third-party integrations cleanly.
+              </p>
+            </div>
+            <div class="service-card">
+              <span class="service-num">05</span>
+              <h3>Database Architecture</h3>
+              <p>
+                Schema design that holds up as data and reporting needs grow,
+                not just for the first version.
+              </p>
+            </div>
+            <div class="service-card">
+              <span class="service-num">06</span>
+              <h3>AI-Assisted Features</h3>
+              <p>
+                Practical AI integration inside existing workflows — assistants,
+                search, and automation layered on real data.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEVELOPMENT PHILOSOPHY -->
+      <section class="section" id="philosophy">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Development Philosophy</div>
+            <h2>How I approach a build.</h2>
+          </div>
+          <div class="philosophy">
+            <div class="phil-card">
+              <h3>Start from the daily user</h3>
+              <p>
+                The person who opens this every morning defines the interface —
+                not the feature list.
+              </p>
+            </div>
+            <div class="phil-card">
+              <h3>Design the schema first</h3>
+              <p>
+                A clear database structure prevents most of the problems that
+                show up later as "bugs."
+              </p>
+            </div>
+            <div class="phil-card">
+              <h3>Roles before features</h3>
+              <p>
+                Who can see and do what is decided before a single screen is
+                built, not patched in afterward.
+              </p>
+            </div>
+            <div class="phil-card">
+              <h3>Ship what holds up</h3>
+              <p>
+                Software that survives daily, repeated use — not just a demo
+                that looks good once.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHY HIRE ME -->
+      <section class="section" id="why">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Why Hire Me</div>
+            <h2>What working together looks like.</h2>
+          </div>
+          <div class="why-grid">
+            <div class="why-cell">
+              <b>01</b
+              ><span
+                >Direct communication — no account managers between you and the
+                person writing the code.</span
+              >
+            </div>
+            <div class="why-cell">
+              <b>02</b
+              ><span
+                >Systems thinking — every feature is considered against the
+                database and roles behind it.</span
+              >
+            </div>
+            <div class="why-cell">
+              <b>03</b
+              ><span
+                >Full ownership — from schema design to the interface, handled
+                end-to-end.</span
+              >
+            </div>
+            <div class="why-cell">
+              <b>04</b
+              ><span
+                >Built for growth — architecture that doesn't need to be rebuilt
+                at the next stage.</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACHIEVEMENTS -->
+      <section class="section" id="achievements">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">By The Numbers</div>
+            <h2>Truthful, not inflated.</h2>
+          </div>
+          <div class="achieve-grid">
+            <div class="achieve-cell">
+              <b data-count="4">0</b><span>Shipped systems</span>
+            </div>
+            <div class="achieve-cell">
+              <b data-count="2">0</b><span>Multi-role platforms</span>
+            </div>
+            <div class="achieve-cell">
+              <b data-count="1">0</b><span>Core framework — Laravel</span>
+            </div>
+            <div class="achieve-cell">
+              <b data-count="100">0</b><span>% remote-friendly delivery</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INDUSTRIES / TOOLS / LEARNING -->
+      <section class="section" id="context">
+        <div class="container">
+          <div
+            class="ov-grid-2"
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px"
+          >
+            <div>
+              <div class="eyebrow">Industries Served</div>
+              <h2 style="font-size: 26px; margin-bottom: 20px">
+                Where the systems have lived.
+              </h2>
+              <div class="chip-grid">
+                <span class="chip-item">Logistics &amp; freight</span>
+                <span class="chip-item">Retail &amp; e-commerce</span>
+                <span class="chip-item">Internal operations tooling</span>
+                <span class="chip-item">HR &amp; workforce management</span>
+              </div>
+            </div>
+            <div>
+              <div class="eyebrow">Currently Learning</div>
+              <h2 style="font-size: 26px; margin-bottom: 20px">
+                What's next on the stack.
+              </h2>
+              <div class="chip-grid">
+                <span class="chip-item">AI-assisted workflows</span>
+                <span class="chip-item">API-first architecture</span>
+                <span class="chip-item">Advanced MySQL performance tuning</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GITHUB ACTIVITY -->
+      <section class="section" id="github">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">GitHub Activity</div>
+            <h2>Consistency, visualized.</h2>
+            <p>
+              Pulled live from the GitHub REST API — enter a username to load
+              real repositories and activity.
+            </p>
+          </div>
+          <div class="github-panel">
+            <div class="github-head">
+              <h3>Contribution overview</h3>
+              <a
+                href="#"
+                class="gh-link"
+                id="ghProfileLink"
+                target="_blank"
+                rel="noopener"
+                >View GitHub Profile →</a
+              >
+            </div>
+            <div class="gh-config">
+              <input
+                type="text"
+                id="ghUsernameInput"
+                placeholder="GitHub username, e.g. muhammadharmain"
+              />
+              <button id="ghLoadBtn">Load</button>
+            </div>
+            <div id="ghContent">
+              <div class="gh-note">
+                No username configured yet — enter a GitHub username above to
+                fetch live repositories, languages, and recent activity. This
+                calls the public GitHub REST API directly from your browser (no
+                key required for public data).
+              </div>
+            </div>
+            <div class="gh-note" id="ghFallbackNote" style="display: none">
+              Live GitHub data is fetched via
+              <span style="color: var(--accent)">api.github.com</span> from the
+              visitor's browser. If a network or rate-limit error occurs, this
+              note is shown instead of fabricated numbers.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI PORTFOLIO ASSISTANT -->
+      <section class="section" id="assistant">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">AI Portfolio Assistant</div>
+            <h2>Ask it about the work.</h2>
+            <p>
+              Answers are grounded in a structured portfolio dataset. The
+              provider layer is modular — see the note below the chat.
+            </p>
+          </div>
+          <div class="ai-panel">
+            <div class="ai-header">
+              <span class="ai-dot"></span><b>Harmain's Assistant</b>
+              <select class="ai-provider-select" id="aiProviderSelect">
+                <option value="local">Local knowledge base</option>
+                <option value="claude">Claude (requires backend proxy)</option>
+                <option value="openai">OpenAI (requires backend proxy)</option>
+                <option value="gemini">Gemini (requires backend proxy)</option>
+              </select>
+              <span>Online</span>
+            </div>
+            <div class="ai-body" id="aiBody">
+              <div class="ai-msg bot">
+                Hi — ask me anything about Harmain's skills, projects, or how to
+                start a conversation with him.
+              </div>
+            </div>
+            <div class="ai-suggestions">
+              <button class="ai-chip" data-q="Tell me about Harmain">
+                Tell me about Harmain
+              </button>
+              <button class="ai-chip" data-q="Show Laravel projects">
+                Show Laravel projects
+              </button>
+              <button class="ai-chip" data-q="Explain Union Enterprises">
+                Explain Union Enterprises
+              </button>
+              <button class="ai-chip" data-q="Can Harmain build an ERP?">
+                Can Harmain build an ERP?
+              </button>
+            </div>
+            <form class="ai-input-row" id="aiForm">
+              <input
+                type="text"
+                id="aiInput"
+                placeholder="Ask a question..."
+                autocomplete="off"
+              />
+              <button type="submit">Send</button>
+            </form>
+            <div class="ai-security-note">
+              Provider layer:
+              <code>AIProviders.local / .claude / .openai / .gemini</code> in
+              the script below. Real model providers need a server-side proxy
+              that holds the API key — calling them with a key embedded in this
+              static page would expose it to every visitor, so those options
+              fall back to the local knowledge base until a proxy endpoint is
+              set.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTERACTIVE TERMINAL -->
+      <section class="section" id="terminal-section">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Developer Terminal</div>
+            <h2>Prefer the command line?</h2>
+            <p>
+              Type <span style="color: var(--accent)">help</span> to see
+              available commands.
+            </p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span class="terminal-dot r"></span
+              ><span class="terminal-dot y"></span
+              ><span class="terminal-dot g"></span
+              ><span class="terminal-title">harmain@portfolio: ~</span>
+            </div>
+            <div class="terminal-body" id="terminalBody">
+              <div class="terminal-line">
+                <span class="prompt">guest@harmain:~$</span> help
+              </div>
+            </div>
+            <div class="terminal-input-row" style="padding: 0 22px 18px">
+              <span class="prompt">guest@harmain:~$</span>
+              <input
+                type="text"
+                id="terminalInput"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOG PREVIEW -->
+      <section class="section" id="blog">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">Technical Writing</div>
+            <h2>Notes from building these systems.</h2>
+          </div>
+          <div class="blog-grid" id="blogGrid"></div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section" id="faq">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">FAQ</div>
+            <h2>Common questions.</h2>
+          </div>
+          <div class="faq-list">
+            <div class="faq-item">
+              <button class="faq-q">
+                What kind of projects do you take on?
+                <span class="plus">+</span>
+              </button>
+              <div class="faq-a">
+                <p>
+                  Business management systems — dashboards, portals, and
+                  internal tools built primarily with Laravel and MySQL.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q">
+                Can you build an ERP-style system? <span class="plus">+</span>
+              </button>
+              <div class="faq-a">
+                <p>
+                  Yes — the Union Enterprises platform is effectively an ERP for
+                  logistics: shipments, invoicing, documents, and roles in one
+                  system. The same architecture extends to other operational
+                  domains.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q">
+                Do you work with clients outside Pakistan?
+                <span class="plus">+</span>
+              </button>
+              <div class="faq-a">
+                <p>
+                  Yes, communication and delivery are fully remote-friendly.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q">
+                How do we get started? <span class="plus">+</span>
+              </button>
+              <div class="faq-a">
+                <p>
+                  Send a short brief through the contact form below — scope,
+                  timeline, and next steps come after an initial conversation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="section" id="contact">
+        <div class="container contact-grid">
+          <div class="contact-copy">
+            <div class="eyebrow">Contact</div>
+            <h2>Let's build something that has to work.</h2>
+            <p>
+              Open to full-stack projects, dashboard builds, and business
+              management systems. Send a brief and I'll reply directly.
+            </p>
+            <div class="avail-grid">
+              <div class="avail-badge"><span class="dot"></span>Freelance</div>
+              <div class="avail-badge"><span class="dot"></span>Internship</div>
+              <div class="avail-badge"><span class="dot"></span>Full-Time</div>
+              <div class="avail-badge"><span class="dot"></span>Remote</div>
+            </div>
+            <div class="contact-detail">
+              <a href="mailto:hello@muhammadharmain.dev"
+                >hello@muhammadharmain.dev <span>↗</span></a
+              >
+              <a href="#">GitHub <span>↗</span></a>
+              <a href="#">LinkedIn <span>↗</span></a>
+            </div>
+            <div class="contact-meta">
+              <div>Preferred contact <b>Email</b></div>
+              <div>Typical response time <b>Within 24 hours</b></div>
+            </div>
+          </div>
+          <form>
+            <div class="form-row">
+              <label>Name</label><input type="text" placeholder="Your name" />
+            </div>
+            <div class="form-row">
+              <label>Email</label
+              ><input type="email" placeholder="you@company.com" />
+            </div>
+            <div class="form-row">
+              <label>Project details</label
+              ><textarea
+                rows="4"
+                placeholder="What are you building?"
+              ></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Send Message →</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div>
+            <a href="#home" class="logo">Harmain<span>.</span></a>
+            <p
+              style="
+                color: var(--muted);
+                font-size: 14px;
+                margin-top: 12px;
+                max-width: 280px;
+              "
+            >
+              Full stack developer building business management systems from
+              Pakistan.
+            </p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-col">
+              <span>Site</span> <a href="#about">About</a
+              ><a href="#work">Work</a><a href="#services">Services</a
+              ><a href="#contact">Contact</a>
+            </div>
+            <div class="footer-col">
+              <span>Elsewhere</span> <a href="#">GitHub</a
+              ><a href="#">LinkedIn</a
+              ><a href="mailto:hello@muhammadharmain.dev">Email</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 Muhammad Harmain. All rights reserved.</span>
+          <span>Designed &amp; built from scratch.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- COMMAND PALETTE -->
+    <div class="cmdk-overlay" id="cmdkOverlay">
+      <div class="cmdk-box">
+        <div class="cmdk-input-row">
+          <span style="color: var(--muted)">⌘</span>
+          <input
+            type="text"
+            id="cmdkInput"
+            placeholder="Search projects, skills, commands..."
+          />
+          <span class="cmdk-esc">ESC</span>
+        </div>
+        <div class="cmdk-list" id="cmdkList"></div>
+      </div>
+    </div>
+
+    <!-- PROJECT OVERLAYS MOUNT POINT -->
+    <div id="overlayMount"></div>
+
+    <script>
+      /* ============================================================
+   PORTFOLIO DATA — single source of truth for AI assistant,
+   terminal, command palette, project cards and overlays.
+   ============================================================ */
+      const portfolioData = {
+        name: "Muhammad Harmain",
+        role: "Full Stack Developer",
+        location: "Pakistan",
+        bio: "Full stack developer focused on PHP and Laravel, building business management systems, dashboards and portals designed for daily, repeated use rather than one-time demos.",
+        stack: {
+          Backend: [
+            {
+              name: "PHP",
+              stars: 5,
+              desc: "Primary server-side language for every system shipped.",
+              uses: ["Auth", "Business logic", "Session handling"],
+              related: ["Laravel", "REST APIs"],
+            },
+            {
+              name: "Laravel",
+              stars: 5,
+              desc: "Default framework — routing, ORM, middleware and auth out of the box.",
+              uses: ["Union Enterprises", "Employee Management System"],
+              related: ["PHP", "MySQL", "REST APIs"],
+            },
+            {
+              name: "REST APIs",
+              stars: 4,
+              desc: "Endpoints powering dashboard views and portal-to-admin data flow.",
+              uses: ["Client portals", "Mobile-ready endpoints"],
+              related: ["Laravel"],
+            },
+          ],
+          Frontend: [
+            {
+              name: "JavaScript",
+              stars: 4,
+              desc: "Keeps dashboard interfaces fast and responsive.",
+              uses: ["Interactive tables", "Live status updates"],
+              related: ["Bootstrap"],
+            },
+            {
+              name: "HTML5",
+              stars: 5,
+              desc: "Semantic structure for every interface.",
+              uses: ["All projects"],
+              related: ["CSS3"],
+            },
+            {
+              name: "CSS3",
+              stars: 5,
+              desc: "Layout and theming across dashboards and portals.",
+              uses: ["All projects"],
+              related: ["Bootstrap"],
+            },
+            {
+              name: "Bootstrap",
+              stars: 4,
+              desc: "Component baseline for admin panels and forms.",
+              uses: ["Union Enterprises", "Employee Management System"],
+              related: ["JavaScript"],
+            },
+          ],
+          Data: [
+            {
+              name: "MySQL",
+              stars: 5,
+              desc: "Relational schema design underneath every system.",
+              uses: ["Union Enterprises", "Employee Management System"],
+              related: ["Laravel"],
+            },
+            {
+              name: "Schema Design",
+              stars: 5,
+              desc: "Normalized structures built before any screen is designed.",
+              uses: ["All multi-role platforms"],
+              related: ["MySQL"],
+            },
+            {
+              name: "Query Optimization",
+              stars: 4,
+              desc: "Keeps reporting fast as data volume grows.",
+              uses: ["Analytics dashboards"],
+              related: ["MySQL"],
+            },
+          ],
+          Applied: [
+            {
+              name: "AI Integration",
+              stars: 3,
+              desc: "Layering assistants and automation on top of existing dashboards.",
+              uses: ["Portfolio AI Assistant"],
+              related: ["REST APIs"],
+            },
+            {
+              name: "Dashboard Development",
+              stars: 5,
+              desc: "Admin and analytics dashboards built around real decisions.",
+              uses: ["Union Enterprises"],
+              related: ["Laravel", "MySQL"],
+            },
+            {
+              name: "Auth & Roles",
+              stars: 5,
+              desc: "Role-based middleware separating admin and client access.",
+              uses: ["Union Enterprises", "Employee Management System"],
+              related: ["Laravel"],
+            },
+          ],
+        },
+        projects: [
+          {
+            id: "union",
+            index: "01",
+            name: "Union Enterprises",
+            tagline: "Import & export logistics management system",
+            description:
+              "A two-sided platform replacing spreadsheet-based tracking with a single operational source of truth for shipments, invoices and documents.",
+            tags: ["Laravel", "MySQL", "REST API", "Role-Based Access"],
+            metrics: {
+              "DB Tables": 14,
+              "User Roles": 2,
+              "REST Endpoints": 22,
+              Dashboards: 2,
+            },
+            problem:
+              "Shipment status, invoices, and client documents were spread across spreadsheets and email threads, with no single source of truth for either the internal team or clients.",
+            research:
+              "Mapped the daily workflow of the operations team and the information clients repeatedly asked for, to decide what belonged in the admin dashboard versus the client portal.",
+            planning:
+              "Scoped the platform as two connected surfaces — an internal admin dashboard and a self-serve client portal — sharing one schema and one permission model.",
+            uiux: "Admin views prioritize dense, scannable tables for daily operational use; the client portal simplifies the same data down to status and documents only.",
+            architecture:
+              "Laravel MVC structure with role-based middleware separating admin and client access, REST endpoints powering dynamic dashboard views.",
+            database:
+              "Normalized MySQL schema linking shipments, invoices, and documents to clients — built to support reporting without duplicating data.",
+            roles: [
+              {
+                role: "Admin",
+                access:
+                  "Full access — shipments, invoices, documents, clients, reports, user management",
+              },
+              {
+                role: "Client",
+                access:
+                  "Read-only visibility into their own shipments, invoice status, and shared documents",
+              },
+            ],
+            auth: "Laravel's built-in authentication with role middleware guarding admin routes; client accounts are scoped strictly to their own records at the query level.",
+            api: "REST endpoints grouped by resource (shipments, invoices, documents, clients) with role-based route guards; JSON responses power the dashboard's dynamic views.",
+            challenges:
+              "Keeping the admin and client views in sync from a single schema, without leaking internal-only data into the client portal.",
+            lessons:
+              "Designing the permission boundary at the query layer — not just the UI layer — was what actually kept client data isolated.",
+            future:
+              "Planned: automated status notifications and a reporting export module.",
+            techstack:
+              "PHP, Laravel, MySQL, REST APIs, Bootstrap, role-based authentication.",
+            results:
+              "Replaced manual status updates with live tracking and centralized invoicing and document management in one place.",
+            timeline: [
+              "Discovery",
+              "Planning",
+              "Research",
+              "UI Design",
+              "Architecture",
+              "Database Design",
+              "Development",
+              "Testing",
+              "Deployment",
+            ],
+          },
+          {
+            id: "employee",
+            index: "02",
+            name: "Employee Management System",
+            tagline: "Centralized HR and attendance platform",
+            description:
+              "Centralized platform for managing employee records, attendance, and internal workflows — built to replace manual HR tracking.",
+            tags: ["Laravel", "MySQL", "Dashboard"],
+            metrics: {
+              "DB Tables": 9,
+              "User Roles": 2,
+              Modules: 5,
+              Reports: 3,
+            },
+            problem:
+              "Employee records and attendance were tracked manually, making reporting slow and error-prone.",
+            research:
+              "Reviewed how HR staff logged attendance and processed requests day to day to define the core modules.",
+            planning:
+              "Scoped around records, attendance, and internal workflow approval before any screen design began.",
+            uiux: "A single admin dashboard organized around daily HR tasks — attendance first, records and workflows beneath it.",
+            architecture:
+              "Laravel MVC with role-based access for HR staff versus employees.",
+            database:
+              "Relational schema linking employees, attendance logs, and workflow requests.",
+            roles: [
+              {
+                role: "HR Admin",
+                access:
+                  "Full access — employee records, attendance, workflow approvals",
+              },
+              {
+                role: "Employee",
+                access: "View own record and attendance, submit requests",
+              },
+            ],
+            auth: "Laravel authentication with role-based middleware separating HR and employee views.",
+            api: "Internal REST endpoints for attendance and record management, consumed by the dashboard UI.",
+            challenges:
+              "Structuring attendance data so daily entries stay fast to query as records accumulate.",
+            lessons:
+              "Attendance-heavy systems reward simple, well-indexed schemas over clever queries.",
+            future: "Planned: shift scheduling module.",
+            techstack: "PHP, Laravel, MySQL, Bootstrap.",
+            results:
+              "Replaced manual HR tracking with a single system for records, attendance, and workflow requests.",
+            timeline: [
+              "Discovery",
+              "Planning",
+              "Research",
+              "UI Design",
+              "Architecture",
+              "Database Design",
+              "Development",
+              "Testing",
+              "Deployment",
+            ],
+          },
+          {
+            id: "jewelry",
+            index: "03",
+            name: "Jewelry Website",
+            tagline: "Product-focused business website",
+            description:
+              "A product-focused website for a jewelry business, built around clean product presentation and straightforward navigation.",
+            tags: ["PHP", "Bootstrap", "JavaScript"],
+            metrics: {
+              Pages: 8,
+              "Product Categories": 6,
+              Modules: 2,
+              Roles: 1,
+            },
+            problem:
+              "The business needed a clean, browsable online presence for its product catalog.",
+            research:
+              "Looked at how customers browse and compare products to keep navigation simple.",
+            planning:
+              "Scoped as a catalog-first site with straightforward product pages, no user accounts required.",
+            uiux: "Clean product presentation prioritized over decorative elements.",
+            architecture:
+              "PHP-driven templating with a lightweight product catalog structure.",
+            database:
+              "Simple relational structure for products and categories.",
+            roles: [
+              { role: "Visitor", access: "Browse products and categories" },
+            ],
+            auth: "No authentication required — public catalog site.",
+            api: "Minimal internal endpoints for category filtering.",
+            challenges:
+              "Keeping product presentation clean without a heavier e-commerce framework.",
+            lessons:
+              "Not every business site needs full e-commerce infrastructure — scope to what's needed.",
+            future: "Potential: inquiry form integration.",
+            techstack: "PHP, Bootstrap, JavaScript.",
+            results:
+              "A working catalog presence for the business's product line.",
+            timeline: [
+              "Discovery",
+              "Planning",
+              "UI Design",
+              "Development",
+              "Deployment",
+            ],
+          },
+          {
+            id: "portfolio",
+            index: "04",
+            name: "Personal Portfolio",
+            tagline: "This site",
+            description:
+              "This site — designed and built as a standalone system, not a template, to represent the same engineering standard as client work.",
+            tags: ["JavaScript", "GSAP", "Design"],
+            metrics: {
+              Sections: 18,
+              "Interactive Widgets": 5,
+              Overlays: 4,
+              Roles: 1,
+            },
+            problem:
+              "Needed a portfolio that reads as production software, not a template.",
+            research:
+              "Studied premium SaaS and studio sites for motion and structural patterns.",
+            planning:
+              "Kept everything to a single page with fullscreen overlays for case studies instead of separate routes.",
+            uiux: "Dark, data-dense aesthetic matching the kind of admin interfaces the projects themselves produce.",
+            architecture:
+              "Single index.html, modular JavaScript sections for cursor, command palette, terminal, AI assistant and overlays.",
+            database: "None — static content driven by an in-page data object.",
+            roles: [
+              {
+                role: "Visitor",
+                access:
+                  "Browse, ask the AI assistant, use the terminal or command palette",
+              },
+            ],
+            auth: "Not applicable.",
+            api: "Client-side GitHub REST API integration; AI assistant provider layer is modular for a future backend proxy.",
+            challenges:
+              "Making every project 'page' feel real without leaving the single-file structure.",
+            lessons:
+              "Fullscreen overlays with sticky in-page navigation can substitute for separate routes convincingly.",
+            future:
+              "Planned: swap the AI assistant's local knowledge base for a live backend-proxied model.",
+            techstack: "HTML, CSS, JavaScript, GSAP.",
+            results:
+              "A single-page portfolio that behaves like a small SaaS product.",
+            timeline: [
+              "Discovery",
+              "Planning",
+              "UI Design",
+              "Development",
+              "Testing",
+              "Deployment",
+            ],
+          },
+        ],
+        services: [
+          "Business Management Systems",
+          "Dashboard Development",
+          "Client Portals",
+          "API Development",
+          "Database Architecture",
+          "AI-Assisted Features",
+        ],
+        blog: [
+          {
+            tag: "Architecture",
+            title: "How I structure a Laravel ERP-style system",
+            summary:
+              "The module and middleware layout behind Union Enterprises, and why roles get decided before screens.",
+            meta: "8 min read",
+          },
+          {
+            tag: "Auth",
+            title: "Role-based authentication, done at the query layer",
+            summary:
+              "Why guarding routes isn't enough — the permission boundary has to live in the data access layer too.",
+            meta: "6 min read",
+          },
+          {
+            tag: "Database",
+            title: "Designing a schema before the first screen",
+            summary:
+              "A walkthrough of normalizing shipments, invoices and documents around one client record.",
+            meta: "7 min read",
+          },
+          {
+            tag: "APIs",
+            title: "REST endpoints for a two-sided platform",
+            summary:
+              "Structuring one API to serve both an admin dashboard and a simplified client portal.",
+            meta: "5 min read",
+          },
+          {
+            tag: "Performance",
+            title: "Keeping Laravel dashboards fast at scale",
+            summary:
+              "Indexing and query patterns that keep reporting screens responsive as data grows.",
+            meta: "6 min read",
+          },
+          {
+            tag: "AI",
+            title: "Adding an AI assistant to an existing dashboard",
+            summary:
+              "A modular provider pattern for swapping model backends without touching the UI.",
+            meta: "5 min read",
+          },
+        ],
+        contact: {
+          email: "hello@muhammadharmain.dev",
+          availability: ["Freelance", "Internship", "Full-Time", "Remote"],
+          responseTime: "Within 24 hours",
+          preferred: "Email",
+        },
+        faq: [
+          {
+            q: "What kind of projects do you take on?",
+            a: "Business management systems — dashboards, portals, and internal tools built primarily with Laravel and MySQL.",
+          },
+          {
+            q: "Can you build an ERP-style system?",
+            a: "Yes — the Union Enterprises platform is effectively an ERP for logistics: shipments, invoicing, documents, and roles in one system.",
+          },
+          {
+            q: "Do you work with clients outside Pakistan?",
+            a: "Yes, communication and delivery are fully remote-friendly.",
+          },
+          {
+            q: "How do we get started?",
+            a: "Send a short brief through the contact form — scope, timeline, and next steps come after an initial conversation.",
+          },
+        ],
+      };
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* ============================================================
+   THEME (in-memory; structured so persistTheme() is the only
+   function to touch when localStorage is enabled later)
+   ============================================================ */
+      const ThemeModule = (() => {
+        let current = "dark";
+        function apply(theme) {
+          current = theme;
+          document.documentElement.setAttribute("data-theme", theme);
+          // persistTheme(theme); // enable when persistence is wired up
+        }
+        function toggle() {
+          apply(current === "dark" ? "light" : "dark");
+        }
+        function get() {
+          return current;
+        }
+        return { apply, toggle, get };
+      })();
+      document
+        .getElementById("themeToggle")
+        .addEventListener("click", ThemeModule.toggle);
+
+      /* ============================================================
+   LOADER — staged
+   ============================================================ */
+      const loaderStages = [
+        "Initializing portfolio...",
+        "Loading components...",
+        "Connecting modules...",
+        "Loading projects...",
+        "Loading GitHub...",
+        "Loading AI assistant...",
+        "Portfolio ready",
+      ];
+      (function runLoader() {
+        const fill = document.getElementById("loaderFill");
+        const pct = document.getElementById("loaderPct");
+        const stageEl = document.getElementById("loaderStage");
+        let p = 0,
+          stageIndex = 0;
+        stageEl.textContent = loaderStages[0];
+        const iv = setInterval(() => {
+          p += Math.random() * 14;
+          if (p >= 100) {
+            p = 100;
+            clearInterval(iv);
+          }
+          fill.style.width = p + "%";
+          pct.textContent = Math.floor(p) + "%";
+          const nextStage = Math.min(
+            loaderStages.length - 1,
+            Math.floor((p / 100) * loaderStages.length),
+          );
+          if (nextStage !== stageIndex) {
+            stageIndex = nextStage;
+            stageEl.textContent = loaderStages[stageIndex];
+          }
+          if (p === 100) {
+            stageEl.textContent = loaderStages[loaderStages.length - 1];
+            setTimeout(() => {
+              document.getElementById("loader").classList.add("hidden");
+              playHeroIntro();
+            }, 350);
+          }
+        }, 140);
+      })();
+
+      /* Header scroll state — rAF-throttled so the class toggle never
+   runs more than once per frame no matter how many scroll events fire. */
+      const header = document.getElementById("siteHeader");
+      let scrollTicking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (scrollTicking) return;
+          scrollTicking = true;
+          requestAnimationFrame(() => {
+            header.classList.toggle("scrolled", window.scrollY > 40);
+            scrollTicking = false;
+          });
+        },
+        { passive: true },
+      );
+
+      /* Hero text reveal */
+      function playHeroIntro() {
+        gsap.to(".hero-copy h1 .line span", {
+          y: 0,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power4.out",
+        });
+        gsap.fromTo(
+          ".hero-sub, .hero-actions, .hero-stats",
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            delay: 0.5,
+            ease: "power2.out",
+          },
+        );
+        gsap.fromTo(
+          ".hero-visual",
+          { opacity: 0, scale: 0.92 },
+          { opacity: 1, scale: 1, duration: 1, delay: 0.3, ease: "power3.out" },
+        );
+        animateCounters();
+      }
+
+      /* ============================================================
+   POINTER PIPELINE — a single passive mousemove listener only
+   ever records the latest coordinates. All visual updates
+   (cursor, spotlight, hero parallax) run once per animation
+   frame off the GSAP ticker, using quickTo/quickSetter so no
+   new tween objects are created on every mouse event.
+   ============================================================ */
+      const heroSection = document.querySelector(".hero");
+      const portrait = document.getElementById("portrait");
+      const spotlight = document.getElementById("spotlight");
+      const cursorDot = document.getElementById("cursorDot");
+      const cursorRing = document.getElementById("cursorRing");
+      const floatTags = gsap.utils.toArray(".float-tag"); // queried once, reused every frame
+
+      gsap.set([cursorDot, cursorRing], { xPercent: -50, yPercent: -50 });
+      gsap.set(spotlight, { xPercent: -50, yPercent: -50 });
+
+      const setDotX = gsap.quickTo(cursorDot, "x", {
+        duration: 0.08,
+        ease: "power2.out",
+      });
+      const setDotY = gsap.quickTo(cursorDot, "y", {
+        duration: 0.08,
+        ease: "power2.out",
+      });
+      const setRingX = gsap.quickTo(cursorRing, "x", {
+        duration: 0.25,
+        ease: "power2.out",
+      });
+      const setRingY = gsap.quickTo(cursorRing, "y", {
+        duration: 0.25,
+        ease: "power2.out",
+      });
+      const setSpotX = gsap.quickTo(spotlight, "x", {
+        duration: 0.4,
+        ease: "power2.out",
+      });
+      const setSpotY = gsap.quickTo(spotlight, "y", {
+        duration: 0.4,
+        ease: "power2.out",
+      });
+
+      const setPortraitX = gsap.quickTo(portrait, "x", {
+        duration: 0.6,
+        ease: "power2.out",
+      });
+      const setPortraitY = gsap.quickTo(portrait, "y", {
+        duration: 0.6,
+        ease: "power2.out",
+      });
+      const setPortraitRY = gsap.quickTo(portrait, "rotateY", {
+        duration: 0.6,
+        ease: "power2.out",
+      });
+      const setPortraitRX = gsap.quickTo(portrait, "rotateX", {
+        duration: 0.6,
+        ease: "power2.out",
+      });
+      const floatTagSetters = floatTags.map((tag) => ({
+        x: gsap.quickTo(tag, "x", { duration: 0.6, ease: "power2.out" }),
+        y: gsap.quickTo(tag, "y", { duration: 0.6, ease: "power2.out" }),
+      }));
+
+      let pointerX = -9999,
+        pointerY = -9999,
+        pointerDirty = false;
+      let heroRect = null; // cached; refreshed on resize/scroll rather than every mousemove
+
+      function refreshHeroRect() {
+        heroRect = heroSection.getBoundingClientRect();
+      }
+      refreshHeroRect();
+      window.addEventListener("resize", refreshHeroRect, { passive: true });
+
+      window.addEventListener(
+        "mousemove",
+        (e) => {
+          pointerX = e.clientX;
+          pointerY = e.clientY;
+          pointerDirty = true;
+        },
+        { passive: true },
+      );
+
+      // One update per animation frame, regardless of how many mousemove events fired.
+      gsap.ticker.add(() => {
+        if (!pointerDirty) return;
+        pointerDirty = false;
+
+        setDotX(pointerX);
+        setDotY(pointerY);
+        setRingX(pointerX);
+        setRingY(pointerY);
+        setSpotX(pointerX);
+        setSpotY(pointerY);
+
+        if (
+          heroRect &&
+          pointerY >= heroRect.top &&
+          pointerY <= heroRect.bottom
+        ) {
+          const nx = (pointerX - heroRect.left) / heroRect.width - 0.5;
+          const ny = (pointerY - heroRect.top) / heroRect.height - 0.5;
+          setPortraitX(nx * 24);
+          setPortraitY(ny * 24);
+          setPortraitRY(nx * 8);
+          setPortraitRX(-ny * 8);
+          floatTagSetters.forEach((s) => {
+            s.x(nx * 12);
+            s.y(ny * 12);
+          });
+        }
+      });
+
+      const hoverTargets = document.querySelectorAll(
+        "a, button, .project-card, .tech-chip, .faq-q, input, textarea",
+      );
+      hoverTargets.forEach((el) => {
+        el.addEventListener(
+          "mouseenter",
+          () => cursorRing.classList.add("hovered"),
+          { passive: true },
+        );
+        el.addEventListener(
+          "mouseleave",
+          () => cursorRing.classList.remove("hovered"),
+          { passive: true },
+        );
+      });
+
+      /* Hero rotating keywords */
+      (function heroRotator() {
+        const words = [
+          "dashboards",
+          "portals",
+          "business platforms",
+          "admin systems",
+          "internal tools",
+        ];
+        const wrap = document.getElementById("heroRotate");
+        let i = 0;
+        function render() {
+          wrap.innerHTML = `<span class="rot-word">${words[i]}</span>`;
+          wrap.style.width = "auto";
+          gsap.fromTo(
+            wrap.firstChild,
+            { y: "100%", opacity: 0 },
+            { y: "0%", opacity: 1, duration: 0.5, ease: "power2.out" },
+          );
+        }
+        render();
+        setInterval(() => {
+          const outEl = wrap.firstChild;
+          gsap.to(outEl, {
+            y: "-100%",
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.in",
+            onComplete: () => {
+              i = (i + 1) % words.length;
+              render();
+            },
+          });
+        }, 2600);
+      })();
+
+      gsap.utils.toArray(".section").forEach((section) => {
+        gsap.from(section.querySelectorAll(".reveal"), {
+          opacity: 0,
+          y: 40,
+          duration: 0.8,
+          stagger: 0.12,
+          ease: "power3.out",
+
+          scrollTrigger: {
+            trigger: section,
+            start: "top 75%",
+            once: true,
+          },
+        });
+      });
+
+      /* Magnetic buttons */
+      document
+        .querySelectorAll(".btn-primary, .btn-secondary")
+        .forEach((btn) => {
+          btn.addEventListener("mousemove", (e) => {
+            const r = btn.getBoundingClientRect();
+            const x = e.clientX - r.left - r.width / 2;
+            const y = e.clientY - r.top - r.height / 2;
+            gsap.to(btn, { x: x * 0.25, y: y * 0.35, duration: 0.3 });
+          });
+          btn.addEventListener("mouseleave", () =>
+            gsap.to(btn, {
+              x: 0,
+              y: 0,
+              duration: 0.4,
+              ease: "elastic.out(1,0.4)",
+            }),
+          );
+        });
+
+      /* FAQ accordion */
+      document.querySelectorAll(".faq-item").forEach((item) => {
+        const q = item.querySelector(".faq-q");
+        const a = item.querySelector(".faq-a");
+        q.addEventListener("click", () => {
+          const isOpen = item.classList.contains("open");
+          document.querySelectorAll(".faq-item").forEach((i) => {
+            i.classList.remove("open");
+            i.querySelector(".faq-a").style.maxHeight = null;
+          });
+          if (!isOpen) {
+            item.classList.add("open");
+            a.style.maxHeight = a.scrollHeight + "px";
+          }
+        });
+      });
+
+      /* Union Enterprises mockup mini-chart */
+      (function buildMockupChart() {
+        const chart = document.getElementById("ueChart");
+        if (!chart) return;
+        const vals = [40, 65, 50, 80, 55, 90, 70, 60, 85, 95, 75, 88];
+        vals.forEach((v) => {
+          const bar = document.createElement("i");
+          bar.style.height = v + "%";
+          chart.appendChild(bar);
+        });
+      })();
+
+      /* Achievement counters */
+      function animateCounters() {
+        document.querySelectorAll("[data-count]").forEach((el) => {
+          const target = parseInt(el.getAttribute("data-count"), 10);
+          const obj = { val: 0 };
+          gsap.to(obj, {
+            val: target,
+            duration: 1.4,
+            ease: "power2.out",
+            onUpdate: () => {
+              el.textContent = Math.floor(obj.val);
+            },
+            scrollTrigger: { trigger: el, start: "top 90%", once: true },
+          });
+        });
+        const statSystems = document.getElementById("statSystems");
+        gsap.to(
+          { v: 0 },
+          {
+            v: portfolioData.projects.length,
+            duration: 1.2,
+            ease: "power2.out",
+            onUpdate: function () {
+              statSystems.textContent = Math.floor(this.targets()[0].v);
+            },
+          },
+        );
+      }
+
+      /* ============================================================
+   TECH STACK — render + hover/tap popovers
+   ============================================================ */
+      (function renderStack() {
+        const grid = document.getElementById("stackGrid");
+        Object.entries(portfolioData.stack).forEach(([category, items]) => {
+          const cell = document.createElement("div");
+          cell.className = "stack-cell";
+          const list = items
+            .map(
+              (t) => `
+      <li class="tech-chip" data-tech="${t.name}">
+        <span>${t.name}</span>
+        <span class="stars">${"★".repeat(t.stars)}${"☆".repeat(5 - t.stars)}</span>
+      </li>`,
+            )
+            .join("");
+          cell.innerHTML = `<span class="cat">${category}</span><ul>${list}</ul>`;
+          grid.appendChild(cell);
+        });
+
+        // single shared popover element
+        const pop = document.createElement("div");
+        pop.className = "tech-popover";
+        pop.id = "techPopover";
+        document.body.appendChild(pop);
+
+        function findTech(name) {
+          for (const cat of Object.values(portfolioData.stack)) {
+            const found = cat.find((t) => t.name === name);
+            if (found) return found;
+          }
+          return null;
+        }
+
+        function showPopover(chip) {
+          const tech = findTech(chip.dataset.tech);
+          if (!tech) return;
+          pop.innerHTML = `
+      <h5>${tech.name}</h5>
+      <p>${tech.desc}</p>
+      <div class="tp-row">${tech.uses.map((u) => `<span class="tp-chip">${u}</span>`).join("")}</div>
+      <div class="tp-row" style="margin-top:8px;">${tech.related.map((r) => `<span class="tp-chip">${r}</span>`).join("")}</div>
+    `;
+          const r = chip.getBoundingClientRect();
+          pop.style.left = Math.min(r.left, window.innerWidth - 280) + "px";
+          pop.style.top = r.bottom + window.scrollY + 8 + "px";
+          pop.classList.add("show");
+        }
+        function hidePopover() {
+          pop.classList.remove("show");
+        }
+
+        document.querySelectorAll(".tech-chip").forEach((chip) => {
+          chip.addEventListener("mouseenter", () => showPopover(chip));
+          chip.addEventListener("mouseleave", hidePopover);
+          chip.addEventListener("click", () => showPopover(chip));
+        });
+        document.addEventListener("scroll", hidePopover, { passive: true });
+      })();
+
+      /* ============================================================
+   PROJECTS GRID — render from data
+   ============================================================ */
+      (function renderProjects() {
+        const grid = document.getElementById("projectsGrid");
+        portfolioData.projects.forEach((p) => {
+          const metricEntries = Object.entries(p.metrics).slice(0, 3);
+          const card = document.createElement("div");
+          card.className = "project-card";
+          card.dataset.openProject = p.id;
+          card.innerHTML = `
+      <div class="project-top"><span class="project-index">${p.index}</span></div>
+      <h3>${p.name}</h3>
+      <p>${p.description}</p>
+      <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      <div class="project-metrics">${metricEntries.map(([k, v]) => `<span class="pm"><b>${v}</b>${k}</span>`).join("")}</div>
+      <div class="project-expand">Open case study →</div>
+    `;
+          grid.appendChild(card);
+        });
+      })();
+
+      /* ============================================================
+   BLOG — render from data
+   ============================================================ */
+      (function renderBlog() {
+        const grid = document.getElementById("blogGrid");
+        portfolioData.blog.forEach((b) => {
+          const card = document.createElement("div");
+          card.className = "blog-card";
+          card.innerHTML = `
+      <span class="blog-tag">${b.tag}</span>
+      <h3>${b.title}</h3>
+      <p>${b.summary}</p>
+      <div class="blog-meta">${b.meta}</div>
+    `;
+          grid.appendChild(card);
+        });
+      })();
+
+      /* ============================================================
+   PROJECT OVERLAYS — fullscreen case studies
+   ============================================================ */
+      const overlayTabs = [
+        "Overview",
+        "Problem",
+        "Research",
+        "Architecture",
+        "Database",
+        "Roles & Auth",
+        "API",
+        "Challenges",
+        "Timeline",
+        "Gallery",
+        "Tech",
+      ];
+
+      function buildOverlay(p) {
+        const el = document.createElement("div");
+        el.className = "overlay";
+        el.id = "overlay-" + p.id;
+        el.innerHTML = `
+    <button class="overlay-close" data-close-overlay>✕</button>
+    <nav class="overlay-nav">
+      ${overlayTabs.map((t, i) => `<button data-tab="${slug(t)}" class="${i === 0 ? "active" : ""}">${t}</button>`).join("")}
+    </nav>
+    <div class="overlay-content">
+      <div class="overlay-hero">
+        <div class="eyebrow">Case Study ${p.index}</div>
+        <h1>${p.name}</h1>
+        <p>${p.tagline} — ${p.description}</p>
+        <div class="ov-links" style="margin-top:24px;">
+          <a href="#" class="btn-secondary">GitHub ↗</a>
+          <a href="#" class="btn-secondary">Live Demo ↗</a>
+        </div>
+      </div>
+
+      <div class="ov-section" id="overview-${p.id}">
+        <h2>Overview</h2>
+        <p>${p.description}</p>
+        <div class="ov-metric-grid">
+          ${Object.entries(p.metrics)
+            .map(
+              ([k, v]) =>
+                `<div class="ov-metric"><b>${v}</b><span>${k}</span></div>`,
+            )
+            .join("")}
+        </div>
+      </div>
+
+      <div class="ov-section" id="problem-${p.id}">
+        <h2>Problem</h2>
+        <p>${p.problem}</p>
+      </div>
+
+      <div class="ov-section" id="research-${p.id}">
+        <h2>Research &amp; Planning</h2>
+        <div class="ov-grid-2">
+          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Research</h4><p>${p.research}</p></div>
+          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Planning</h4><p>${p.planning}</p></div>
+        </div>
+        <h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin:24px 0 10px;">UI/UX Decisions</h4>
+        <p>${p.uiux}</p>
+      </div>
+
+      <div class="ov-section" id="architecture-${p.id}">
+        <h2>Architecture</h2>
+        <p>${p.architecture}</p>
+        <div class="ov-diagram">${buildArchDiagram(p)}</div>
+      </div>
+
+      <div class="ov-section" id="database-${p.id}">
+        <h2>Database Design</h2>
+        <p>${p.database}</p>
+        <div class="ov-diagram">${buildERDiagram(p)}</div>
+      </div>
+
+      <div class="ov-section" id="roles---auth-${p.id}">
+        <h2>User Roles &amp; Authentication</h2>
+        <table class="role-table">
+          <thead><tr><th>Role</th><th>Access</th></tr></thead>
+          <tbody>${p.roles.map((r) => `<tr><td>${r.role}</td><td>${r.access}</td></tr>`).join("")}</tbody>
+        </table>
+        <p style="margin-top:20px;">${p.auth}</p>
+      </div>
+
+      <div class="ov-section" id="api-${p.id}">
+        <h2>API Structure</h2>
+        <p>${p.api}</p>
+      </div>
+
+      <div class="ov-section" id="challenges-${p.id}">
+        <h2>Challenges, Solutions &amp; Lessons</h2>
+        <div class="ov-grid-2">
+          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Challenge</h4><p>${p.challenges}</p></div>
+          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Lessons Learned</h4><p>${p.lessons}</p></div>
+        </div>
+        <h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin:24px 0 10px;">Future Improvements</h4>
+        <p>${p.future}</p>
+      </div>
+
+      <div class="ov-section" id="timeline-${p.id}">
+        <h2>Timeline &amp; Results</h2>
+        <div class="timeline-mini">
+          ${p.timeline.map((t) => `<div class="tm-step done"><b>${t}</b></div>`).join("")}
+        </div>
+        <p style="margin-top:24px;">${p.results}</p>
+      </div>
+
+      <div class="ov-section" id="gallery-${p.id}">
+        <h2>Gallery &amp; Screenshots</h2>
+        <div class="ov-gallery">
+          <div class="ov-gallery-item">Admin dashboard view</div>
+          <div class="ov-gallery-item">Mobile preview</div>
+          <div class="ov-gallery-item">Reports &amp; analytics</div>
+        </div>
+      </div>
+
+      <div class="ov-section" id="tech-${p.id}">
+        <h2>Tech Stack</h2>
+        <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+        <p style="margin-top:16px;">${p.techstack}</p>
+      </div>
+    </div>
+  `;
+        return el;
+      }
+
+      function slug(s) {
+        return s.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "");
+      }
+
+      function buildArchDiagram(p) {
+        return `
+  <svg viewBox="0 0 640 140" width="100%" height="140" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+    <style>
+      .box{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1;}
+      .lbl{fill:var(--muted);font-size:11px;}
+      .lnk{stroke:var(--accent);stroke-width:1.2;fill:none;marker-end:url(#arrow-${p.id});}
+    </style>
+    <defs>
+      <marker id="arrow-${p.id}" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--accent)"/></marker>
+    </defs>
+    <rect class="box" x="10" y="50" width="120" height="40" rx="8"/><text class="lbl" x="30" y="74">Client / Portal</text>
+    <rect class="box" x="180" y="50" width="140" height="40" rx="8"/><text class="lbl" x="205" y="74">Laravel Middleware</text>
+    <rect class="box" x="370" y="50" width="120" height="40" rx="8"/><text class="lbl" x="392" y="74">Controllers</text>
+    <rect class="box" x="530" y="50" width="100" height="40" rx="8"/><text class="lbl" x="548" y="74">MySQL</text>
+    <path class="lnk" d="M130,70 H180"/>
+    <path class="lnk" d="M320,70 H370"/>
+    <path class="lnk" d="M490,70 H530"/>
+  </svg>`;
+      }
+
+      function buildERDiagram(p) {
+        const tables = ["clients", "shipments", "invoices", "documents"].slice(
+          0,
+          Math.max(2, Object.keys(p.metrics).length - 1),
+        );
+        return `
+  <svg viewBox="0 0 640 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+    <style>
+      .er{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1;}
+      .erh{fill:var(--accent-dim);}
+      .erl{fill:var(--muted);font-size:10.5px;}
+      .erlink{stroke:var(--border-strong);stroke-width:1;}
+    </style>
+    ${tables
+      .map(
+        (t, i) => `
+      <g transform="translate(${20 + i * 160},20)">
+        <rect class="er erh" width="140" height="26"/>
+        <text class="erl" x="10" y="17" style="fill:var(--accent);font-weight:600;">${t}</text>
+        <rect class="er" y="26" width="140" height="90"/>
+        <text class="erl" x="10" y="44">id (PK)</text>
+        <text class="erl" x="10" y="60">name</text>
+        <text class="erl" x="10" y="76">status</text>
+        <text class="erl" x="10" y="92">created_at</text>
+      </g>
+    `,
+      )
+      .join("")}
+    ${tables
+      .slice(0, -1)
+      .map(
+        (t, i) =>
+          `<line class="erlink" x1="${160 + i * 160}" y1="70" x2="${180 + i * 160}" y2="70"/>`,
+      )
+      .join("")}
+  </svg>`;
+      }
+
+      const overlayMount = document.getElementById("overlayMount");
+      portfolioData.projects.forEach((p) =>
+        overlayMount.appendChild(buildOverlay(p)),
+      );
+
+      function openOverlay(id) {
+        const overlay = document.getElementById("overlay-" + id);
+        if (!overlay) return;
+        overlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+        gsap.fromTo(
+          overlay.querySelectorAll(".ov-section, .overlay-hero"),
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.05,
+            ease: "power2.out",
+            delay: 0.15,
+          },
+        );
+      }
+      function closeOverlay(overlay) {
+        overlay.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      document.addEventListener("click", (e) => {
+        const opener = e.target.closest("[data-open-project]");
+        if (opener) {
+          openOverlay(opener.dataset.openProject);
+        }
+        const closer = e.target.closest("[data-close-overlay]");
+        if (closer) {
+          closeOverlay(closer.closest(".overlay"));
+        }
+        const tabBtn = e.target.closest(".overlay-nav button");
+        if (tabBtn) {
+          const overlay = tabBtn.closest(".overlay");
+          overlay
+            .querySelectorAll(".overlay-nav button")
+            .forEach((b) => b.classList.remove("active"));
+          tabBtn.classList.add("active");
+          const target = overlay.querySelector(
+            "#" + tabBtn.dataset.tab + "-" + overlay.id.replace("overlay-", ""),
+          );
+          if (target)
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          document
+            .querySelectorAll(".overlay.open")
+            .forEach((o) => closeOverlay(o));
+        }
+      });
+
+      /* ============================================================
+   COMMAND PALETTE (Ctrl+K)
+   ============================================================ */
+      const cmdkOverlay = document.getElementById("cmdkOverlay");
+      const cmdkInput = document.getElementById("cmdkInput");
+      const cmdkList = document.getElementById("cmdkList");
+
+      const cmdkCommands = [
+        {
+          label: "Search Projects",
+          hint: "↵",
+          action: () => scrollToSection("#projects"),
+        },
+        {
+          label: "Search Skills",
+          hint: "↵",
+          action: () => scrollToSection("#stack"),
+        },
+        {
+          label: "Download Resume",
+          hint: "↵",
+          action: () =>
+            alert(
+              "Resume download not wired up yet — reach out via Contact and one will be sent directly.",
+            ),
+        },
+        {
+          label: "Open GitHub",
+          hint: "↵",
+          action: () => scrollToSection("#github"),
+        },
+        {
+          label: "Open LinkedIn",
+          hint: "↵",
+          action: () => window.open("#", "_blank"),
+        },
+        {
+          label: "Contact",
+          hint: "↵",
+          action: () => scrollToSection("#contact"),
+        },
+        {
+          label: "AI Assistant",
+          hint: "↵",
+          action: () => scrollToSection("#assistant"),
+        },
+        {
+          label: "Navigate: About",
+          hint: "↵",
+          action: () => scrollToSection("#about"),
+        },
+        {
+          label: "Navigate: Work",
+          hint: "↵",
+          action: () => scrollToSection("#work"),
+        },
+        {
+          label: "Navigate: Services",
+          hint: "↵",
+          action: () => scrollToSection("#services"),
+        },
+        {
+          label: "Navigate: Blog",
+          hint: "↵",
+          action: () => scrollToSection("#blog"),
+        },
+        {
+          label: "Toggle Dark Mode",
+          hint: "↵",
+          action: () => ThemeModule.apply("dark"),
+        },
+        {
+          label: "Toggle Light Mode",
+          hint: "↵",
+          action: () => ThemeModule.apply("light"),
+        },
+      ];
+      portfolioData.projects.forEach((p) => {
+        cmdkCommands.push({
+          label: `Open case study: ${p.name}`,
+          hint: "↵",
+          action: () => {
+            closeCmdk();
+            openOverlay(p.id);
+          },
+        });
+      });
+
+      function scrollToSection(sel) {
+        closeCmdk();
+        const el = document.querySelector(sel);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+      let cmdkActiveIndex = 0;
+      function renderCmdk(filter = "") {
+        const f = filter.toLowerCase();
+        const filtered = cmdkCommands.filter((c) =>
+          c.label.toLowerCase().includes(f),
+        );
+        cmdkList.innerHTML = filtered.length
+          ? filtered
+              .map(
+                (c, i) => `
+    <div class="cmdk-item ${i === cmdkActiveIndex ? "active" : ""}" data-idx="${i}">
+      <span>${c.label}</span><span class="k">${c.hint}</span>
+    </div>`,
+              )
+              .join("")
+          : `<div class="cmdk-empty">No matching commands</div>`;
+        cmdkList._filtered = filtered;
+      }
+      function openCmdk() {
+        cmdkOverlay.classList.add("open");
+        cmdkInput.value = "";
+        cmdkActiveIndex = 0;
+        renderCmdk("");
+        setTimeout(() => cmdkInput.focus(), 50);
+      }
+      function closeCmdk() {
+        cmdkOverlay.classList.remove("open");
+      }
+
+      document
+        .getElementById("cmdkTrigger")
+        .addEventListener("click", openCmdk);
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+          e.preventDefault();
+          openCmdk();
+        }
+        if (e.key === "Escape") {
+          closeCmdk();
+        }
+      });
+      cmdkOverlay.addEventListener("click", (e) => {
+        if (e.target === cmdkOverlay) closeCmdk();
+      });
+      cmdkInput.addEventListener("input", () => {
+        cmdkActiveIndex = 0;
+        renderCmdk(cmdkInput.value);
+      });
+      cmdkInput.addEventListener("keydown", (e) => {
+        const items = cmdkList._filtered || [];
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          cmdkActiveIndex = Math.min(items.length - 1, cmdkActiveIndex + 1);
+          renderCmdk(cmdkInput.value);
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          cmdkActiveIndex = Math.max(0, cmdkActiveIndex - 1);
+          renderCmdk(cmdkInput.value);
+        }
+        if (e.key === "Enter") {
+          const item = items[cmdkActiveIndex];
+          if (item) {
+            item.action();
+            closeCmdk();
+          }
+        }
+      });
+      cmdkList.addEventListener("click", (e) => {
+        const item = e.target.closest(".cmdk-item");
+        if (item) {
+          const idx = parseInt(item.dataset.idx, 10);
+          const cmd = cmdkList._filtered[idx];
+          if (cmd) {
+            cmd.action();
+            closeCmdk();
+          }
+        }
+      });
+
+      /* ============================================================
+   AI PORTFOLIO ASSISTANT — modular provider layer
+   ============================================================ */
+      const AIProviders = {
+        /* Local knowledge-base matcher — always available, no network or key required. */
+        local: async function (query) {
+          const key = query.toLowerCase().trim();
+          const kb = portfolioData;
+          if (/tell me about|who is harmain|bio/.test(key))
+            return kb.bio + ` Based in ${kb.location}.`;
+          if (/laravel project/.test(key))
+            return `Laravel-built systems: ${kb.projects
+              .filter((p) => p.tags.includes("Laravel"))
+              .map((p) => p.name)
+              .join(", ")}.`;
+          if (/union enterprises|union/.test(key)) {
+            const p = kb.projects.find((p) => p.id === "union");
+            return `${p.name}: ${p.description}`;
+          }
+          if (/employee management|hr system/.test(key)) {
+            const p = kb.projects.find((p) => p.id === "employee");
+            return `${p.name}: ${p.description}`;
+          }
+          if (/jewelry/.test(key)) {
+            const p = kb.projects.find((p) => p.id === "jewelry");
+            return `${p.name}: ${p.description}`;
+          }
+          if (/skill|stack|technolog/.test(key))
+            return `Core stack: ${Object.values(kb.stack)
+              .flat()
+              .map((t) => t.name)
+              .join(", ")}.`;
+          if (/resume|cv/.test(key))
+            return "A downloadable resume isn't wired up in this build yet — use the Contact section and one can be sent directly.";
+          if (/erp/.test(key))
+            return "Yes — Union Enterprises is effectively an ERP for logistics operations, and the same schema-first, role-based approach extends to other operational domains.";
+          if (/contact|hire|email|reach/.test(key))
+            return `Use the Contact section, or email ${kb.contact.email} directly. Typical response time: ${kb.contact.responseTime}.`;
+          if (/service/.test(key))
+            return `Services offered: ${kb.services.join(", ")}.`;
+          for (const f of kb.faq) {
+            if (
+              key.includes(f.q.toLowerCase().split(" ").slice(0, 3).join(" "))
+            )
+              return f.a;
+          }
+          return "I can speak to Harmain's skills, projects, and how to get in touch — try one of the suggested questions above, or ask about a specific project or technology.";
+        },
+        /* Real-model providers require a server-side proxy holding the API key.
+     A static page cannot safely call these directly — doing so would expose
+     the key to every visitor. Point PROXY_ENDPOINT at your own backend
+     (which then calls Anthropic/OpenAI/Google) and these become live. */
+        claude: async function (query) {
+          const PROXY_ENDPOINT = null; // e.g. "https://your-backend.example.com/api/assistant"
+          if (!PROXY_ENDPOINT)
+            return (
+              AIProviders.local(query) +
+              "\n\n(Claude provider: no backend proxy configured yet — answered from the local knowledge base instead.)"
+            );
+          const res = await fetch(PROXY_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              provider: "claude",
+              query,
+              context: portfolioData,
+            }),
+          });
+          const data = await res.json();
+          return data.reply;
+        },
+        openai: async function (query) {
+          const PROXY_ENDPOINT = null;
+          if (!PROXY_ENDPOINT)
+            return (
+              AIProviders.local(query) +
+              "\n\n(OpenAI provider: no backend proxy configured yet — answered from the local knowledge base instead.)"
+            );
+          const res = await fetch(PROXY_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              provider: "openai",
+              query,
+              context: portfolioData,
+            }),
+          });
+          const data = await res.json();
+          return data.reply;
+        },
+        gemini: async function (query) {
+          const PROXY_ENDPOINT = null;
+          if (!PROXY_ENDPOINT)
+            return (
+              AIProviders.local(query) +
+              "\n\n(Gemini provider: no backend proxy configured yet — answered from the local knowledge base instead.)"
+            );
+          const res = await fetch(PROXY_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              provider: "gemini",
+              query,
+              context: portfolioData,
+            }),
+          });
+          const data = await res.json();
+          return data.reply;
+        },
+      };
+
+      const aiBody = document.getElementById("aiBody");
+      const aiForm = document.getElementById("aiForm");
+      const aiInput = document.getElementById("aiInput");
+      const aiProviderSelect = document.getElementById("aiProviderSelect");
+
+      function pushMsg(text, role) {
+        const div = document.createElement("div");
+        div.className = "ai-msg " + role;
+        div.textContent = text;
+        aiBody.appendChild(div);
+        aiBody.scrollTop = aiBody.scrollHeight;
+        return div;
+      }
+      function pushTyping() {
+        const div = document.createElement("div");
+        div.className = "ai-typing";
+        div.innerHTML = "<span></span><span></span><span></span>";
+        aiBody.appendChild(div);
+        aiBody.scrollTop = aiBody.scrollHeight;
+        return div;
+      }
+      async function handleAIQuery(q) {
+        pushMsg(q, "user");
+        const typing = pushTyping();
+        const provider =
+          AIProviders[aiProviderSelect.value] || AIProviders.local;
+        try {
+          const reply = await provider(q);
+          typing.remove();
+          pushMsg(reply, "bot");
+        } catch (err) {
+          typing.remove();
+          pushMsg(
+            "That provider isn't reachable right now — falling back to the local knowledge base.",
+            "bot",
+          );
+          pushMsg(await AIProviders.local(q), "bot");
+        }
+      }
+      aiForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const val = aiInput.value.trim();
+        if (!val) return;
+        aiInput.value = "";
+        handleAIQuery(val);
+      });
+      document.querySelectorAll(".ai-chip").forEach((chip) => {
+        chip.addEventListener("click", () => handleAIQuery(chip.dataset.q));
+      });
+
+      /* ============================================================
+   INTERACTIVE TERMINAL
+   ============================================================ */
+      const termBody = document.getElementById("terminalBody");
+      const termInput = document.getElementById("terminalInput");
+      function termPrint(text) {
+        const line = document.createElement("div");
+        line.className = "terminal-line";
+        line.textContent = text;
+        termBody.appendChild(line);
+        termBody.scrollTop = termBody.scrollHeight;
+      }
+      function termPrintPrompt(cmd) {
+        const line = document.createElement("div");
+        line.className = "terminal-line";
+        line.innerHTML = `<span class="prompt">guest@harmain:~$</span> ${cmd}`;
+        termBody.appendChild(line);
+        termBody.scrollTop = termBody.scrollHeight;
+      }
+      const termCommands = {
+        help: () =>
+          "Available commands: help, about, projects, skills, github, resume, contact, hire, clear",
+        about: () => portfolioData.bio,
+        projects: () =>
+          portfolioData.projects
+            .map((p) => `${p.index}  ${p.name} — ${p.tagline}`)
+            .join("\n"),
+        skills: () =>
+          Object.entries(portfolioData.stack)
+            .map(
+              ([cat, items]) =>
+                `${cat}: ${items.map((i) => i.name).join(", ")}`,
+            )
+            .join("\n"),
+        github: () =>
+          "See the GitHub Activity section above — enter a username there to load live data.",
+        resume: () =>
+          "Resume download isn't wired up yet — use 'contact' to request one directly.",
+        contact: () =>
+          `Email: ${portfolioData.contact.email} — typical response time ${portfolioData.contact.responseTime}.`,
+        hire: () =>
+          `Available for: ${portfolioData.contact.availability.join(", ")}. Use 'contact' to start a conversation.`,
+        clear: () => {
+          termBody.innerHTML = "";
+          return null;
+        },
+      };
+      termInput.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        const raw = termInput.value.trim();
+        if (!raw) return;
+        termPrintPrompt(raw);
+        termInput.value = "";
+        const fn = termCommands[raw.toLowerCase()];
+        if (fn) {
+          const out = fn();
+          if (out) termPrint(out);
+        } else
+          termPrint(
+            `command not found: ${raw} — type 'help' for a list of commands`,
+          );
+      });
+
+      /* ============================================================
+   GITHUB — real REST API integration (client-side fetch)
+   ============================================================ */
+      const ghUsernameInput = document.getElementById("ghUsernameInput");
+      const ghLoadBtn = document.getElementById("ghLoadBtn");
+      const ghContent = document.getElementById("ghContent");
+      const ghProfileLink = document.getElementById("ghProfileLink");
+      const ghFallbackNote = document.getElementById("ghFallbackNote");
+
+      async function loadGithub(username) {
+        if (!username) {
+          return;
+        }
+        ghContent.innerHTML = `<div class="gh-loading">Loading @${username} from the GitHub API...</div>`;
+        ghProfileLink.href = `https://github.com/${username}`;
+        try {
+          const [userRes, reposRes, eventsRes] = await Promise.all([
+            fetch(`https://api.github.com/users/${username}`),
+            fetch(
+              `https://api.github.com/users/${username}/repos?sort=updated&per_page=6`,
+            ),
+            fetch(
+              `https://api.github.com/users/${username}/events/public?per_page=10`,
+            ),
+          ]);
+          if (!userRes.ok) throw new Error("user not found");
+          const user = await userRes.json();
+          const repos = reposRes.ok ? await reposRes.json() : [];
+          const events = eventsRes.ok ? await eventsRes.json() : [];
+
+          const totalStars = repos.reduce(
+            (s, r) => s + (r.stargazers_count || 0),
+            0,
+          );
+          const totalForks = repos.reduce(
+            (s, r) => s + (r.forks_count || 0),
+            0,
+          );
+          const langs = [
+            ...new Set(repos.map((r) => r.language).filter(Boolean)),
+          ];
+
+          const statsHtml = `
+      <div class="gh-stats-row">
+        <div class="gh-stat"><b>${user.public_repos ?? "—"}</b><span>Public repos</span></div>
+        <div class="gh-stat"><b>${totalStars}</b><span>Stars (recent repos)</span></div>
+        <div class="gh-stat"><b>${totalForks}</b><span>Forks (recent repos)</span></div>
+        <div class="gh-stat"><b>${user.followers ?? "—"}</b><span>Followers</span></div>
+      </div>`;
+
+          const repoHtml = `<div class="repo-grid">${repos
+            .slice(0, 6)
+            .map(
+              (r) => `
+      <div class="repo-card">
+        <h4>${r.name}</h4>
+        <p>${r.description ? r.description : "No description provided."}</p>
+        <div class="repo-meta">
+          ${r.language ? `<span><span class="repo-lang-dot"></span>${r.language}</span>` : ""}
+          <span>★ ${r.stargazers_count}</span>
+          <span>⑂ ${r.forks_count}</span>
+        </div>
+      </div>`,
+            )
+            .join("")}</div>`;
+
+          const recentHtml = events.length
+            ? `<div class="gh-note">Recent activity: ${events
+                .slice(0, 5)
+                .map((e) => e.type.replace("Event", ""))
+                .join(", ")}</div>`
+            : `<div class="gh-note">No recent public activity found — contribution heatmaps require authenticated access, so recent activity is shown instead of a fabricated graph.</div>`;
+
+          ghContent.innerHTML = statsHtml + repoHtml + recentHtml;
+          ghFallbackNote.style.display = "block";
+        } catch (err) {
+          ghContent.innerHTML = `<div class="gh-note">Couldn't load @${username} from the GitHub API (rate limit, network, or the username doesn't exist). No placeholder numbers are shown in its place.</div>`;
+        }
+      }
+      ghLoadBtn.addEventListener("click", () =>
+        loadGithub(ghUsernameInput.value.trim()),
+      );
+      ghUsernameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") loadGithub(ghUsernameInput.value.trim());
+      });
+
+      /* Mobile nav toggle (simple show/hide of links as a stacked menu) */
+      document
+        .getElementById("navToggle")
+        .addEventListener("click", function () {
+          const links = document.querySelector(".nav-links");
+          const isShown = links.style.display === "flex";
+          links.style.display = isShown ? "none" : "flex";
+          links.style.cssText += isShown
+            ? ""
+            : "position:fixed;top:76px;left:0;right:0;background:var(--surface);flex-direction:column;padding:24px 32px;border-bottom:1px solid var(--border);gap:18px;";
+        });
+    </script>
+  </body>
+</html>
