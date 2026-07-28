@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -14,13 +14,15 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+    </script>
 
     <style>
       /* ============================================================
-   DESIGN TOKENS
-   ============================================================ */
+         DESIGN TOKENS
+         ============================================================ */
       :root {
         --bg: #050505;
         --surface: #0d0d0d;
@@ -81,12 +83,11 @@
         font-family: var(--font-body);
         overflow-x: hidden;
         line-height: 1.5;
-        transition:
-          background 0.4s ease,
-          color 0.4s ease;
+        transition: background 0.4s ease, color 0.4s ease;
         cursor: none;
       }
-      @media (hover: none), (pointer: coarse) {
+      @media (hover: none),
+      (pointer: coarse) {
         body {
           cursor: auto;
         }
@@ -177,11 +178,7 @@
           linear-gradient(90deg, var(--border) 1px, transparent 1px);
         background-size: 64px 64px;
         opacity: 0.35;
-        mask-image: radial-gradient(
-          ellipse 70% 60% at 50% 20%,
-          black 20%,
-          transparent 75%
-        );
+        mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, black 20%, transparent 75%);
       }
       .ambient-mesh {
         position: absolute;
@@ -189,31 +186,19 @@
         left: -10%;
         width: 70%;
         height: 70%;
-        background: radial-gradient(
-          circle,
-          rgba(0, 230, 118, 0.12) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(0, 230, 118, 0.12) 0%, transparent 70%);
         filter: blur(60px);
       }
       .ambient-mesh.two {
         top: 30%;
         right: -15%;
         left: auto;
-        background: radial-gradient(
-          circle,
-          rgba(0, 191, 165, 0.1) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(0, 191, 165, 0.1) 0%, transparent 70%);
       }
       .ambient-mesh.three {
         bottom: -10%;
         left: 20%;
-        background: radial-gradient(
-          circle,
-          rgba(0, 230, 118, 0.06) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(0, 230, 118, 0.06) 0%, transparent 70%);
       }
       .ambient-noise {
         position: absolute;
@@ -222,9 +207,6 @@
         mix-blend-mode: overlay;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       }
-      /* Spotlight is now a fixed-size, pre-rendered glow that only ever moves via
-   transform (translate3d) — never repaints a full-viewport gradient on
-   mousemove like a background-position/custom-property approach would. */
       .spotlight {
         position: fixed;
         top: 0;
@@ -233,11 +215,7 @@
         height: 640px;
         z-index: 1;
         pointer-events: none;
-        background: radial-gradient(
-          circle,
-          rgba(0, 230, 118, 0.09),
-          transparent 65%
-        );
+        background: radial-gradient(circle, rgba(0, 230, 118, 0.09), transparent 65%);
         border-radius: 50%;
         transform: translate3d(-9999px, -9999px, 0);
         will-change: transform;
@@ -248,9 +226,6 @@
         position: relative;
         z-index: 2;
       }
-      /* content-visibility lets the browser skip layout/paint work for sections
-   that are off-screen — the single biggest lever for a long, section-heavy
-   page like this one. Hero is excluded so it's always fully rendered. */
       .section {
         content-visibility: auto;
         contain-intrinsic-size: 1px 900px;
@@ -276,11 +251,7 @@
         width: 34px;
         height: 34px;
         border: 1px solid var(--border-strong);
-        transition:
-          width 0.25s var(--ease),
-          height 0.25s var(--ease),
-          border-color 0.25s ease,
-          background 0.25s ease;
+        transition: width 0.25s var(--ease), height 0.25s var(--ease), border-color 0.25s ease, background 0.25s ease;
       }
       .cursor-ring.hovered {
         width: 56px;
@@ -288,7 +259,8 @@
         border-color: var(--accent);
         background: var(--accent-dim);
       }
-      @media (hover: none), (pointer: coarse) {
+      @media (hover: none),
+      (pointer: coarse) {
         .cursor-dot,
         .cursor-ring {
           display: none;
@@ -305,9 +277,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition:
-          opacity 0.6s ease,
-          visibility 0.6s ease;
+        transition: opacity 0.6s ease, visibility 0.6s ease;
       }
       #loader.hidden {
         opacity: 0;
@@ -359,10 +329,7 @@
         right: 0;
         z-index: 500;
         padding: 24px 0;
-        transition:
-          background 0.3s ease,
-          backdrop-filter 0.3s ease,
-          border-color 0.3s ease;
+        transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
         border-bottom: 1px solid transparent;
       }
       header.scrolled {
@@ -413,9 +380,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition:
-          border-color 0.2s ease,
-          color 0.2s ease;
+        transition: border-color 0.2s ease, color 0.2s ease;
       }
       .icon-btn:hover {
         border-color: var(--accent);
@@ -436,9 +401,7 @@
         padding: 10px 22px;
         border: 1px solid var(--border);
         border-radius: 100px;
-        transition:
-          border-color 0.25s ease,
-          transform 0.25s ease;
+        transition: border-color 0.25s ease, transform 0.25s ease;
       }
       .nav-cta:hover {
         border-color: var(--accent);
@@ -558,9 +521,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        transition:
-          border-color 0.25s ease,
-          transform 0.3s ease;
+        transition: border-color 0.25s ease, transform 0.3s ease;
         background: none;
         color: var(--text);
       }
@@ -597,12 +558,7 @@
         width: 380px;
         height: 380px;
         border-radius: 50%;
-        background: conic-gradient(
-          from 0deg,
-          rgba(0, 230, 118, 0.5),
-          rgba(0, 191, 165, 0.05),
-          rgba(0, 230, 118, 0.5)
-        );
+        background: conic-gradient(from 0deg, rgba(0, 230, 118, 0.5), rgba(0, 191, 165, 0.05), rgba(0, 230, 118, 0.5));
         filter: blur(50px);
         opacity: 0.55;
         animation: spin 18s linear infinite;
@@ -891,9 +847,7 @@
         align-items: center;
         justify-content: space-between;
         border-bottom: 1px dashed transparent;
-        transition:
-          color 0.2s ease,
-          border-color 0.2s ease;
+        transition: color 0.2s ease, border-color 0.2s ease;
       }
       .tech-chip:hover {
         color: var(--text);
@@ -917,10 +871,7 @@
         opacity: 0;
         visibility: hidden;
         transform: translateY(6px);
-        transition:
-          opacity 0.2s ease,
-          transform 0.2s ease,
-          visibility 0.2s;
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
       }
       .tech-popover.show {
         opacity: 1;
@@ -1182,9 +1133,7 @@
         background: var(--card);
         position: relative;
         overflow: hidden;
-        transition:
-          transform 0.35s ease,
-          border-color 0.35s ease;
+        transition: transform 0.35s ease, border-color 0.35s ease;
         cursor: pointer;
       }
       .project-card:hover {
@@ -1352,133 +1301,596 @@
         font-size: 13px;
       }
 
-      /* ===== GITHUB ===== */
-      .github-panel {
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 40px;
+      /* ============================================================
+         GITHUB DASHBOARD – COMPLETE REDESIGN
+         ============================================================ */
+      .github-dashboard {
         background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        position: relative;
+        transition: border-color 0.3s ease;
       }
-      .github-head {
+
+      .github-dashboard:hover {
+        border-color: var(--border-strong);
+      }
+
+      /* Header */
+      .github-header {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 28px;
+        padding: 28px 32px;
+        border-bottom: 1px solid var(--border);
         flex-wrap: wrap;
-        gap: 12px;
-      }
-      .github-head h3 {
-        font-size: 20px;
-      }
-      .gh-link {
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--accent);
-        border: 1px solid var(--border);
-        padding: 8px 16px;
-        border-radius: 100px;
-      }
-      .gh-config {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-      }
-      .gh-config input {
-        background: var(--surface-2);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 8px 12px;
-        color: var(--text);
-        font-family: var(--font-mono);
-        font-size: 13px;
-        width: 200px;
-      }
-      .gh-config button {
-        background: var(--accent);
-        color: #04140b;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-weight: 600;
-        font-size: 13px;
-      }
-      .gh-stats-row {
-        display: flex;
-        gap: 40px;
-        margin-bottom: 28px;
-        flex-wrap: wrap;
-      }
-      .gh-stat b {
-        font-family: var(--font-mono);
-        color: var(--accent);
-        font-size: 22px;
-        display: block;
-      }
-      .gh-stat span {
-        color: var(--muted);
-        font-size: 12.5px;
-      }
-      .repo-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
         gap: 16px;
-        margin-bottom: 28px;
+        background: color-mix(in srgb, var(--surface-2) 50%, transparent);
       }
-      .repo-card {
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 18px;
-      }
-      .repo-card h4 {
-        font-size: 14.5px;
-        margin-bottom: 6px;
+
+      .github-header-left {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 16px;
       }
-      .repo-card p {
-        color: var(--muted);
-        font-size: 13px;
-        margin-bottom: 12px;
-        min-height: 34px;
-      }
-      .repo-meta {
+
+      .github-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--accent-dim);
         display: flex;
-        gap: 14px;
-        font-size: 12px;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 18px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        transition: background 0.3s ease;
+      }
+
+      .github-header h3 {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+
+      .github-header .gh-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
         color: var(--muted);
         font-family: var(--font-mono);
       }
-      .repo-lang-dot {
+
+      .github-header .gh-status .dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
         background: var(--accent);
-        display: inline-block;
-        margin-right: 4px;
+        animation: pulse-dot 2s ease-in-out infinite;
       }
-      .heatmap {
+
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.4;
+          transform: scale(0.8);
+        }
+      }
+
+      /* Search / input area */
+      .github-controls {
+        padding: 24px 32px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface-2) 30%, transparent);
+      }
+
+      .github-controls .input-wrap {
+        flex: 1;
+        min-width: 220px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        padding: 4px 4px 4px 18px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .github-controls .input-wrap:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-dim);
+      }
+
+      .github-controls .input-wrap .prefix {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--muted-2);
+        opacity: 0.7;
+        white-space: nowrap;
+      }
+
+      .github-controls .input-wrap input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 14px;
+        font-family: var(--font-body);
+        padding: 10px 0;
+        min-width: 100px;
+      }
+
+      .github-controls .input-wrap input:focus {
+        outline: none;
+      }
+
+      .github-controls .input-wrap input::placeholder {
+        color: var(--muted-2);
+        opacity: 0.6;
+        font-size: 13px;
+      }
+
+      .github-controls .btn-load {
+        background: var(--accent);
+        color: #04140b;
+        border: none;
+        padding: 10px 28px;
+        border-radius: 100px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-body);
+      }
+
+      .github-controls .btn-load:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 20px rgba(0, 230, 118, 0.3);
+      }
+
+      .github-controls .btn-load:active {
+        transform: scale(0.97);
+      }
+
+      .github-controls .btn-load.loading {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .github-controls .btn-load .spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-top-color: #04140b;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+
+      .github-controls .btn-load.loading .spinner {
+        display: inline-block;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Stats row – premium KPI cards */
+      .github-stats {
         display: grid;
-        grid-template-columns: repeat(26, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface-2) 20%, transparent);
+      }
+
+      .github-stat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        transition: border-color 0.3s ease, transform 0.3s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .github-stat-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .github-stat-card .stat-value {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--accent);
+        display: block;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+
+      .github-stat-card .stat-label {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-family: var(--font-mono);
+        margin-top: 4px;
+        display: block;
+      }
+
+      .github-stat-card .stat-trend {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        font-size: 10px;
+        color: var(--muted-2);
+        font-family: var(--font-mono);
+        opacity: 0.5;
+      }
+
+      /* Repositories grid */
+      .github-repos {
+        padding: 24px 32px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .github-repos .repos-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .github-repos .repos-header h4 {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        font-family: var(--font-head);
+      }
+
+      .github-repos .repos-header .repo-count {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted-2);
+        background: var(--card);
+        padding: 4px 12px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+      }
+
+      .repo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      .repo-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 20px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .repo-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .repo-card .repo-name {
+        font-size: 15px;
+        font-weight: 600;
+        font-family: var(--font-head);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text);
+      }
+
+      .repo-card .repo-name .repo-icon {
+        color: var(--muted-2);
+        font-size: 14px;
+        opacity: 0.6;
+      }
+
+      .repo-card .repo-name .repo-badge {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: var(--accent-dim);
+        color: var(--accent);
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-family: var(--font-mono);
+        font-weight: 500;
+      }
+
+      .repo-card .repo-desc {
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.5;
+        margin-bottom: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 40px;
+      }
+
+      .repo-card .repo-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+        font-size: 12px;
+        color: var(--muted-2);
+        font-family: var(--font-mono);
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+      }
+
+      .repo-card .repo-meta .lang {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .repo-card .repo-meta .lang .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .repo-card .repo-meta .stat {
+        display: flex;
+        align-items: center;
         gap: 4px;
       }
-      .heatmap span {
-        aspect-ratio: 1;
-        border-radius: 2px;
-        background: var(--border);
+
+      .repo-card .repo-meta .stat .icon {
+        opacity: 0.6;
       }
-      .gh-note {
+
+      .repo-card .repo-updated {
+        font-size: 11px;
+        color: var(--muted-2);
+        font-family: var(--font-mono);
+        margin-top: 10px;
+        opacity: 0.6;
+      }
+
+      /* Activity / contribution heatmap placeholder */
+      .github-activity {
+        padding: 24px 32px 32px;
+      }
+
+      .github-activity .activity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .github-activity .activity-header h4 {
+        font-size: 15px;
+        font-weight: 600;
+        font-family: var(--font-head);
+      }
+
+      .github-activity .activity-header .activity-count {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted-2);
+      }
+
+      .activity-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .activity-event {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 12px;
+        font-family: var(--font-mono);
         color: var(--muted);
-        font-size: 12.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: border-color 0.2s ease;
+        flex: 1 0 auto;
+        max-width: 100%;
+      }
+
+      .activity-event .event-type {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .activity-event .event-repo {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .activity-event .event-time {
+        color: var(--muted-2);
+        font-size: 10px;
+        margin-left: auto;
+        opacity: 0.6;
+      }
+
+      .activity-event:hover {
+        border-color: var(--border-strong);
+      }
+
+      /* Fallback / empty state */
+      .github-empty {
+        padding: 48px 32px;
+        text-align: center;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+      }
+
+      .github-empty .empty-icon {
+        font-size: 48px;
+        opacity: 0.2;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .github-empty h4 {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .github-empty p {
+        font-size: 14px;
+        max-width: 480px;
+        margin: 0 auto;
+        color: var(--muted-2);
+        line-height: 1.6;
+      }
+
+      .github-empty .empty-cta {
         margin-top: 20px;
+        display: inline-block;
+        padding: 8px 20px;
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        font-size: 13px;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        transition: border-color 0.3s ease, color 0.3s ease;
+        cursor: default;
+      }
+
+      .github-empty .empty-cta:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+
+      /* Error state */
+      .github-error {
+        padding: 32px;
+        text-align: center;
+        color: var(--danger);
+        border-top: 1px solid var(--border);
+      }
+
+      .github-error .error-icon {
+        font-size: 32px;
+        opacity: 0.4;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .github-error p {
+        font-size: 14px;
         font-family: var(--font-mono);
       }
-      .gh-loading {
-        color: var(--muted);
-        font-size: 13px;
-        font-family: var(--font-mono);
+
+      /* Responsive adjustments for GitHub dashboard */
+      @media (max-width: 768px) {
+        .github-header {
+          padding: 20px 20px;
+        }
+
+        .github-controls {
+          padding: 16px 20px;
+          flex-direction: column;
+        }
+
+        .github-controls .input-wrap {
+          width: 100%;
+          min-width: unset;
+        }
+
+        .github-controls .btn-load {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .github-stats {
+          grid-template-columns: repeat(2, 1fr);
+          padding: 16px 20px;
+          gap: 8px;
+        }
+
+        .github-stat-card .stat-value {
+          font-size: 22px;
+        }
+
+        .github-repos {
+          padding: 16px 20px;
+        }
+
+        .repo-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .github-activity {
+          padding: 16px 20px 24px;
+        }
+
+        .activity-event {
+          flex-wrap: wrap;
+          gap: 4px;
+          font-size: 11px;
+        }
+
+        .activity-event .event-time {
+          margin-left: 0;
+          width: 100%;
+          text-align: left;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .github-stats {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .github-stat-card {
+          padding: 12px 14px;
+        }
+
+        .github-stat-card .stat-value {
+          font-size: 20px;
+        }
       }
 
       /* ===== AI ASSISTANT ===== */
@@ -1636,9 +2048,7 @@
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 26px;
-        transition:
-          border-color 0.3s ease,
-          transform 0.3s ease;
+        transition: border-color 0.3s ease, transform 0.3s ease;
       }
       .blog-card:hover {
         border-color: rgba(0, 230, 118, 0.3);
@@ -1726,6 +2136,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        padding: 0 22px 18px;
       }
       .terminal-input-row .prompt {
         color: var(--accent);
@@ -1946,8 +2357,8 @@
       }
 
       /* ============================================================
-   COMMAND PALETTE
-   ============================================================ */
+         COMMAND PALETTE
+         ============================================================ */
       .cmdk-overlay {
         position: fixed;
         inset: 0;
@@ -1960,9 +2371,7 @@
         padding-top: 12vh;
         opacity: 0;
         visibility: hidden;
-        transition:
-          opacity 0.2s ease,
-          visibility 0.2s ease;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
       }
       .cmdk-overlay.open {
         opacity: 1;
@@ -2040,8 +2449,8 @@
       }
 
       /* ============================================================
-   PROJECT OVERLAY (fullscreen case study)
-   ============================================================ */
+         PROJECT OVERLAY (fullscreen case study)
+         ============================================================ */
       .overlay {
         position: fixed;
         inset: 0;
@@ -2071,7 +2480,7 @@
         justify-content: center;
       }
 
-      
+
       .overlay-nav {
         position: sticky;
         top: 0;
@@ -2335,20 +2744,10 @@
             <li><a href="#contact">Contact</a></li>
           </ul>
           <div class="nav-right">
-            <button
-              class="icon-btn"
-              id="cmdkTrigger"
-              aria-label="Open command palette"
-              title="Command palette (Ctrl+K)"
-            >
+            <button class="icon-btn" id="cmdkTrigger" aria-label="Open command palette" title="Command palette (Ctrl+K)">
               ⌘
             </button>
-            <button
-              class="icon-btn"
-              id="themeToggle"
-              aria-label="Toggle theme"
-              title="Toggle theme"
-            >
+            <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
               ◐
             </button>
             <a href="#contact" class="nav-cta">Start a project</a>
@@ -2374,9 +2773,7 @@
             </h1>
             <p class="hero-sub">
               I design and build full-stack
-              <span class="hero-rotate" id="heroRotate"
-                ><span class="rot-word">dashboards</span></span
-              >
+              <span class="hero-rotate" id="heroRotate"><span class="rot-word">dashboards</span></span>
               — systems for teams that need software to hold up in production,
               not just in a pitch.
             </p>
@@ -2401,51 +2798,12 @@
             <div class="float-tag tag-3"><i></i>MySQL</div>
             <div class="float-tag tag-4"><i></i>AI Integration</div>
             <div class="portrait-wrap" id="portrait">
-            <img
-    src="pic.png"
-    alt="Muhammad Harmain"
-    class="hero-image"
-  />
-                <defs>
-                  <radialGradient id="glow" cx="50%" cy="35%" r="65%">
-                    <stop
-                      offset="0%"
-                      stop-color="#00E676"
-                      stop-opacity="0.35"
-                    />
-                    <stop offset="100%" stop-color="#00E676" stop-opacity="0" />
-                  </radialGradient>
-                  <linearGradient id="figure" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#1a1a1a" />
-                    <stop offset="100%" stop-color="#0a0a0a" />
-                  </linearGradient>
-                </defs>
-                <ellipse
-                  cx="170"
-                  cy="180"
-                  rx="160"
-                  ry="160"
-                  fill="url(#glow)"
-                />
-                <circle
-                  cx="170"
-                  cy="130"
-                  r="70"
-                  fill="url(#figure)"
-                  stroke="#00E676"
-                  stroke-opacity="0.25"
-                />
-                <path
-                  d="M60 420 C60 300 100 240 170 240 C240 240 280 300 280 420 Z"
-                  fill="url(#figure)"
-                  stroke="#00E676"
-                  stroke-opacity="0.25"
-                />
-              </svg>
+              <img
+                src="pic.png"
+                alt="Muhammad Harmain"
+                class="hero-image"
+              />
             </div>
-            <!-- NOTE: swap the SVG placeholder above for your transparent PNG.
-           When you do, drop it in unwrapped — no card, no crop, no frame —
-           just the glow + parallax already wired up on #portrait. -->
           </div>
         </div>
         <div class="scroll-cue">
@@ -2570,7 +2928,7 @@
         </div>
       </section>
 
-      <!-- DEVELOPMENT PROCESS (replaces the old testimonial placeholder) -->
+      <!-- DEVELOPMENT PROCESS -->
       <section class="section" id="process">
         <div class="container">
           <div class="section-head">
@@ -2657,203 +3015,7 @@
         </div>
       </section>
 
-      <!-- FEATURED CASE STUDY -->
-      <section class="section" id="work">
-        <div class="container">
-          <div class="section-head">
-            <div class="eyebrow">Featured Case Study</div>
-            <h2>Union Enterprises</h2>
-            <p>
-              An import &amp; export logistics management system built to
-              replace spreadsheet-based tracking with a single operational
-              platform.
-            </p>
-          </div>
-          <div class="case-study">
-            <div class="case-top">
-              <h3>Import &amp; Export Logistics Platform</h3>
-              <div class="case-tags">
-                <span class="chip">Laravel</span><span class="chip">MySQL</span
-                ><span class="chip">REST API</span
-                ><span class="chip">Role-Based Access</span>
-              </div>
-            </div>
-            <div class="case-cols">
-              <div>
-                <h4>Problem</h4>
-                <p>
-                  Shipment status, invoices, and client documents were spread
-                  across spreadsheets and email threads, with no single source
-                  of truth for either the internal team or clients.
-                </p>
-              </div>
-              <div>
-                <h4>Research</h4>
-                <p>
-                  Mapped the daily workflow of the operations team and the
-                  information clients repeatedly asked for, to decide what
-                  belonged in the admin dashboard versus the client portal.
-                </p>
-              </div>
-              <div>
-                <h4>Solution</h4>
-                <p>
-                  A two-sided platform: an admin dashboard for internal
-                  operations, and a client portal for shipment visibility —
-                  connected by one database and a consistent permission model.
-                </p>
-              </div>
-            </div>
-            <div class="case-cols">
-              <div>
-                <h4>Architecture</h4>
-                <p>
-                  Laravel MVC structure with role-based middleware separating
-                  admin and client access, REST endpoints powering dynamic
-                  dashboard views.
-                </p>
-              </div>
-              <div>
-                <h4>Database Design</h4>
-                <p>
-                  Normalized MySQL schema linking shipments, invoices, and
-                  documents to clients — built to support reporting without
-                  duplicating data.
-                </p>
-              </div>
-              <div>
-                <h4>Results</h4>
-                <p>
-                  Replaced manual status updates with live tracking and
-                  centralized invoicing and document management in one place.
-                </p>
-              </div>
-            </div>
-            <div class="case-features">
-              <div class="case-feature">
-                <b>Admin Dashboard</b>Operational control center for shipments,
-                invoices, and users.
-              </div>
-              <div class="case-feature">
-                <b>Client Portal</b>Self-serve visibility into shipment status
-                and documents.
-              </div>
-              <div class="case-feature">
-                <b>Shipment Tracking</b>Status updates tied directly to each
-                shipment record.
-              </div>
-              <div class="case-feature">
-                <b>Invoice Management</b>Generation, tracking, and status of
-                client invoices.
-              </div>
-              <div class="case-feature">
-                <b>Document Management</b>Centralized storage for
-                shipment-related paperwork.
-              </div>
-              <div class="case-feature">
-                <b>Analytics Dashboard</b>Operational metrics surfaced for
-                internal decision-making.
-              </div>
-              <div class="case-feature">
-                <b>Authentication</b>Secure login across admin and client roles.
-              </div>
-              <div class="case-feature">
-                <b>Role Management</b>Granular permissions per user type.
-              </div>
-              <div class="case-feature">
-                <b>Modern UI</b>Clean, data-dense interface built for daily use.
-              </div>
-            </div>
-            <div class="case-shot">
-              <div class="mockup">
-                <div class="mockup-window">
-                  <div class="mockup-topbar">
-                    <span class="mockup-dot"></span
-                    ><span class="mockup-dot"></span
-                    ><span class="mockup-dot"></span
-                    ><span class="mockup-title"
-                      >union-enterprises.app / admin / shipments</span
-                    >
-                  </div>
-                  <div class="mockup-body">
-                    <div class="mockup-side">
-                      <div class="m-item active">Dashboard</div>
-                      <div class="m-item">Shipments</div>
-                      <div class="m-item">Invoices</div>
-                      <div class="m-item">Documents</div>
-                      <div class="m-item">Clients</div>
-                      <div class="m-item">Reports</div>
-                    </div>
-                    <div class="mockup-main">
-                      <div class="mockup-kpis">
-                        <div class="mockup-kpi">
-                          <b>128</b><span>Active shipments</span>
-                        </div>
-                        <div class="mockup-kpi">
-                          <b>34</b><span>Pending invoices</span>
-                        </div>
-                        <div class="mockup-kpi">
-                          <b>96%</b><span>On-time delivery</span>
-                        </div>
-                      </div>
-                      <div class="mockup-chart" id="ueChart"></div>
-                      <div class="mockup-table-row head">
-                        <span>Shipment</span><span>Client</span><span>ETA</span
-                        ><span>Status</span>
-                      </div>
-                      <div class="mockup-table-row">
-                        <span>UE-2291</span><span>Al-Falah Traders</span
-                        ><span>Aug 03</span
-                        ><span
-                          ><span class="status-pill ok">On track</span></span
-                        >
-                      </div>
-                      <div class="mockup-table-row">
-                        <span>UE-2288</span><span>Meridian Textiles</span
-                        ><span>Aug 05</span
-                        ><span
-                          ><span class="status-pill wait">Customs</span></span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="case-cols">
-              <div>
-                <h4>Challenges</h4>
-                <p>
-                  Keeping the admin and client views in sync from a single
-                  schema, without leaking internal-only data into the client
-                  portal.
-                </p>
-              </div>
-              <div>
-                <h4>Tech Stack</h4>
-                <p>
-                  PHP, Laravel, MySQL, REST APIs, Bootstrap, role-based
-                  authentication.
-                </p>
-              </div>
-              <div>
-                <h4>Outcome</h4>
-                <p>
-                  A platform that gives operations and clients the same source
-                  of truth, each through the lens they need.
-                </p>
-              </div>
-            </div>
-            <button
-              class="btn-secondary case-open-btn"
-              data-open-project="union"
-            >
-              Open full case study →
-            </button>
-          </div>
-        </div>
-      </section>
-
+      
       <!-- PROJECTS GRID -->
       <section class="section" id="projects">
         <div class="container">
@@ -2975,32 +3137,20 @@
           </div>
           <div class="why-grid">
             <div class="why-cell">
-              <b>01</b
-              ><span
-                >Direct communication — no account managers between you and the
-                person writing the code.</span
-              >
+              <b>01</b>
+              <span>Direct communication — no account managers between you and the person writing the code.</span>
             </div>
             <div class="why-cell">
-              <b>02</b
-              ><span
-                >Systems thinking — every feature is considered against the
-                database and roles behind it.</span
-              >
+              <b>02</b>
+              <span>Systems thinking — every feature is considered against the database and roles behind it.</span>
             </div>
             <div class="why-cell">
-              <b>03</b
-              ><span
-                >Full ownership — from schema design to the interface, handled
-                end-to-end.</span
-              >
+              <b>03</b>
+              <span>Full ownership — from schema design to the interface, handled end-to-end.</span>
             </div>
             <div class="why-cell">
-              <b>04</b
-              ><span
-                >Built for growth — architecture that doesn't need to be rebuilt
-                at the next stage.</span
-              >
+              <b>04</b>
+              <span>Built for growth — architecture that doesn't need to be rebuilt at the next stage.</span>
             </div>
           </div>
         </div>
@@ -3033,15 +3183,10 @@
       <!-- INDUSTRIES / TOOLS / LEARNING -->
       <section class="section" id="context">
         <div class="container">
-          <div
-            class="ov-grid-2"
-            style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px"
-          >
+          <div class="ov-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px;">
             <div>
               <div class="eyebrow">Industries Served</div>
-              <h2 style="font-size: 26px; margin-bottom: 20px">
-                Where the systems have lived.
-              </h2>
+              <h2 style="font-size: 26px; margin-bottom: 20px;">Where the systems have lived.</h2>
               <div class="chip-grid">
                 <span class="chip-item">Logistics &amp; freight</span>
                 <span class="chip-item">Retail &amp; e-commerce</span>
@@ -3051,9 +3196,7 @@
             </div>
             <div>
               <div class="eyebrow">Currently Learning</div>
-              <h2 style="font-size: 26px; margin-bottom: 20px">
-                What's next on the stack.
-              </h2>
+              <h2 style="font-size: 26px; margin-bottom: 20px;">What's next on the stack.</h2>
               <div class="chip-grid">
                 <span class="chip-item">AI-assisted workflows</span>
                 <span class="chip-item">API-first architecture</span>
@@ -3064,50 +3207,73 @@
         </div>
       </section>
 
-      <!-- GITHUB ACTIVITY -->
+      <!-- ============================================================
+      GITHUB DASHBOARD – REDESIGNED
+      ============================================================ -->
       <section class="section" id="github">
         <div class="container">
           <div class="section-head">
-            <div class="eyebrow">GitHub Activity</div>
-            <h2>Consistency, visualized.</h2>
+            <div class="eyebrow">GitHub</div>
+            <h2>Code consistency, visualized.</h2>
             <p>
               Pulled live from the GitHub REST API — enter a username to load
-              real repositories and activity.
+              real repositories, language distribution, and activity.
             </p>
           </div>
-          <div class="github-panel">
-            <div class="github-head">
-              <h3>Contribution overview</h3>
+
+          <div class="github-dashboard" id="githubDashboard">
+            <!-- Header -->
+            <div class="github-header">
+              <div class="github-header-left">
+                <div class="github-icon">⌨</div>
+                <h3>GitHub Activity</h3>
+                <div class="gh-status">
+                  <span class="dot"></span>
+                  <span id="ghStatusText">Ready</span>
+                </div>
+              </div>
               <a
                 href="#"
                 class="gh-link"
                 id="ghProfileLink"
                 target="_blank"
                 rel="noopener"
-                >View GitHub Profile →</a
+                style="font-family:var(--font-mono);font-size:13px;color:var(--accent);border:1px solid var(--border);padding:8px 16px;border-radius:100px;"
               >
+                View Profile ↗
+              </a>
             </div>
-            <div class="gh-config">
-              <input
-                type="text"
-                id="ghUsernameInput"
-                placeholder="GitHub username, e.g. muhammadharmain"
-              />
-              <button id="ghLoadBtn">Load</button>
-            </div>
-            <div id="ghContent">
-              <div class="gh-note">
-                No username configured yet — enter a GitHub username above to
-                fetch live repositories, languages, and recent activity. This
-                calls the public GitHub REST API directly from your browser (no
-                key required for public data).
+
+            <!-- Controls -->
+            <div class="github-controls">
+              <div class="input-wrap">
+                <span class="prefix">github.com/</span>
+                <input
+                  type="text"
+                  id="ghUsernameInput"
+                  placeholder="username"
+                  autocomplete="off"
+                />
               </div>
+              <button class="btn-load" id="ghLoadBtn">
+                <span class="spinner"></span>
+                <span class="btn-label">Load</span>
+              </button>
             </div>
-            <div class="gh-note" id="ghFallbackNote" style="display: none">
-              Live GitHub data is fetched via
-              <span style="color: var(--accent)">api.github.com</span> from the
-              visitor's browser. If a network or rate-limit error occurs, this
-              note is shown instead of fabricated numbers.
+
+            <!-- Content container – rendered by JS -->
+            <div id="ghContent">
+              <!-- Empty state shown by default -->
+              <div class="github-empty">
+                <span class="empty-icon">⎆</span>
+                <h4>No data loaded yet</h4>
+                <p>
+                  Enter a GitHub username above to fetch live repository data,
+                  languages, stars, forks, and recent activity from the public
+                  GitHub REST API.
+                </p>
+                <div class="empty-cta">Try: muhammadharmain</div>
+              </div>
             </div>
           </div>
         </div>
@@ -3190,17 +3356,17 @@
           </div>
           <div class="terminal">
             <div class="terminal-bar">
-              <span class="terminal-dot r"></span
-              ><span class="terminal-dot y"></span
-              ><span class="terminal-dot g"></span
-              ><span class="terminal-title">harmain@portfolio: ~</span>
+              <span class="terminal-dot r"></span>
+              <span class="terminal-dot y"></span>
+              <span class="terminal-dot g"></span>
+              <span class="terminal-title">harmain@portfolio: ~</span>
             </div>
             <div class="terminal-body" id="terminalBody">
               <div class="terminal-line">
                 <span class="prompt">guest@harmain:~$</span> help
               </div>
             </div>
-            <div class="terminal-input-row" style="padding: 0 22px 18px">
+            <div class="terminal-input-row">
               <span class="prompt">guest@harmain:~$</span>
               <input
                 type="text"
@@ -3316,15 +3482,12 @@
               <label>Name</label><input type="text" placeholder="Your name" />
             </div>
             <div class="form-row">
-              <label>Email</label
-              ><input type="email" placeholder="you@company.com" />
+              <label>Email</label>
+              <input type="email" placeholder="you@company.com" />
             </div>
             <div class="form-row">
-              <label>Project details</label
-              ><textarea
-                rows="4"
-                placeholder="What are you building?"
-              ></textarea>
+              <label>Project details</label>
+              <textarea rows="4" placeholder="What are you building?"></textarea>
             </div>
             <button type="submit" class="btn-primary">Send Message →</button>
           </form>
@@ -3337,28 +3500,21 @@
         <div class="footer-top">
           <div>
             <a href="#home" class="logo">Harmain<span>.</span></a>
-            <p
-              style="
-                color: var(--muted);
-                font-size: 14px;
-                margin-top: 12px;
-                max-width: 280px;
-              "
-            >
+            <p style="color: var(--muted); font-size: 14px; margin-top: 12px; max-width: 280px;">
               Full stack developer building business management systems from
               Pakistan.
             </p>
           </div>
           <div class="footer-links">
             <div class="footer-col">
-              <span>Site</span> <a href="#about">About</a
-              ><a href="#work">Work</a><a href="#services">Services</a
-              ><a href="#contact">Contact</a>
+              <span>Site</span> <a href="#about">About</a>
+              <a href="#work">Work</a><a href="#services">Services</a>
+              <a href="#contact">Contact</a>
             </div>
             <div class="footer-col">
-              <span>Elsewhere</span> <a href="#">GitHub</a
-              ><a href="#">LinkedIn</a
-              ><a href="mailto:hello@muhammadharmain.dev">Email</a>
+              <span>Elsewhere</span> <a href="#">GitHub</a>
+              <a href="#">LinkedIn</a>
+              <a href="mailto:hello@muhammadharmain.dev">Email</a>
             </div>
           </div>
         </div>
@@ -3390,9 +3546,8 @@
 
     <script>
       /* ============================================================
-   PORTFOLIO DATA — single source of truth for AI assistant,
-   terminal, command palette, project cards and overlays.
-   ============================================================ */
+         PORTFOLIO DATA — single source of truth
+         ============================================================ */
       const portfolioData = {
         name: "Muhammad Harmain",
         role: "Full Stack Developer",
@@ -3400,103 +3555,25 @@
         bio: "Full stack developer focused on PHP and Laravel, building business management systems, dashboards and portals designed for daily, repeated use rather than one-time demos.",
         stack: {
           Backend: [
-            {
-              name: "PHP",
-              stars: 5,
-              desc: "Primary server-side language for every system shipped.",
-              uses: ["Auth", "Business logic", "Session handling"],
-              related: ["Laravel", "REST APIs"],
-            },
-            {
-              name: "Laravel",
-              stars: 5,
-              desc: "Default framework — routing, ORM, middleware and auth out of the box.",
-              uses: ["Union Enterprises", "Employee Management System"],
-              related: ["PHP", "MySQL", "REST APIs"],
-            },
-            {
-              name: "REST APIs",
-              stars: 4,
-              desc: "Endpoints powering dashboard views and portal-to-admin data flow.",
-              uses: ["Client portals", "Mobile-ready endpoints"],
-              related: ["Laravel"],
-            },
+            { name: "PHP", stars: 5, desc: "Primary server-side language for every system shipped.", uses: ["Auth", "Business logic", "Session handling"], related: ["Laravel", "REST APIs"] },
+            { name: "Laravel", stars: 5, desc: "Default framework — routing, ORM, middleware and auth out of the box.", uses: ["Union Enterprises", "Employee Management System"], related: ["PHP", "MySQL", "REST APIs"] },
+            { name: "REST APIs", stars: 4, desc: "Endpoints powering dashboard views and portal-to-admin data flow.", uses: ["Client portals", "Mobile-ready endpoints"], related: ["Laravel"] },
           ],
           Frontend: [
-            {
-              name: "JavaScript",
-              stars: 4,
-              desc: "Keeps dashboard interfaces fast and responsive.",
-              uses: ["Interactive tables", "Live status updates"],
-              related: ["Bootstrap"],
-            },
-            {
-              name: "HTML5",
-              stars: 5,
-              desc: "Semantic structure for every interface.",
-              uses: ["All projects"],
-              related: ["CSS3"],
-            },
-            {
-              name: "CSS3",
-              stars: 5,
-              desc: "Layout and theming across dashboards and portals.",
-              uses: ["All projects"],
-              related: ["Bootstrap"],
-            },
-            {
-              name: "Bootstrap",
-              stars: 4,
-              desc: "Component baseline for admin panels and forms.",
-              uses: ["Union Enterprises", "Employee Management System"],
-              related: ["JavaScript"],
-            },
+            { name: "JavaScript", stars: 4, desc: "Keeps dashboard interfaces fast and responsive.", uses: ["Interactive tables", "Live status updates"], related: ["Bootstrap"] },
+            { name: "HTML5", stars: 5, desc: "Semantic structure for every interface.", uses: ["All projects"], related: ["CSS3"] },
+            { name: "CSS3", stars: 5, desc: "Layout and theming across dashboards and portals.", uses: ["All projects"], related: ["Bootstrap"] },
+            { name: "Bootstrap", stars: 4, desc: "Component baseline for admin panels and forms.", uses: ["Union Enterprises", "Employee Management System"], related: ["JavaScript"] },
           ],
           Data: [
-            {
-              name: "MySQL",
-              stars: 5,
-              desc: "Relational schema design underneath every system.",
-              uses: ["Union Enterprises", "Employee Management System"],
-              related: ["Laravel"],
-            },
-            {
-              name: "Schema Design",
-              stars: 5,
-              desc: "Normalized structures built before any screen is designed.",
-              uses: ["All multi-role platforms"],
-              related: ["MySQL"],
-            },
-            {
-              name: "Query Optimization",
-              stars: 4,
-              desc: "Keeps reporting fast as data volume grows.",
-              uses: ["Analytics dashboards"],
-              related: ["MySQL"],
-            },
+            { name: "MySQL", stars: 5, desc: "Relational schema design underneath every system.", uses: ["Union Enterprises", "Employee Management System"], related: ["Laravel"] },
+            { name: "Schema Design", stars: 5, desc: "Normalized structures built before any screen is designed.", uses: ["All multi-role platforms"], related: ["MySQL"] },
+            { name: "Query Optimization", stars: 4, desc: "Keeps reporting fast as data volume grows.", uses: ["Analytics dashboards"], related: ["MySQL"] },
           ],
           Applied: [
-            {
-              name: "AI Integration",
-              stars: 3,
-              desc: "Layering assistants and automation on top of existing dashboards.",
-              uses: ["Portfolio AI Assistant"],
-              related: ["REST APIs"],
-            },
-            {
-              name: "Dashboard Development",
-              stars: 5,
-              desc: "Admin and analytics dashboards built around real decisions.",
-              uses: ["Union Enterprises"],
-              related: ["Laravel", "MySQL"],
-            },
-            {
-              name: "Auth & Roles",
-              stars: 5,
-              desc: "Role-based middleware separating admin and client access.",
-              uses: ["Union Enterprises", "Employee Management System"],
-              related: ["Laravel"],
-            },
+            { name: "AI Integration", stars: 3, desc: "Layering assistants and automation on top of existing dashboards.", uses: ["Portfolio AI Assistant"], related: ["REST APIs"] },
+            { name: "Dashboard Development", stars: 5, desc: "Admin and analytics dashboards built around real decisions.", uses: ["Union Enterprises"], related: ["Laravel", "MySQL"] },
+            { name: "Auth & Roles", stars: 5, desc: "Role-based middleware separating admin and client access.", uses: ["Union Enterprises", "Employee Management System"], related: ["Laravel"] },
           ],
         },
         projects: [
@@ -3505,324 +3582,143 @@
             index: "01",
             name: "Union Enterprises",
             tagline: "Import & export logistics management system",
-            description:
-              "A two-sided platform replacing spreadsheet-based tracking with a single operational source of truth for shipments, invoices and documents.",
+            description: "A two-sided platform replacing spreadsheet-based tracking with a single operational source of truth for shipments, invoices and documents.",
             tags: ["Laravel", "MySQL", "REST API", "Role-Based Access"],
-            metrics: {
-              "DB Tables": 14,
-              "User Roles": 2,
-              "REST Endpoints": 22,
-              Dashboards: 2,
-            },
-            problem:
-              "Shipment status, invoices, and client documents were spread across spreadsheets and email threads, with no single source of truth for either the internal team or clients.",
-            research:
-              "Mapped the daily workflow of the operations team and the information clients repeatedly asked for, to decide what belonged in the admin dashboard versus the client portal.",
-            planning:
-              "Scoped the platform as two connected surfaces — an internal admin dashboard and a self-serve client portal — sharing one schema and one permission model.",
+            metrics: { "DB Tables": 14, "User Roles": 2, "REST Endpoints": 22, Dashboards: 2 },
+            problem: "Shipment status, invoices, and client documents were spread across spreadsheets and email threads, with no single source of truth for either the internal team or clients.",
+            research: "Mapped the daily workflow of the operations team and the information clients repeatedly asked for, to decide what belonged in the admin dashboard versus the client portal.",
+            planning: "Scoped the platform as two connected surfaces — an internal admin dashboard and a self-serve client portal — sharing one schema and one permission model.",
             uiux: "Admin views prioritize dense, scannable tables for daily operational use; the client portal simplifies the same data down to status and documents only.",
-            architecture:
-              "Laravel MVC structure with role-based middleware separating admin and client access, REST endpoints powering dynamic dashboard views.",
-            database:
-              "Normalized MySQL schema linking shipments, invoices, and documents to clients — built to support reporting without duplicating data.",
-            roles: [
-              {
-                role: "Admin",
-                access:
-                  "Full access — shipments, invoices, documents, clients, reports, user management",
-              },
-              {
-                role: "Client",
-                access:
-                  "Read-only visibility into their own shipments, invoice status, and shared documents",
-              },
-            ],
+            architecture: "Laravel MVC structure with role-based middleware separating admin and client access, REST endpoints powering dynamic dashboard views.",
+            database: "Normalized MySQL schema linking shipments, invoices, and documents to clients — built to support reporting without duplicating data.",
+            roles: [{ role: "Admin", access: "Full access — shipments, invoices, documents, clients, reports, user management" }, { role: "Client", access: "Read-only visibility into their own shipments, invoice status, and shared documents" }],
             auth: "Laravel's built-in authentication with role middleware guarding admin routes; client accounts are scoped strictly to their own records at the query level.",
             api: "REST endpoints grouped by resource (shipments, invoices, documents, clients) with role-based route guards; JSON responses power the dashboard's dynamic views.",
-            challenges:
-              "Keeping the admin and client views in sync from a single schema, without leaking internal-only data into the client portal.",
-            lessons:
-              "Designing the permission boundary at the query layer — not just the UI layer — was what actually kept client data isolated.",
-            future:
-              "Planned: automated status notifications and a reporting export module.",
-            techstack:
-              "PHP, Laravel, MySQL, REST APIs, Bootstrap, role-based authentication.",
-            results:
-              "Replaced manual status updates with live tracking and centralized invoicing and document management in one place.",
-            timeline: [
-              "Discovery",
-              "Planning",
-              "Research",
-              "UI Design",
-              "Architecture",
-              "Database Design",
-              "Development",
-              "Testing",
-              "Deployment",
-            ],
+            challenges: "Keeping the admin and client views in sync from a single schema, without leaking internal-only data into the client portal.",
+            lessons: "Designing the permission boundary at the query layer — not just the UI layer — was what actually kept client data isolated.",
+            future: "Planned: automated status notifications and a reporting export module.",
+            techstack: "PHP, Laravel, MySQL, REST APIs, Bootstrap, role-based authentication.",
+            results: "Replaced manual status updates with live tracking and centralized invoicing and document management in one place.",
+            timeline: ["Discovery", "Planning", "Research", "UI Design", "Architecture", "Database Design", "Development", "Testing", "Deployment"],
           },
           {
             id: "employee",
             index: "02",
             name: "Employee Management System",
             tagline: "Centralized HR and attendance platform",
-            description:
-              "Centralized platform for managing employee records, attendance, and internal workflows — built to replace manual HR tracking.",
+            description: "Centralized platform for managing employee records, attendance, and internal workflows — built to replace manual HR tracking.",
             tags: ["Laravel", "MySQL", "Dashboard"],
-            metrics: {
-              "DB Tables": 9,
-              "User Roles": 2,
-              Modules: 5,
-              Reports: 3,
-            },
-            problem:
-              "Employee records and attendance were tracked manually, making reporting slow and error-prone.",
-            research:
-              "Reviewed how HR staff logged attendance and processed requests day to day to define the core modules.",
-            planning:
-              "Scoped around records, attendance, and internal workflow approval before any screen design began.",
+            metrics: { "DB Tables": 9, "User Roles": 2, Modules: 5, Reports: 3 },
+            problem: "Employee records and attendance were tracked manually, making reporting slow and error-prone.",
+            research: "Reviewed how HR staff logged attendance and processed requests day to day to define the core modules.",
+            planning: "Scoped around records, attendance, and internal workflow approval before any screen design began.",
             uiux: "A single admin dashboard organized around daily HR tasks — attendance first, records and workflows beneath it.",
-            architecture:
-              "Laravel MVC with role-based access for HR staff versus employees.",
-            database:
-              "Relational schema linking employees, attendance logs, and workflow requests.",
-            roles: [
-              {
-                role: "HR Admin",
-                access:
-                  "Full access — employee records, attendance, workflow approvals",
-              },
-              {
-                role: "Employee",
-                access: "View own record and attendance, submit requests",
-              },
-            ],
+            architecture: "Laravel MVC with role-based access for HR staff versus employees.",
+            database: "Relational schema linking employees, attendance logs, and workflow requests.",
+            roles: [{ role: "HR Admin", access: "Full access — employee records, attendance, workflow approvals" }, { role: "Employee", access: "View own record and attendance, submit requests" }],
             auth: "Laravel authentication with role-based middleware separating HR and employee views.",
             api: "Internal REST endpoints for attendance and record management, consumed by the dashboard UI.",
-            challenges:
-              "Structuring attendance data so daily entries stay fast to query as records accumulate.",
-            lessons:
-              "Attendance-heavy systems reward simple, well-indexed schemas over clever queries.",
+            challenges: "Structuring attendance data so daily entries stay fast to query as records accumulate.",
+            lessons: "Attendance-heavy systems reward simple, well-indexed schemas over clever queries.",
             future: "Planned: shift scheduling module.",
             techstack: "PHP, Laravel, MySQL, Bootstrap.",
-            results:
-              "Replaced manual HR tracking with a single system for records, attendance, and workflow requests.",
-            timeline: [
-              "Discovery",
-              "Planning",
-              "Research",
-              "UI Design",
-              "Architecture",
-              "Database Design",
-              "Development",
-              "Testing",
-              "Deployment",
-            ],
+            results: "Replaced manual HR tracking with a single system for records, attendance, and workflow requests.",
+            timeline: ["Discovery", "Planning", "Research", "UI Design", "Architecture", "Database Design", "Development", "Testing", "Deployment"],
           },
           {
             id: "jewelry",
             index: "03",
             name: "Jewelry Website",
             tagline: "Product-focused business website",
-            description:
-              "A product-focused website for a jewelry business, built around clean product presentation and straightforward navigation.",
+            description: "A product-focused website for a jewelry business, built around clean product presentation and straightforward navigation.",
             tags: ["PHP", "Bootstrap", "JavaScript"],
-            metrics: {
-              Pages: 8,
-              "Product Categories": 6,
-              Modules: 2,
-              Roles: 1,
-            },
-            problem:
-              "The business needed a clean, browsable online presence for its product catalog.",
-            research:
-              "Looked at how customers browse and compare products to keep navigation simple.",
-            planning:
-              "Scoped as a catalog-first site with straightforward product pages, no user accounts required.",
+            metrics: { Pages: 8, "Product Categories": 6, Modules: 2, Roles: 1 },
+            problem: "The business needed a clean, browsable online presence for its product catalog.",
+            research: "Looked at how customers browse and compare products to keep navigation simple.",
+            planning: "Scoped as a catalog-first site with straightforward product pages, no user accounts required.",
             uiux: "Clean product presentation prioritized over decorative elements.",
-            architecture:
-              "PHP-driven templating with a lightweight product catalog structure.",
-            database:
-              "Simple relational structure for products and categories.",
-            roles: [
-              { role: "Visitor", access: "Browse products and categories" },
-            ],
+            architecture: "PHP-driven templating with a lightweight product catalog structure.",
+            database: "Simple relational structure for products and categories.",
+            roles: [{ role: "Visitor", access: "Browse products and categories" }],
             auth: "No authentication required — public catalog site.",
             api: "Minimal internal endpoints for category filtering.",
-            challenges:
-              "Keeping product presentation clean without a heavier e-commerce framework.",
-            lessons:
-              "Not every business site needs full e-commerce infrastructure — scope to what's needed.",
+            challenges: "Keeping product presentation clean without a heavier e-commerce framework.",
+            lessons: "Not every business site needs full e-commerce infrastructure — scope to what's needed.",
             future: "Potential: inquiry form integration.",
             techstack: "PHP, Bootstrap, JavaScript.",
-            results:
-              "A working catalog presence for the business's product line.",
-            timeline: [
-              "Discovery",
-              "Planning",
-              "UI Design",
-              "Development",
-              "Deployment",
-            ],
+            results: "A working catalog presence for the business's product line.",
+            timeline: ["Discovery", "Planning", "UI Design", "Development", "Deployment"],
           },
           {
             id: "portfolio",
             index: "04",
             name: "Personal Portfolio",
             tagline: "This site",
-            description:
-              "This site — designed and built as a standalone system, not a template, to represent the same engineering standard as client work.",
+            description: "This site — designed and built as a standalone system, not a template, to represent the same engineering standard as client work.",
             tags: ["JavaScript", "GSAP", "Design"],
-            metrics: {
-              Sections: 18,
-              "Interactive Widgets": 5,
-              Overlays: 4,
-              Roles: 1,
-            },
-            problem:
-              "Needed a portfolio that reads as production software, not a template.",
-            research:
-              "Studied premium SaaS and studio sites for motion and structural patterns.",
-            planning:
-              "Kept everything to a single page with fullscreen overlays for case studies instead of separate routes.",
+            metrics: { Sections: 18, "Interactive Widgets": 5, Overlays: 4, Roles: 1 },
+            problem: "Needed a portfolio that reads as production software, not a template.",
+            research: "Studied premium SaaS and studio sites for motion and structural patterns.",
+            planning: "Kept everything to a single page with fullscreen overlays for case studies instead of separate routes.",
             uiux: "Dark, data-dense aesthetic matching the kind of admin interfaces the projects themselves produce.",
-            architecture:
-              "Single index.html, modular JavaScript sections for cursor, command palette, terminal, AI assistant and overlays.",
+            architecture: "Single index.html, modular JavaScript sections for cursor, command palette, terminal, AI assistant and overlays.",
             database: "None — static content driven by an in-page data object.",
-            roles: [
-              {
-                role: "Visitor",
-                access:
-                  "Browse, ask the AI assistant, use the terminal or command palette",
-              },
-            ],
+            roles: [{ role: "Visitor", access: "Browse, ask the AI assistant, use the terminal or command palette" }],
             auth: "Not applicable.",
             api: "Client-side GitHub REST API integration; AI assistant provider layer is modular for a future backend proxy.",
-            challenges:
-              "Making every project 'page' feel real without leaving the single-file structure.",
-            lessons:
-              "Fullscreen overlays with sticky in-page navigation can substitute for separate routes convincingly.",
-            future:
-              "Planned: swap the AI assistant's local knowledge base for a live backend-proxied model.",
+            challenges: "Making every project 'page' feel real without leaving the single-file structure.",
+            lessons: "Fullscreen overlays with sticky in-page navigation can substitute for separate routes convincingly.",
+            future: "Planned: swap the AI assistant's local knowledge base for a live backend-proxied model.",
             techstack: "HTML, CSS, JavaScript, GSAP.",
-            results:
-              "A single-page portfolio that behaves like a small SaaS product.",
-            timeline: [
-              "Discovery",
-              "Planning",
-              "UI Design",
-              "Development",
-              "Testing",
-              "Deployment",
-            ],
+            results: "A single-page portfolio that behaves like a small SaaS product.",
+            timeline: ["Discovery", "Planning", "UI Design", "Development", "Testing", "Deployment"],
           },
         ],
-        services: [
-          "Business Management Systems",
-          "Dashboard Development",
-          "Client Portals",
-          "API Development",
-          "Database Architecture",
-          "AI-Assisted Features",
-        ],
+        services: ["Business Management Systems", "Dashboard Development", "Client Portals", "API Development", "Database Architecture", "AI-Assisted Features"],
         blog: [
-          {
-            tag: "Architecture",
-            title: "How I structure a Laravel ERP-style system",
-            summary:
-              "The module and middleware layout behind Union Enterprises, and why roles get decided before screens.",
-            meta: "8 min read",
-          },
-          {
-            tag: "Auth",
-            title: "Role-based authentication, done at the query layer",
-            summary:
-              "Why guarding routes isn't enough — the permission boundary has to live in the data access layer too.",
-            meta: "6 min read",
-          },
-          {
-            tag: "Database",
-            title: "Designing a schema before the first screen",
-            summary:
-              "A walkthrough of normalizing shipments, invoices and documents around one client record.",
-            meta: "7 min read",
-          },
-          {
-            tag: "APIs",
-            title: "REST endpoints for a two-sided platform",
-            summary:
-              "Structuring one API to serve both an admin dashboard and a simplified client portal.",
-            meta: "5 min read",
-          },
-          {
-            tag: "Performance",
-            title: "Keeping Laravel dashboards fast at scale",
-            summary:
-              "Indexing and query patterns that keep reporting screens responsive as data grows.",
-            meta: "6 min read",
-          },
-          {
-            tag: "AI",
-            title: "Adding an AI assistant to an existing dashboard",
-            summary:
-              "A modular provider pattern for swapping model backends without touching the UI.",
-            meta: "5 min read",
-          },
+          { tag: "Architecture", title: "How I structure a Laravel ERP-style system", summary: "The module and middleware layout behind Union Enterprises, and why roles get decided before screens.", meta: "8 min read" },
+          { tag: "Auth", title: "Role-based authentication, done at the query layer", summary: "Why guarding routes isn't enough — the permission boundary has to live in the data access layer too.", meta: "6 min read" },
+          { tag: "Database", title: "Designing a schema before the first screen", summary: "A walkthrough of normalizing shipments, invoices and documents around one client record.", meta: "7 min read" },
+          { tag: "APIs", title: "REST endpoints for a two-sided platform", summary: "Structuring one API to serve both an admin dashboard and a simplified client portal.", meta: "5 min read" },
+          { tag: "Performance", title: "Keeping Laravel dashboards fast at scale", summary: "Indexing and query patterns that keep reporting screens responsive as data grows.", meta: "6 min read" },
+          { tag: "AI", title: "Adding an AI assistant to an existing dashboard", summary: "A modular provider pattern for swapping model backends without touching the UI.", meta: "5 min read" },
         ],
-        contact: {
-          email: "hello@muhammadharmain.dev",
-          availability: ["Freelance", "Internship", "Full-Time", "Remote"],
-          responseTime: "Within 24 hours",
-          preferred: "Email",
-        },
+        contact: { email: "hello@muhammadharmain.dev", availability: ["Freelance", "Internship", "Full-Time", "Remote"], responseTime: "Within 24 hours", preferred: "Email" },
         faq: [
-          {
-            q: "What kind of projects do you take on?",
-            a: "Business management systems — dashboards, portals, and internal tools built primarily with Laravel and MySQL.",
-          },
-          {
-            q: "Can you build an ERP-style system?",
-            a: "Yes — the Union Enterprises platform is effectively an ERP for logistics: shipments, invoicing, documents, and roles in one system.",
-          },
-          {
-            q: "Do you work with clients outside Pakistan?",
-            a: "Yes, communication and delivery are fully remote-friendly.",
-          },
-          {
-            q: "How do we get started?",
-            a: "Send a short brief through the contact form — scope, timeline, and next steps come after an initial conversation.",
-          },
+          { q: "What kind of projects do you take on?", a: "Business management systems — dashboards, portals, and internal tools built primarily with Laravel and MySQL." },
+          { q: "Can you build an ERP-style system?", a: "Yes — the Union Enterprises platform is effectively an ERP for logistics: shipments, invoicing, documents, and roles in one system." },
+          { q: "Do you work with clients outside Pakistan?", a: "Yes, communication and delivery are fully remote-friendly." },
+          { q: "How do we get started?", a: "Send a short brief through the contact form — scope, timeline, and next steps come after an initial conversation." },
         ],
       };
 
       gsap.registerPlugin(ScrollTrigger);
 
       /* ============================================================
-   THEME (in-memory; structured so persistTheme() is the only
-   function to touch when localStorage is enabled later)
-   ============================================================ */
+         THEME
+         ============================================================ */
       const ThemeModule = (() => {
         let current = "dark";
+
         function apply(theme) {
           current = theme;
           document.documentElement.setAttribute("data-theme", theme);
-          // persistTheme(theme); // enable when persistence is wired up
         }
+
         function toggle() {
           apply(current === "dark" ? "light" : "dark");
         }
+
         function get() {
           return current;
         }
         return { apply, toggle, get };
       })();
-      document
-        .getElementById("themeToggle")
-        .addEventListener("click", ThemeModule.toggle);
+      document.getElementById("themeToggle").addEventListener("click", ThemeModule.toggle);
 
       /* ============================================================
-   LOADER — staged
-   ============================================================ */
+         LOADER
+         ============================================================ */
       const loaderStages = [
         "Initializing portfolio...",
         "Loading components...",
@@ -3841,20 +3737,13 @@
         stageEl.textContent = loaderStages[0];
         const iv = setInterval(() => {
           p += Math.random() * 14;
-          if (p >= 100) {
-            p = 100;
-            clearInterval(iv);
-          }
+          if (p >= 100) { p = 100;
+            clearInterval(iv); }
           fill.style.width = p + "%";
           pct.textContent = Math.floor(p) + "%";
-          const nextStage = Math.min(
-            loaderStages.length - 1,
-            Math.floor((p / 100) * loaderStages.length),
-          );
-          if (nextStage !== stageIndex) {
-            stageIndex = nextStage;
-            stageEl.textContent = loaderStages[stageIndex];
-          }
+          const nextStage = Math.min(loaderStages.length - 1, Math.floor((p / 100) * loaderStages.length));
+          if (nextStage !== stageIndex) { stageIndex = nextStage;
+            stageEl.textContent = loaderStages[stageIndex]; }
           if (p === 100) {
             stageEl.textContent = loaderStages[loaderStages.length - 1];
             setTimeout(() => {
@@ -3865,109 +3754,49 @@
         }, 140);
       })();
 
-      /* Header scroll state — rAF-throttled so the class toggle never
-   runs more than once per frame no matter how many scroll events fire. */
       const header = document.getElementById("siteHeader");
       let scrollTicking = false;
-      window.addEventListener(
-        "scroll",
-        () => {
-          if (scrollTicking) return;
-          scrollTicking = true;
-          requestAnimationFrame(() => {
-            header.classList.toggle("scrolled", window.scrollY > 40);
-            scrollTicking = false;
-          });
-        },
-        { passive: true },
-      );
+      window.addEventListener("scroll", () => {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          header.classList.toggle("scrolled", window.scrollY > 40);
+          scrollTicking = false;
+        });
+      }, { passive: true });
 
       /* Hero text reveal */
       function playHeroIntro() {
-        gsap.to(".hero-copy h1 .line span", {
-          y: 0,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: "power4.out",
-        });
-        gsap.fromTo(
-          ".hero-sub, .hero-actions, .hero-stats",
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.12,
-            delay: 0.5,
-            ease: "power2.out",
-          },
-        );
-        gsap.fromTo(
-          ".hero-visual",
-          { opacity: 0, scale: 0.92 },
-          { opacity: 1, scale: 1, duration: 1, delay: 0.3, ease: "power3.out" },
-        );
+        gsap.to(".hero-copy h1 .line span", { y: 0, duration: 0.9, stagger: 0.12, ease: "power4.out" });
+        gsap.fromTo(".hero-sub, .hero-actions, .hero-stats", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12, delay: 0.5, ease: "power2.out" });
+        gsap.fromTo(".hero-visual", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1, delay: 0.3, ease: "power3.out" });
         animateCounters();
       }
 
       /* ============================================================
-   POINTER PIPELINE — a single passive mousemove listener only
-   ever records the latest coordinates. All visual updates
-   (cursor, spotlight, hero parallax) run once per animation
-   frame off the GSAP ticker, using quickTo/quickSetter so no
-   new tween objects are created on every mouse event.
-   ============================================================ */
+         CURSOR & SPOTLIGHT
+         ============================================================ */
       const heroSection = document.querySelector(".hero");
       const portrait = document.getElementById("portrait");
       const spotlight = document.getElementById("spotlight");
       const cursorDot = document.getElementById("cursorDot");
       const cursorRing = document.getElementById("cursorRing");
-      const floatTags = gsap.utils.toArray(".float-tag"); // queried once, reused every frame
+      const floatTags = gsap.utils.toArray(".float-tag");
 
       gsap.set([cursorDot, cursorRing], { xPercent: -50, yPercent: -50 });
       gsap.set(spotlight, { xPercent: -50, yPercent: -50 });
 
-      const setDotX = gsap.quickTo(cursorDot, "x", {
-        duration: 0.08,
-        ease: "power2.out",
-      });
-      const setDotY = gsap.quickTo(cursorDot, "y", {
-        duration: 0.08,
-        ease: "power2.out",
-      });
-      const setRingX = gsap.quickTo(cursorRing, "x", {
-        duration: 0.25,
-        ease: "power2.out",
-      });
-      const setRingY = gsap.quickTo(cursorRing, "y", {
-        duration: 0.25,
-        ease: "power2.out",
-      });
-      const setSpotX = gsap.quickTo(spotlight, "x", {
-        duration: 0.4,
-        ease: "power2.out",
-      });
-      const setSpotY = gsap.quickTo(spotlight, "y", {
-        duration: 0.4,
-        ease: "power2.out",
-      });
+      const setDotX = gsap.quickTo(cursorDot, "x", { duration: 0.08, ease: "power2.out" });
+      const setDotY = gsap.quickTo(cursorDot, "y", { duration: 0.08, ease: "power2.out" });
+      const setRingX = gsap.quickTo(cursorRing, "x", { duration: 0.25, ease: "power2.out" });
+      const setRingY = gsap.quickTo(cursorRing, "y", { duration: 0.25, ease: "power2.out" });
+      const setSpotX = gsap.quickTo(spotlight, "x", { duration: 0.4, ease: "power2.out" });
+      const setSpotY = gsap.quickTo(spotlight, "y", { duration: 0.4, ease: "power2.out" });
 
-      const setPortraitX = gsap.quickTo(portrait, "x", {
-        duration: 0.6,
-        ease: "power2.out",
-      });
-      const setPortraitY = gsap.quickTo(portrait, "y", {
-        duration: 0.6,
-        ease: "power2.out",
-      });
-      const setPortraitRY = gsap.quickTo(portrait, "rotateY", {
-        duration: 0.6,
-        ease: "power2.out",
-      });
-      const setPortraitRX = gsap.quickTo(portrait, "rotateX", {
-        duration: 0.6,
-        ease: "power2.out",
-      });
+      const setPortraitX = gsap.quickTo(portrait, "x", { duration: 0.6, ease: "power2.out" });
+      const setPortraitY = gsap.quickTo(portrait, "y", { duration: 0.6, ease: "power2.out" });
+      const setPortraitRY = gsap.quickTo(portrait, "rotateY", { duration: 0.6, ease: "power2.out" });
+      const setPortraitRX = gsap.quickTo(portrait, "rotateX", { duration: 0.6, ease: "power2.out" });
       const floatTagSetters = floatTags.map((tag) => ({
         x: gsap.quickTo(tag, "x", { duration: 0.6, ease: "power2.out" }),
         y: gsap.quickTo(tag, "y", { duration: 0.6, ease: "power2.out" }),
@@ -3976,29 +3805,21 @@
       let pointerX = -9999,
         pointerY = -9999,
         pointerDirty = false;
-      let heroRect = null; // cached; refreshed on resize/scroll rather than every mousemove
+      let heroRect = null;
 
-      function refreshHeroRect() {
-        heroRect = heroSection.getBoundingClientRect();
-      }
+      function refreshHeroRect() { heroRect = heroSection.getBoundingClientRect(); }
       refreshHeroRect();
       window.addEventListener("resize", refreshHeroRect, { passive: true });
 
-      window.addEventListener(
-        "mousemove",
-        (e) => {
-          pointerX = e.clientX;
-          pointerY = e.clientY;
-          pointerDirty = true;
-        },
-        { passive: true },
-      );
+      window.addEventListener("mousemove", (e) => {
+        pointerX = e.clientX;
+        pointerY = e.clientY;
+        pointerDirty = true;
+      }, { passive: true });
 
-      // One update per animation frame, regardless of how many mousemove events fired.
       gsap.ticker.add(() => {
         if (!pointerDirty) return;
         pointerDirty = false;
-
         setDotX(pointerX);
         setDotY(pointerY);
         setRingX(pointerX);
@@ -4006,73 +3827,40 @@
         setSpotX(pointerX);
         setSpotY(pointerY);
 
-        if (
-          heroRect &&
-          pointerY >= heroRect.top &&
-          pointerY <= heroRect.bottom
-        ) {
+        if (heroRect && pointerY >= heroRect.top && pointerY <= heroRect.bottom) {
           const nx = (pointerX - heroRect.left) / heroRect.width - 0.5;
           const ny = (pointerY - heroRect.top) / heroRect.height - 0.5;
           setPortraitX(nx * 24);
           setPortraitY(ny * 24);
           setPortraitRY(nx * 8);
           setPortraitRX(-ny * 8);
-          floatTagSetters.forEach((s) => {
-            s.x(nx * 12);
-            s.y(ny * 12);
-          });
+          floatTagSetters.forEach((s) => { s.x(nx * 12);
+            s.y(ny * 12); });
         }
       });
 
-      const hoverTargets = document.querySelectorAll(
-        "a, button, .project-card, .tech-chip, .faq-q, input, textarea",
-      );
+      const hoverTargets = document.querySelectorAll("a, button, .project-card, .tech-chip, .faq-q, input, textarea");
       hoverTargets.forEach((el) => {
-        el.addEventListener(
-          "mouseenter",
-          () => cursorRing.classList.add("hovered"),
-          { passive: true },
-        );
-        el.addEventListener(
-          "mouseleave",
-          () => cursorRing.classList.remove("hovered"),
-          { passive: true },
-        );
+        el.addEventListener("mouseenter", () => cursorRing.classList.add("hovered"), { passive: true });
+        el.addEventListener("mouseleave", () => cursorRing.classList.remove("hovered"), { passive: true });
       });
 
       /* Hero rotating keywords */
       (function heroRotator() {
-        const words = [
-          "dashboards",
-          "portals",
-          "business platforms",
-          "admin systems",
-          "internal tools",
-        ];
+        const words = ["dashboards", "portals", "business platforms", "admin systems", "internal tools"];
         const wrap = document.getElementById("heroRotate");
         let i = 0;
+
         function render() {
           wrap.innerHTML = `<span class="rot-word">${words[i]}</span>`;
           wrap.style.width = "auto";
-          gsap.fromTo(
-            wrap.firstChild,
-            { y: "100%", opacity: 0 },
-            { y: "0%", opacity: 1, duration: 0.5, ease: "power2.out" },
-          );
+          gsap.fromTo(wrap.firstChild, { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 0.5, ease: "power2.out" });
         }
         render();
         setInterval(() => {
           const outEl = wrap.firstChild;
-          gsap.to(outEl, {
-            y: "-100%",
-            opacity: 0,
-            duration: 0.4,
-            ease: "power2.in",
-            onComplete: () => {
-              i = (i + 1) % words.length;
-              render();
-            },
-          });
+          gsap.to(outEl, { y: "-100%", opacity: 0, duration: 0.4, ease: "power2.in", onComplete: () => { i = (i + 1) % words.length;
+              render(); } });
         }, 2600);
       })();
 
@@ -4083,34 +3871,21 @@
           duration: 0.8,
           stagger: 0.12,
           ease: "power3.out",
-
-          scrollTrigger: {
-            trigger: section,
-            start: "top 75%",
-            once: true,
-          },
+          scrollTrigger: { trigger: section, start: "top 75%", once: true },
         });
       });
 
-      /* Magnetic buttons */
-      document
-        .querySelectorAll(".btn-primary, .btn-secondary")
-        .forEach((btn) => {
-          btn.addEventListener("mousemove", (e) => {
-            const r = btn.getBoundingClientRect();
-            const x = e.clientX - r.left - r.width / 2;
-            const y = e.clientY - r.top - r.height / 2;
-            gsap.to(btn, { x: x * 0.25, y: y * 0.35, duration: 0.3 });
-          });
-          btn.addEventListener("mouseleave", () =>
-            gsap.to(btn, {
-              x: 0,
-              y: 0,
-              duration: 0.4,
-              ease: "elastic.out(1,0.4)",
-            }),
-          );
+      document.querySelectorAll(".btn-primary, .btn-secondary").forEach((btn) => {
+        btn.addEventListener("mousemove", (e) => {
+          const r = btn.getBoundingClientRect();
+          const x = e.clientX - r.left - r.width / 2;
+          const y = e.clientY - r.top - r.height / 2;
+          gsap.to(btn, { x: x * 0.25, y: y * 0.35, duration: 0.3 });
         });
+        btn.addEventListener("mouseleave", () =>
+          gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1,0.4)" })
+        );
+      });
 
       /* FAQ accordion */
       document.querySelectorAll(".faq-item").forEach((item) => {
@@ -4129,7 +3904,7 @@
         });
       });
 
-      /* Union Enterprises mockup mini-chart */
+      /* Union Enterprises mockup chart */
       (function buildMockupChart() {
         const chart = document.getElementById("ueChart");
         if (!chart) return;
@@ -4141,7 +3916,6 @@
         });
       })();
 
-      /* Achievement counters */
       function animateCounters() {
         document.querySelectorAll("[data-count]").forEach((el) => {
           const target = parseInt(el.getAttribute("data-count"), 10);
@@ -4150,48 +3924,37 @@
             val: target,
             duration: 1.4,
             ease: "power2.out",
-            onUpdate: () => {
-              el.textContent = Math.floor(obj.val);
-            },
+            onUpdate: () => { el.textContent = Math.floor(obj.val); },
             scrollTrigger: { trigger: el, start: "top 90%", once: true },
           });
         });
         const statSystems = document.getElementById("statSystems");
-        gsap.to(
-          { v: 0 },
-          {
-            v: portfolioData.projects.length,
-            duration: 1.2,
-            ease: "power2.out",
-            onUpdate: function () {
-              statSystems.textContent = Math.floor(this.targets()[0].v);
-            },
-          },
-        );
+        gsap.to({ v: 0 }, {
+          v: portfolioData.projects.length,
+          duration: 1.2,
+          ease: "power2.out",
+          onUpdate: function() { statSystems.textContent = Math.floor(this.targets()[0].v); },
+        });
       }
 
       /* ============================================================
-   TECH STACK — render + hover/tap popovers
-   ============================================================ */
+         TECH STACK
+         ============================================================ */
       (function renderStack() {
         const grid = document.getElementById("stackGrid");
         Object.entries(portfolioData.stack).forEach(([category, items]) => {
           const cell = document.createElement("div");
           cell.className = "stack-cell";
-          const list = items
-            .map(
-              (t) => `
-      <li class="tech-chip" data-tech="${t.name}">
-        <span>${t.name}</span>
-        <span class="stars">${"★".repeat(t.stars)}${"☆".repeat(5 - t.stars)}</span>
-      </li>`,
-            )
-            .join("");
+          const list = items.map((t) =>
+            `<li class="tech-chip" data-tech="${t.name}">
+              <span>${t.name}</span>
+              <span class="stars">${"★".repeat(t.stars)}${"☆".repeat(5 - t.stars)}</span>
+            </li>`
+          ).join("");
           cell.innerHTML = `<span class="cat">${category}</span><ul>${list}</ul>`;
           grid.appendChild(cell);
         });
 
-        // single shared popover element
         const pop = document.createElement("div");
         pop.className = "tech-popover";
         pop.id = "techPopover";
@@ -4209,19 +3972,18 @@
           const tech = findTech(chip.dataset.tech);
           if (!tech) return;
           pop.innerHTML = `
-      <h5>${tech.name}</h5>
-      <p>${tech.desc}</p>
-      <div class="tp-row">${tech.uses.map((u) => `<span class="tp-chip">${u}</span>`).join("")}</div>
-      <div class="tp-row" style="margin-top:8px;">${tech.related.map((r) => `<span class="tp-chip">${r}</span>`).join("")}</div>
-    `;
+            <h5>${tech.name}</h5>
+            <p>${tech.desc}</p>
+            <div class="tp-row">${tech.uses.map((u) => `<span class="tp-chip">${u}</span>`).join("")}</div>
+            <div class="tp-row" style="margin-top:8px;">${tech.related.map((r) => `<span class="tp-chip">${r}</span>`).join("")}</div>
+          `;
           const r = chip.getBoundingClientRect();
           pop.style.left = Math.min(r.left, window.innerWidth - 280) + "px";
           pop.style.top = r.bottom + window.scrollY + 8 + "px";
           pop.classList.add("show");
         }
-        function hidePopover() {
-          pop.classList.remove("show");
-        }
+
+        function hidePopover() { pop.classList.remove("show"); }
 
         document.querySelectorAll(".tech-chip").forEach((chip) => {
           chip.addEventListener("mouseenter", () => showPopover(chip));
@@ -4232,8 +3994,8 @@
       })();
 
       /* ============================================================
-   PROJECTS GRID — render from data
-   ============================================================ */
+         PROJECTS GRID
+         ============================================================ */
       (function renderProjects() {
         const grid = document.getElementById("projectsGrid");
         portfolioData.projects.forEach((p) => {
@@ -4242,249 +4004,205 @@
           card.className = "project-card";
           card.dataset.openProject = p.id;
           card.innerHTML = `
-      <div class="project-top"><span class="project-index">${p.index}</span></div>
-      <h3>${p.name}</h3>
-      <p>${p.description}</p>
-      <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
-      <div class="project-metrics">${metricEntries.map(([k, v]) => `<span class="pm"><b>${v}</b>${k}</span>`).join("")}</div>
-      <div class="project-expand">Open case study →</div>
-    `;
+            <div class="project-top"><span class="project-index">${p.index}</span></div>
+            <h3>${p.name}</h3>
+            <p>${p.description}</p>
+            <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+            <div class="project-metrics">${metricEntries.map(([k, v]) => `<span class="pm"><b>${v}</b>${k}</span>`).join("")}</div>
+            <div class="project-expand">Open case study →</div>
+          `;
           grid.appendChild(card);
         });
       })();
 
       /* ============================================================
-   BLOG — render from data
-   ============================================================ */
+         BLOG
+         ============================================================ */
       (function renderBlog() {
         const grid = document.getElementById("blogGrid");
         portfolioData.blog.forEach((b) => {
           const card = document.createElement("div");
           card.className = "blog-card";
           card.innerHTML = `
-      <span class="blog-tag">${b.tag}</span>
-      <h3>${b.title}</h3>
-      <p>${b.summary}</p>
-      <div class="blog-meta">${b.meta}</div>
-    `;
+            <span class="blog-tag">${b.tag}</span>
+            <h3>${b.title}</h3>
+            <p>${b.summary}</p>
+            <div class="blog-meta">${b.meta}</div>
+          `;
           grid.appendChild(card);
         });
       })();
 
       /* ============================================================
-   PROJECT OVERLAYS — fullscreen case studies
-   ============================================================ */
-      const overlayTabs = [
-        "Overview",
-        "Problem",
-        "Research",
-        "Architecture",
-        "Database",
-        "Roles & Auth",
-        "API",
-        "Challenges",
-        "Timeline",
-        "Gallery",
-        "Tech",
-      ];
+         PROJECT OVERLAYS
+         ============================================================ */
+      const overlayTabs = ["Overview", "Problem", "Research", "Architecture", "Database", "Roles & Auth", "API", "Challenges", "Timeline", "Gallery", "Tech"];
 
       function buildOverlay(p) {
         const el = document.createElement("div");
         el.className = "overlay";
         el.id = "overlay-" + p.id;
         el.innerHTML = `
-    <button class="overlay-close" data-close-overlay>✕</button>
-    <nav class="overlay-nav">
-      ${overlayTabs.map((t, i) => `<button data-tab="${slug(t)}" class="${i === 0 ? "active" : ""}">${t}</button>`).join("")}
-    </nav>
-    <div class="overlay-content">
-      <div class="overlay-hero">
-        <div class="eyebrow">Case Study ${p.index}</div>
-        <h1>${p.name}</h1>
-        <p>${p.tagline} — ${p.description}</p>
-        <div class="ov-links" style="margin-top:24px;">
-          <a href="#" class="btn-secondary">GitHub ↗</a>
-          <a href="#" class="btn-secondary">Live Demo ↗</a>
-        </div>
-      </div>
+          <button class="overlay-close" data-close-overlay>✕</button>
+          <nav class="overlay-nav">
+            ${overlayTabs.map((t, i) => `<button data-tab="${slug(t)}" class="${i === 0 ? "active" : ""}">${t}</button>`).join("")}
+          </nav>
+          <div class="overlay-content">
+            <div class="overlay-hero">
+              <div class="eyebrow">Case Study ${p.index}</div>
+              <h1>${p.name}</h1>
+              <p>${p.tagline} — ${p.description}</p>
+              <div class="ov-links" style="margin-top:24px;">
+                <a href="#" class="btn-secondary">GitHub ↗</a>
+                <a href="#" class="btn-secondary">Live Demo ↗</a>
+              </div>
+            </div>
 
-      <div class="ov-section" id="overview-${p.id}">
-        <h2>Overview</h2>
-        <p>${p.description}</p>
-        <div class="ov-metric-grid">
-          ${Object.entries(p.metrics)
-            .map(
-              ([k, v]) =>
-                `<div class="ov-metric"><b>${v}</b><span>${k}</span></div>`,
-            )
-            .join("")}
-        </div>
-      </div>
+            <div class="ov-section" id="overview-${p.id}">
+              <h2>Overview</h2>
+              <p>${p.description}</p>
+              <div class="ov-metric-grid">
+                ${Object.entries(p.metrics).map(([k, v]) => `<div class="ov-metric"><b>${v}</b><span>${k}</span></div>`).join("")}
+              </div>
+            </div>
 
-      <div class="ov-section" id="problem-${p.id}">
-        <h2>Problem</h2>
-        <p>${p.problem}</p>
-      </div>
+            <div class="ov-section" id="problem-${p.id}">
+              <h2>Problem</h2>
+              <p>${p.problem}</p>
+            </div>
 
-      <div class="ov-section" id="research-${p.id}">
-        <h2>Research &amp; Planning</h2>
-        <div class="ov-grid-2">
-          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Research</h4><p>${p.research}</p></div>
-          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Planning</h4><p>${p.planning}</p></div>
-        </div>
-        <h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin:24px 0 10px;">UI/UX Decisions</h4>
-        <p>${p.uiux}</p>
-      </div>
+            <div class="ov-section" id="research-${p.id}">
+              <h2>Research &amp; Planning</h2>
+              <div class="ov-grid-2">
+                <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Research</h4><p>${p.research}</p></div>
+                <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Planning</h4><p>${p.planning}</p></div>
+              </div>
+              <h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin:24px 0 10px;">UI/UX Decisions</h4>
+              <p>${p.uiux}</p>
+            </div>
 
-      <div class="ov-section" id="architecture-${p.id}">
-        <h2>Architecture</h2>
-        <p>${p.architecture}</p>
-        <div class="ov-diagram">${buildArchDiagram(p)}</div>
-      </div>
+            <div class="ov-section" id="architecture-${p.id}">
+              <h2>Architecture</h2>
+              <p>${p.architecture}</p>
+              <div class="ov-diagram">${buildArchDiagram(p)}</div>
+            </div>
 
-      <div class="ov-section" id="database-${p.id}">
-        <h2>Database Design</h2>
-        <p>${p.database}</p>
-        <div class="ov-diagram">${buildERDiagram(p)}</div>
-      </div>
+            <div class="ov-section" id="database-${p.id}">
+              <h2>Database Design</h2>
+              <p>${p.database}</p>
+              <div class="ov-diagram">${buildERDiagram(p)}</div>
+            </div>
 
-      <div class="ov-section" id="roles---auth-${p.id}">
-        <h2>User Roles &amp; Authentication</h2>
-        <table class="role-table">
-          <thead><tr><th>Role</th><th>Access</th></tr></thead>
-          <tbody>${p.roles.map((r) => `<tr><td>${r.role}</td><td>${r.access}</td></tr>`).join("")}</tbody>
-        </table>
-        <p style="margin-top:20px;">${p.auth}</p>
-      </div>
+            <div class="ov-section" id="roles---auth-${p.id}">
+              <h2>User Roles &amp; Authentication</h2>
+              <table class="role-table">
+                <thead><tr><th>Role</th><th>Access</th></tr></thead>
+                <tbody>${p.roles.map((r) => `<tr><td>${r.role}</td><td>${r.access}</td></tr>`).join("")}</tbody>
+              </table>
+              <p style="margin-top:20px;">${p.auth}</p>
+            </div>
 
-      <div class="ov-section" id="api-${p.id}">
-        <h2>API Structure</h2>
-        <p>${p.api}</p>
-      </div>
+            <div class="ov-section" id="api-${p.id}">
+              <h2>API Structure</h2>
+              <p>${p.api}</p>
+            </div>
 
-      <div class="ov-section" id="challenges-${p.id}">
-        <h2>Challenges, Solutions &amp; Lessons</h2>
-        <div class="ov-grid-2">
-          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Challenge</h4><p>${p.challenges}</p></div>
-          <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Lessons Learned</h4><p>${p.lessons}</p></div>
-        </div>
-        <h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin:24px 0 10px;">Future Improvements</h4>
-        <p>${p.future}</p>
-      </div>
+            <div class="ov-section" id="challenges-${p.id}">
+              <h2>Challenges, Solutions &amp; Lessons</h2>
+              <div class="ov-grid-2">
+                <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Challenge</h4><p>${p.challenges}</p></div>
+                <div><h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;">Lessons Learned</h4><p>${p.lessons}</p></div>
+              </div>
+              <h4 style="font-size:14px;color:var(--accent);font-family:var(--font-mono);margin:24px 0 10px;">Future Improvements</h4>
+              <p>${p.future}</p>
+            </div>
 
-      <div class="ov-section" id="timeline-${p.id}">
-        <h2>Timeline &amp; Results</h2>
-        <div class="timeline-mini">
-          ${p.timeline.map((t) => `<div class="tm-step done"><b>${t}</b></div>`).join("")}
-        </div>
-        <p style="margin-top:24px;">${p.results}</p>
-      </div>
+            <div class="ov-section" id="timeline-${p.id}">
+              <h2>Timeline &amp; Results</h2>
+              <div class="timeline-mini">
+                ${p.timeline.map((t) => `<div class="tm-step done"><b>${t}</b></div>`).join("")}
+              </div>
+              <p style="margin-top:24px;">${p.results}</p>
+            </div>
 
-      <div class="ov-section" id="gallery-${p.id}">
-        <h2>Gallery &amp; Screenshots</h2>
-        <div class="ov-gallery">
-          <div class="ov-gallery-item">Admin dashboard view</div>
-          <div class="ov-gallery-item">Mobile preview</div>
-          <div class="ov-gallery-item">Reports &amp; analytics</div>
-        </div>
-      </div>
+            <div class="ov-section" id="gallery-${p.id}">
+              <h2>Gallery &amp; Screenshots</h2>
+              <div class="ov-gallery">
+                <div class="ov-gallery-item">Admin dashboard view</div>
+                <div class="ov-gallery-item">Mobile preview</div>
+                <div class="ov-gallery-item">Reports &amp; analytics</div>
+              </div>
+            </div>
 
-      <div class="ov-section" id="tech-${p.id}">
-        <h2>Tech Stack</h2>
-        <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
-        <p style="margin-top:16px;">${p.techstack}</p>
-      </div>
-    </div>
-  `;
+            <div class="ov-section" id="tech-${p.id}">
+              <h2>Tech Stack</h2>
+              <div class="project-tags">${p.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+              <p style="margin-top:16px;">${p.techstack}</p>
+            </div>
+          </div>
+        `;
         return el;
       }
 
-      function slug(s) {
-        return s.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "");
-      }
+      function slug(s) { return s.toLowerCase().replace(/\s+/g, "-").replace(/&/g, ""); }
 
       function buildArchDiagram(p) {
         return `
-  <svg viewBox="0 0 640 140" width="100%" height="140" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
-    <style>
-      .box{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1;}
-      .lbl{fill:var(--muted);font-size:11px;}
-      .lnk{stroke:var(--accent);stroke-width:1.2;fill:none;marker-end:url(#arrow-${p.id});}
-    </style>
-    <defs>
-      <marker id="arrow-${p.id}" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--accent)"/></marker>
-    </defs>
-    <rect class="box" x="10" y="50" width="120" height="40" rx="8"/><text class="lbl" x="30" y="74">Client / Portal</text>
-    <rect class="box" x="180" y="50" width="140" height="40" rx="8"/><text class="lbl" x="205" y="74">Laravel Middleware</text>
-    <rect class="box" x="370" y="50" width="120" height="40" rx="8"/><text class="lbl" x="392" y="74">Controllers</text>
-    <rect class="box" x="530" y="50" width="100" height="40" rx="8"/><text class="lbl" x="548" y="74">MySQL</text>
-    <path class="lnk" d="M130,70 H180"/>
-    <path class="lnk" d="M320,70 H370"/>
-    <path class="lnk" d="M490,70 H530"/>
-  </svg>`;
+          <svg viewBox="0 0 640 140" width="100%" height="140" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+            <style>
+              .box{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1;}
+              .lbl{fill:var(--muted);font-size:11px;}
+              .lnk{stroke:var(--accent);stroke-width:1.2;fill:none;marker-end:url(#arrow-${p.id});}
+            </style>
+            <defs>
+              <marker id="arrow-${p.id}" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--accent)"/></marker>
+            </defs>
+            <rect class="box" x="10" y="50" width="120" height="40" rx="8"/><text class="lbl" x="30" y="74">Client / Portal</text>
+            <rect class="box" x="180" y="50" width="140" height="40" rx="8"/><text class="lbl" x="205" y="74">Laravel Middleware</text>
+            <rect class="box" x="370" y="50" width="120" height="40" rx="8"/><text class="lbl" x="392" y="74">Controllers</text>
+            <rect class="box" x="530" y="50" width="100" height="40" rx="8"/><text class="lbl" x="548" y="74">MySQL</text>
+            <path class="lnk" d="M130,70 H180"/>
+            <path class="lnk" d="M320,70 H370"/>
+            <path class="lnk" d="M490,70 H530"/>
+          </svg>`;
       }
 
       function buildERDiagram(p) {
-        const tables = ["clients", "shipments", "invoices", "documents"].slice(
-          0,
-          Math.max(2, Object.keys(p.metrics).length - 1),
-        );
+        const tables = ["clients", "shipments", "invoices", "documents"].slice(0, Math.max(2, Object.keys(p.metrics).length - 1));
         return `
-  <svg viewBox="0 0 640 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
-    <style>
-      .er{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1;}
-      .erh{fill:var(--accent-dim);}
-      .erl{fill:var(--muted);font-size:10.5px;}
-      .erlink{stroke:var(--border-strong);stroke-width:1;}
-    </style>
-    ${tables
-      .map(
-        (t, i) => `
-      <g transform="translate(${20 + i * 160},20)">
-        <rect class="er erh" width="140" height="26"/>
-        <text class="erl" x="10" y="17" style="fill:var(--accent);font-weight:600;">${t}</text>
-        <rect class="er" y="26" width="140" height="90"/>
-        <text class="erl" x="10" y="44">id (PK)</text>
-        <text class="erl" x="10" y="60">name</text>
-        <text class="erl" x="10" y="76">status</text>
-        <text class="erl" x="10" y="92">created_at</text>
-      </g>
-    `,
-      )
-      .join("")}
-    ${tables
-      .slice(0, -1)
-      .map(
-        (t, i) =>
-          `<line class="erlink" x1="${160 + i * 160}" y1="70" x2="${180 + i * 160}" y2="70"/>`,
-      )
-      .join("")}
-  </svg>`;
+          <svg viewBox="0 0 640 160" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+            <style>
+              .er{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1;}
+              .erh{fill:var(--accent-dim);}
+              .erl{fill:var(--muted);font-size:10.5px;}
+              .erlink{stroke:var(--border-strong);stroke-width:1;}
+            </style>
+            ${tables.map((t, i) => `
+              <g transform="translate(${20 + i * 160},20)">
+                <rect class="er erh" width="140" height="26"/>
+                <text class="erl" x="10" y="17" style="fill:var(--accent);font-weight:600;">${t}</text>
+                <rect class="er" y="26" width="140" height="90"/>
+                <text class="erl" x="10" y="44">id (PK)</text>
+                <text class="erl" x="10" y="60">name</text>
+                <text class="erl" x="10" y="76">status</text>
+                <text class="erl" x="10" y="92">created_at</text>
+              </g>
+            `).join("")}
+            ${tables.slice(0, -1).map((t, i) => `<line class="erlink" x1="${160 + i * 160}" y1="70" x2="${180 + i * 160}" y2="70"/>`).join("")}
+          </svg>`;
       }
 
       const overlayMount = document.getElementById("overlayMount");
-      portfolioData.projects.forEach((p) =>
-        overlayMount.appendChild(buildOverlay(p)),
-      );
+      portfolioData.projects.forEach((p) => overlayMount.appendChild(buildOverlay(p)));
 
       function openOverlay(id) {
         const overlay = document.getElementById("overlay-" + id);
         if (!overlay) return;
         overlay.classList.add("open");
         document.body.style.overflow = "hidden";
-        gsap.fromTo(
-          overlay.querySelectorAll(".ov-section, .overlay-hero"),
-          { opacity: 0, y: 24 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.05,
-            ease: "power2.out",
-            delay: 0.15,
-          },
-        );
+        gsap.fromTo(overlay.querySelectorAll(".ov-section, .overlay-hero"), { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05, ease: "power2.out", delay: 0.15 });
       }
+
       function closeOverlay(overlay) {
         overlay.classList.remove("open");
         document.body.style.overflow = "";
@@ -4492,121 +4210,49 @@
 
       document.addEventListener("click", (e) => {
         const opener = e.target.closest("[data-open-project]");
-        if (opener) {
-          openOverlay(opener.dataset.openProject);
-        }
+        if (opener) { openOverlay(opener.dataset.openProject); }
         const closer = e.target.closest("[data-close-overlay]");
-        if (closer) {
-          closeOverlay(closer.closest(".overlay"));
-        }
+        if (closer) { closeOverlay(closer.closest(".overlay")); }
         const tabBtn = e.target.closest(".overlay-nav button");
         if (tabBtn) {
           const overlay = tabBtn.closest(".overlay");
-          overlay
-            .querySelectorAll(".overlay-nav button")
-            .forEach((b) => b.classList.remove("active"));
+          overlay.querySelectorAll(".overlay-nav button").forEach((b) => b.classList.remove("active"));
           tabBtn.classList.add("active");
-          const target = overlay.querySelector(
-            "#" + tabBtn.dataset.tab + "-" + overlay.id.replace("overlay-", ""),
-          );
-          if (target)
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          const target = overlay.querySelector("#" + tabBtn.dataset.tab + "-" + overlay.id.replace("overlay-", ""));
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          document
-            .querySelectorAll(".overlay.open")
-            .forEach((o) => closeOverlay(o));
+          document.querySelectorAll(".overlay.open").forEach((o) => closeOverlay(o));
         }
       });
 
       /* ============================================================
-   COMMAND PALETTE (Ctrl+K)
-   ============================================================ */
+         COMMAND PALETTE
+         ============================================================ */
       const cmdkOverlay = document.getElementById("cmdkOverlay");
       const cmdkInput = document.getElementById("cmdkInput");
       const cmdkList = document.getElementById("cmdkList");
 
       const cmdkCommands = [
-        {
-          label: "Search Projects",
-          hint: "↵",
-          action: () => scrollToSection("#projects"),
-        },
-        {
-          label: "Search Skills",
-          hint: "↵",
-          action: () => scrollToSection("#stack"),
-        },
-        {
-          label: "Download Resume",
-          hint: "↵",
-          action: () =>
-            alert(
-              "Resume download not wired up yet — reach out via Contact and one will be sent directly.",
-            ),
-        },
-        {
-          label: "Open GitHub",
-          hint: "↵",
-          action: () => scrollToSection("#github"),
-        },
-        {
-          label: "Open LinkedIn",
-          hint: "↵",
-          action: () => window.open("#", "_blank"),
-        },
-        {
-          label: "Contact",
-          hint: "↵",
-          action: () => scrollToSection("#contact"),
-        },
-        {
-          label: "AI Assistant",
-          hint: "↵",
-          action: () => scrollToSection("#assistant"),
-        },
-        {
-          label: "Navigate: About",
-          hint: "↵",
-          action: () => scrollToSection("#about"),
-        },
-        {
-          label: "Navigate: Work",
-          hint: "↵",
-          action: () => scrollToSection("#work"),
-        },
-        {
-          label: "Navigate: Services",
-          hint: "↵",
-          action: () => scrollToSection("#services"),
-        },
-        {
-          label: "Navigate: Blog",
-          hint: "↵",
-          action: () => scrollToSection("#blog"),
-        },
-        {
-          label: "Toggle Dark Mode",
-          hint: "↵",
-          action: () => ThemeModule.apply("dark"),
-        },
-        {
-          label: "Toggle Light Mode",
-          hint: "↵",
-          action: () => ThemeModule.apply("light"),
-        },
+        { label: "Search Projects", hint: "↵", action: () => scrollToSection("#projects") },
+        { label: "Search Skills", hint: "↵", action: () => scrollToSection("#stack") },
+        { label: "Download Resume", hint: "↵", action: () => alert("Resume download not wired up yet — reach out via Contact and one will be sent directly.") },
+        { label: "Open GitHub", hint: "↵", action: () => scrollToSection("#github") },
+        { label: "Open LinkedIn", hint: "↵", action: () => window.open("#", "_blank") },
+        { label: "Contact", hint: "↵", action: () => scrollToSection("#contact") },
+        { label: "AI Assistant", hint: "↵", action: () => scrollToSection("#assistant") },
+        { label: "Navigate: About", hint: "↵", action: () => scrollToSection("#about") },
+        { label: "Navigate: Work", hint: "↵", action: () => scrollToSection("#work") },
+        { label: "Navigate: Services", hint: "↵", action: () => scrollToSection("#services") },
+        { label: "Navigate: Blog", hint: "↵", action: () => scrollToSection("#blog") },
+        { label: "Toggle Dark Mode", hint: "↵", action: () => ThemeModule.apply("dark") },
+        { label: "Toggle Light Mode", hint: "↵", action: () => ThemeModule.apply("light") },
       ];
       portfolioData.projects.forEach((p) => {
-        cmdkCommands.push({
-          label: `Open case study: ${p.name}`,
-          hint: "↵",
-          action: () => {
-            closeCmdk();
-            openOverlay(p.id);
-          },
-        });
+        cmdkCommands.push({ label: `Open case study: ${p.name}`, hint: "↵", action: () => { closeCmdk();
+            openOverlay(p.id); } });
       });
 
       function scrollToSection(sel) {
@@ -4615,23 +4261,20 @@
         if (el) el.scrollIntoView({ behavior: "smooth" });
       }
       let cmdkActiveIndex = 0;
+
       function renderCmdk(filter = "") {
         const f = filter.toLowerCase();
-        const filtered = cmdkCommands.filter((c) =>
-          c.label.toLowerCase().includes(f),
-        );
-        cmdkList.innerHTML = filtered.length
-          ? filtered
-              .map(
-                (c, i) => `
-    <div class="cmdk-item ${i === cmdkActiveIndex ? "active" : ""}" data-idx="${i}">
-      <span>${c.label}</span><span class="k">${c.hint}</span>
-    </div>`,
-              )
-              .join("")
-          : `<div class="cmdk-empty">No matching commands</div>`;
+        const filtered = cmdkCommands.filter((c) => c.label.toLowerCase().includes(f));
+        cmdkList.innerHTML = filtered.length ?
+          filtered.map((c, i) =>
+            `<div class="cmdk-item ${i === cmdkActiveIndex ? "active" : ""}" data-idx="${i}">
+              <span>${c.label}</span><span class="k">${c.hint}</span>
+            </div>`
+          ).join("") :
+          `<div class="cmdk-empty">No matching commands</div>`;
         cmdkList._filtered = filtered;
       }
+
       function openCmdk() {
         cmdkOverlay.classList.add("open");
         cmdkInput.value = "";
@@ -4639,47 +4282,32 @@
         renderCmdk("");
         setTimeout(() => cmdkInput.focus(), 50);
       }
-      function closeCmdk() {
-        cmdkOverlay.classList.remove("open");
-      }
 
-      document
-        .getElementById("cmdkTrigger")
-        .addEventListener("click", openCmdk);
+      function closeCmdk() { cmdkOverlay.classList.remove("open"); }
+
+      document.getElementById("cmdkTrigger").addEventListener("click", openCmdk);
       document.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-          e.preventDefault();
-          openCmdk();
-        }
-        if (e.key === "Escape") {
-          closeCmdk();
-        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault();
+          openCmdk(); }
+        if (e.key === "Escape") { closeCmdk(); }
       });
       cmdkOverlay.addEventListener("click", (e) => {
         if (e.target === cmdkOverlay) closeCmdk();
       });
-      cmdkInput.addEventListener("input", () => {
-        cmdkActiveIndex = 0;
-        renderCmdk(cmdkInput.value);
-      });
+      cmdkInput.addEventListener("input", () => { cmdkActiveIndex = 0;
+        renderCmdk(cmdkInput.value); });
       cmdkInput.addEventListener("keydown", (e) => {
         const items = cmdkList._filtered || [];
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
+        if (e.key === "ArrowDown") { e.preventDefault();
           cmdkActiveIndex = Math.min(items.length - 1, cmdkActiveIndex + 1);
-          renderCmdk(cmdkInput.value);
-        }
-        if (e.key === "ArrowUp") {
-          e.preventDefault();
+          renderCmdk(cmdkInput.value); }
+        if (e.key === "ArrowUp") { e.preventDefault();
           cmdkActiveIndex = Math.max(0, cmdkActiveIndex - 1);
-          renderCmdk(cmdkInput.value);
-        }
+          renderCmdk(cmdkInput.value); }
         if (e.key === "Enter") {
           const item = items[cmdkActiveIndex];
-          if (item) {
-            item.action();
-            closeCmdk();
-          }
+          if (item) { item.action();
+            closeCmdk(); }
         }
       });
       cmdkList.addEventListener("click", (e) => {
@@ -4687,119 +4315,51 @@
         if (item) {
           const idx = parseInt(item.dataset.idx, 10);
           const cmd = cmdkList._filtered[idx];
-          if (cmd) {
-            cmd.action();
-            closeCmdk();
-          }
+          if (cmd) { cmd.action();
+            closeCmdk(); }
         }
       });
 
       /* ============================================================
-   AI PORTFOLIO ASSISTANT — modular provider layer
-   ============================================================ */
+         AI PORTFOLIO ASSISTANT
+         ============================================================ */
       const AIProviders = {
-        /* Local knowledge-base matcher — always available, no network or key required. */
-        local: async function (query) {
+        local: async function(query) {
           const key = query.toLowerCase().trim();
           const kb = portfolioData;
-          if (/tell me about|who is harmain|bio/.test(key))
-            return kb.bio + ` Based in ${kb.location}.`;
-          if (/laravel project/.test(key))
-            return `Laravel-built systems: ${kb.projects
-              .filter((p) => p.tags.includes("Laravel"))
-              .map((p) => p.name)
-              .join(", ")}.`;
-          if (/union enterprises|union/.test(key)) {
-            const p = kb.projects.find((p) => p.id === "union");
-            return `${p.name}: ${p.description}`;
-          }
-          if (/employee management|hr system/.test(key)) {
-            const p = kb.projects.find((p) => p.id === "employee");
-            return `${p.name}: ${p.description}`;
-          }
-          if (/jewelry/.test(key)) {
-            const p = kb.projects.find((p) => p.id === "jewelry");
-            return `${p.name}: ${p.description}`;
-          }
-          if (/skill|stack|technolog/.test(key))
-            return `Core stack: ${Object.values(kb.stack)
-              .flat()
-              .map((t) => t.name)
-              .join(", ")}.`;
-          if (/resume|cv/.test(key))
-            return "A downloadable resume isn't wired up in this build yet — use the Contact section and one can be sent directly.";
-          if (/erp/.test(key))
-            return "Yes — Union Enterprises is effectively an ERP for logistics operations, and the same schema-first, role-based approach extends to other operational domains.";
-          if (/contact|hire|email|reach/.test(key))
-            return `Use the Contact section, or email ${kb.contact.email} directly. Typical response time: ${kb.contact.responseTime}.`;
-          if (/service/.test(key))
-            return `Services offered: ${kb.services.join(", ")}.`;
+          if (/tell me about|who is harmain|bio/.test(key)) return kb.bio + ` Based in ${kb.location}.`;
+          if (/laravel project/.test(key)) return `Laravel-built systems: ${kb.projects.filter((p) => p.tags.includes("Laravel")).map((p) => p.name).join(", ")}.`;
+          if (/union enterprises|union/.test(key)) { const p = kb.projects.find((p) => p.id === "union"); return `${p.name}: ${p.description}`; }
+          if (/employee management|hr system/.test(key)) { const p = kb.projects.find((p) => p.id === "employee"); return `${p.name}: ${p.description}`; }
+          if (/jewelry/.test(key)) { const p = kb.projects.find((p) => p.id === "jewelry"); return `${p.name}: ${p.description}`; }
+          if (/skill|stack|technolog/.test(key)) return `Core stack: ${Object.values(kb.stack).flat().map((t) => t.name).join(", ")}.`;
+          if (/resume|cv/.test(key)) return "A downloadable resume isn't wired up in this build yet — use the Contact section and one can be sent directly.";
+          if (/erp/.test(key)) return "Yes — Union Enterprises is effectively an ERP for logistics operations, and the same schema-first, role-based approach extends to other operational domains.";
+          if (/contact|hire|email|reach/.test(key)) return `Use the Contact section, or email ${kb.contact.email} directly. Typical response time: ${kb.contact.responseTime}.`;
+          if (/service/.test(key)) return `Services offered: ${kb.services.join(", ")}.`;
           for (const f of kb.faq) {
-            if (
-              key.includes(f.q.toLowerCase().split(" ").slice(0, 3).join(" "))
-            )
-              return f.a;
+            if (key.includes(f.q.toLowerCase().split(" ").slice(0, 3).join(" "))) return f.a;
           }
           return "I can speak to Harmain's skills, projects, and how to get in touch — try one of the suggested questions above, or ask about a specific project or technology.";
         },
-        /* Real-model providers require a server-side proxy holding the API key.
-     A static page cannot safely call these directly — doing so would expose
-     the key to every visitor. Point PROXY_ENDPOINT at your own backend
-     (which then calls Anthropic/OpenAI/Google) and these become live. */
-        claude: async function (query) {
-          const PROXY_ENDPOINT = null; // e.g. "https://your-backend.example.com/api/assistant"
-          if (!PROXY_ENDPOINT)
-            return (
-              AIProviders.local(query) +
-              "\n\n(Claude provider: no backend proxy configured yet — answered from the local knowledge base instead.)"
-            );
-          const res = await fetch(PROXY_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              provider: "claude",
-              query,
-              context: portfolioData,
-            }),
-          });
+        claude: async function(query) {
+          const PROXY_ENDPOINT = null;
+          if (!PROXY_ENDPOINT) return AIProviders.local(query) + "\n\n(Claude provider: no backend proxy configured yet — answered from the local knowledge base instead.)";
+          const res = await fetch(PROXY_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: "claude", query, context: portfolioData }) });
           const data = await res.json();
           return data.reply;
         },
-        openai: async function (query) {
+        openai: async function(query) {
           const PROXY_ENDPOINT = null;
-          if (!PROXY_ENDPOINT)
-            return (
-              AIProviders.local(query) +
-              "\n\n(OpenAI provider: no backend proxy configured yet — answered from the local knowledge base instead.)"
-            );
-          const res = await fetch(PROXY_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              provider: "openai",
-              query,
-              context: portfolioData,
-            }),
-          });
+          if (!PROXY_ENDPOINT) return AIProviders.local(query) + "\n\n(OpenAI provider: no backend proxy configured yet — answered from the local knowledge base instead.)";
+          const res = await fetch(PROXY_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: "openai", query, context: portfolioData }) });
           const data = await res.json();
           return data.reply;
         },
-        gemini: async function (query) {
+        gemini: async function(query) {
           const PROXY_ENDPOINT = null;
-          if (!PROXY_ENDPOINT)
-            return (
-              AIProviders.local(query) +
-              "\n\n(Gemini provider: no backend proxy configured yet — answered from the local knowledge base instead.)"
-            );
-          const res = await fetch(PROXY_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              provider: "gemini",
-              query,
-              context: portfolioData,
-            }),
-          });
+          if (!PROXY_ENDPOINT) return AIProviders.local(query) + "\n\n(Gemini provider: no backend proxy configured yet — answered from the local knowledge base instead.)";
+          const res = await fetch(PROXY_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: "gemini", query, context: portfolioData }) });
           const data = await res.json();
           return data.reply;
         },
@@ -4818,6 +4378,7 @@
         aiBody.scrollTop = aiBody.scrollHeight;
         return div;
       }
+
       function pushTyping() {
         const div = document.createElement("div");
         div.className = "ai-typing";
@@ -4826,21 +4387,18 @@
         aiBody.scrollTop = aiBody.scrollHeight;
         return div;
       }
+
       async function handleAIQuery(q) {
         pushMsg(q, "user");
         const typing = pushTyping();
-        const provider =
-          AIProviders[aiProviderSelect.value] || AIProviders.local;
+        const provider = AIProviders[aiProviderSelect.value] || AIProviders.local;
         try {
           const reply = await provider(q);
           typing.remove();
           pushMsg(reply, "bot");
         } catch (err) {
           typing.remove();
-          pushMsg(
-            "That provider isn't reachable right now — falling back to the local knowledge base.",
-            "bot",
-          );
+          pushMsg("That provider isn't reachable right now — falling back to the local knowledge base.", "bot");
           pushMsg(await AIProviders.local(q), "bot");
         }
       }
@@ -4856,10 +4414,11 @@
       });
 
       /* ============================================================
-   INTERACTIVE TERMINAL
-   ============================================================ */
+         INTERACTIVE TERMINAL
+         ============================================================ */
       const termBody = document.getElementById("terminalBody");
       const termInput = document.getElementById("terminalInput");
+
       function termPrint(text) {
         const line = document.createElement("div");
         line.className = "terminal-line";
@@ -4867,6 +4426,7 @@
         termBody.appendChild(line);
         termBody.scrollTop = termBody.scrollHeight;
       }
+
       function termPrintPrompt(cmd) {
         const line = document.createElement("div");
         line.className = "terminal-line";
@@ -4874,34 +4434,20 @@
         termBody.appendChild(line);
         termBody.scrollTop = termBody.scrollHeight;
       }
+
       const termCommands = {
-        help: () =>
-          "Available commands: help, about, projects, skills, github, resume, contact, hire, clear",
+        help: () => "Available commands: help, about, projects, skills, github, resume, contact, hire, clear",
         about: () => portfolioData.bio,
-        projects: () =>
-          portfolioData.projects
-            .map((p) => `${p.index}  ${p.name} — ${p.tagline}`)
-            .join("\n"),
-        skills: () =>
-          Object.entries(portfolioData.stack)
-            .map(
-              ([cat, items]) =>
-                `${cat}: ${items.map((i) => i.name).join(", ")}`,
-            )
-            .join("\n"),
-        github: () =>
-          "See the GitHub Activity section above — enter a username there to load live data.",
-        resume: () =>
-          "Resume download isn't wired up yet — use 'contact' to request one directly.",
-        contact: () =>
-          `Email: ${portfolioData.contact.email} — typical response time ${portfolioData.contact.responseTime}.`,
-        hire: () =>
-          `Available for: ${portfolioData.contact.availability.join(", ")}. Use 'contact' to start a conversation.`,
-        clear: () => {
-          termBody.innerHTML = "";
-          return null;
-        },
+        projects: () => portfolioData.projects.map((p) => `${p.index}  ${p.name} — ${p.tagline}`).join("\n"),
+        skills: () => Object.entries(portfolioData.stack).map(([cat, items]) => `${cat}: ${items.map((i) => i.name).join(", ")}`).join("\n"),
+        github: () => "See the GitHub Activity section above — enter a username there to load live data.",
+        resume: () => "Resume download isn't wired up yet — use 'contact' to request one directly.",
+        contact: () => `Email: ${portfolioData.contact.email} — typical response time ${portfolioData.contact.responseTime}.`,
+        hire: () => `Available for: ${portfolioData.contact.availability.join(", ")}. Use 'contact' to start a conversation.`,
+        clear: () => { termBody.innerHTML = "";
+          return null; },
       };
+
       termInput.addEventListener("keydown", (e) => {
         if (e.key !== "Enter") return;
         const raw = termInput.value.trim();
@@ -4912,109 +4458,251 @@
         if (fn) {
           const out = fn();
           if (out) termPrint(out);
-        } else
-          termPrint(
-            `command not found: ${raw} — type 'help' for a list of commands`,
-          );
+        } else termPrint(`command not found: ${raw} — type 'help' for a list of commands`);
       });
 
       /* ============================================================
-   GITHUB — real REST API integration (client-side fetch)
-   ============================================================ */
+         GITHUB DASHBOARD – REDESIGNED API INTEGRATION
+         ============================================================ */
       const ghUsernameInput = document.getElementById("ghUsernameInput");
       const ghLoadBtn = document.getElementById("ghLoadBtn");
       const ghContent = document.getElementById("ghContent");
       const ghProfileLink = document.getElementById("ghProfileLink");
-      const ghFallbackNote = document.getElementById("ghFallbackNote");
+      const ghStatusText = document.getElementById("ghStatusText");
+
+      // Language color mapping
+      const langColors = {
+        "JavaScript": "#f1e05a",
+        "PHP": "#4F5D95",
+        "CSS": "#563d7c",
+        "HTML": "#e34c26",
+        "Python": "#3572A5",
+        "Java": "#b07219",
+        "TypeScript": "#3178c6",
+        "Ruby": "#701516",
+        "Go": "#00ADD8",
+        "Rust": "#dea584",
+        "Vue": "#41b883",
+        "React": "#61dafb",
+        "C++": "#f34b7d",
+        "C#": "#178600",
+        "Swift": "#ffac45",
+        "Kotlin": "#A97BFF",
+        "Dart": "#00B4AB",
+        "Shell": "#89e051",
+        "Other": "#6e7681",
+      };
+
+      function getLangColor(lang) {
+        return langColors[lang] || langColors.Other;
+      }
+
+      function formatDate(dateStr) {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      function timeAgo(dateStr) {
+        const now = new Date();
+        const then = new Date(dateStr);
+        const diff = Math.floor((now - then) / 1000);
+        if (diff < 60) return 'just now';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        return Math.floor(diff / 86400) + 'd ago';
+      }
+
+      function getEventIcon(type) {
+        const icons = {
+          'PushEvent': '📤',
+          'PullRequestEvent': '🔀',
+          'IssuesEvent': '🔍',
+          'WatchEvent': '⭐',
+          'ForkEvent': '⑂',
+          'CreateEvent': '📁',
+          'DeleteEvent': '🗑️',
+          'CommitCommentEvent': '💬',
+          'ReleaseEvent': '📦',
+          'PublicEvent': '🌍',
+        };
+        return icons[type] || '📌';
+      }
+
+      function getEventLabel(type) {
+        const labels = {
+          'PushEvent': 'Pushed',
+          'PullRequestEvent': 'PR',
+          'IssuesEvent': 'Issue',
+          'WatchEvent': 'Starred',
+          'ForkEvent': 'Forked',
+          'CreateEvent': 'Created',
+          'DeleteEvent': 'Deleted',
+          'CommitCommentEvent': 'Commented',
+          'ReleaseEvent': 'Released',
+          'PublicEvent': 'Publicized',
+        };
+        return labels[type] || type.replace('Event', '');
+      }
 
       async function loadGithub(username) {
-        if (!username) {
-          return;
-        }
-        ghContent.innerHTML = `<div class="gh-loading">Loading @${username} from the GitHub API...</div>`;
+        if (!username) return;
+
+        // Update UI state
+        ghLoadBtn.classList.add('loading');
+        ghLoadBtn.querySelector('.btn-label').textContent = 'Loading...';
+        ghStatusText.textContent = 'Fetching...';
+        ghStatusText.style.color = 'var(--muted-2)';
+
         ghProfileLink.href = `https://github.com/${username}`;
+
         try {
           const [userRes, reposRes, eventsRes] = await Promise.all([
             fetch(`https://api.github.com/users/${username}`),
-            fetch(
-              `https://api.github.com/users/${username}/repos?sort=updated&per_page=6`,
-            ),
-            fetch(
-              `https://api.github.com/users/${username}/events/public?per_page=10`,
-            ),
+            fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`),
+            fetch(`https://api.github.com/users/${username}/events/public?per_page=10`),
           ]);
-          if (!userRes.ok) throw new Error("user not found");
+
+          if (!userRes.ok) throw new Error('User not found');
+
           const user = await userRes.json();
           const repos = reposRes.ok ? await reposRes.json() : [];
           const events = eventsRes.ok ? await eventsRes.json() : [];
 
-          const totalStars = repos.reduce(
-            (s, r) => s + (r.stargazers_count || 0),
-            0,
-          );
-          const totalForks = repos.reduce(
-            (s, r) => s + (r.forks_count || 0),
-            0,
-          );
-          const langs = [
-            ...new Set(repos.map((r) => r.language).filter(Boolean)),
-          ];
+          // Calculate stats
+          const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+          const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
+          const langCount = {};
+          repos.forEach(r => {
+            if (r.language) {
+              langCount[r.language] = (langCount[r.language] || 0) + 1;
+            }
+          });
+          const topLang = Object.keys(langCount).sort((a, b) => langCount[b] - langCount[a])[0] || '';
 
+          // Build stats row
           const statsHtml = `
-      <div class="gh-stats-row">
-        <div class="gh-stat"><b>${user.public_repos ?? "—"}</b><span>Public repos</span></div>
-        <div class="gh-stat"><b>${totalStars}</b><span>Stars (recent repos)</span></div>
-        <div class="gh-stat"><b>${totalForks}</b><span>Forks (recent repos)</span></div>
-        <div class="gh-stat"><b>${user.followers ?? "—"}</b><span>Followers</span></div>
-      </div>`;
+            <div class="github-stats">
+              <div class="github-stat-card">
+                <span class="stat-trend">repos</span>
+                <span class="stat-value">${user.public_repos ?? '—'}</span>
+                <span class="stat-label">Public Repositories</span>
+              </div>
+              <div class="github-stat-card">
+                <span class="stat-trend">stars</span>
+                <span class="stat-value">${totalStars}</span>
+                <span class="stat-label">Total Stars</span>
+              </div>
+              <div class="github-stat-card">
+                <span class="stat-trend">forks</span>
+                <span class="stat-value">${totalForks}</span>
+                <span class="stat-label">Total Forks</span>
+              </div>
+              <div class="github-stat-card">
+                <span class="stat-trend">followers</span>
+                <span class="stat-value">${user.followers ?? '—'}</span>
+                <span class="stat-label">Followers</span>
+              </div>
+            </div>
+          `;
 
-          const repoHtml = `<div class="repo-grid">${repos
-            .slice(0, 6)
-            .map(
-              (r) => `
-      <div class="repo-card">
-        <h4>${r.name}</h4>
-        <p>${r.description ? r.description : "No description provided."}</p>
-        <div class="repo-meta">
-          ${r.language ? `<span><span class="repo-lang-dot"></span>${r.language}</span>` : ""}
-          <span>★ ${r.stargazers_count}</span>
-          <span>⑂ ${r.forks_count}</span>
-        </div>
-      </div>`,
-            )
-            .join("")}</div>`;
+          // Build repos grid
+          const repoHtml = `
+            <div class="github-repos">
+              <div class="repos-header">
+                <h4>Recent Repositories</h4>
+                <span class="repo-count">${repos.length} total</span>
+              </div>
+              <div class="repo-grid">
+                ${repos.slice(0, 6).map((r) => `
+                  <div class="repo-card">
+                    <div class="repo-name">
+                      <span>${r.name}</span>
+                      ${r.fork ? '<span class="repo-badge">fork</span>' : ''}
+                    </div>
+                    <div class="repo-desc">${r.description || 'No description provided.'}</div>
+                    <div class="repo-meta">
+                      ${r.language ? `
+                        <span class="lang">
+                          <span class="dot" style="background:${getLangColor(r.language)};"></span>
+                          ${r.language}
+                        </span>
+                      ` : ''}
+                      <span class="stat">⭐ ${r.stargazers_count}</span>
+                      <span class="stat">⑂ ${r.forks_count}</span>
+                    </div>
+                    <div class="repo-updated">Updated ${timeAgo(r.updated_at)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
 
-          const recentHtml = events.length
-            ? `<div class="gh-note">Recent activity: ${events
-                .slice(0, 5)
-                .map((e) => e.type.replace("Event", ""))
-                .join(", ")}</div>`
-            : `<div class="gh-note">No recent public activity found — contribution heatmaps require authenticated access, so recent activity is shown instead of a fabricated graph.</div>`;
+          // Build activity feed
+          const activityHtml = `
+            <div class="github-activity">
+              <div class="activity-header">
+                <h4>Recent Activity</h4>
+                <span class="activity-count">${events.length} events</span>
+              </div>
+              <div class="activity-grid">
+                ${events.length > 0 ? events.slice(0, 8).map((e) => `
+                  <div class="activity-event">
+                    <span>${getEventIcon(e.type)}</span>
+                    <span class="event-type">${getEventLabel(e.type)}</span>
+                    <span class="event-repo">${e.repo?.name?.split('/')[1] || e.repo?.name || ''}</span>
+                    <span class="event-time">${timeAgo(e.created_at)}</span>
+                  </div>
+                `).join('') : `
+                  <div style="color:var(--muted-2);font-size:13px;padding:8px 0;width:100%;text-align:center;">
+                    No recent public activity found.
+                  </div>
+                `}
+              </div>
+            </div>
+          `;
 
-          ghContent.innerHTML = statsHtml + repoHtml + recentHtml;
-          ghFallbackNote.style.display = "block";
+          // Combine all
+          ghContent.innerHTML = statsHtml + repoHtml + activityHtml;
+
+          // Update status
+          ghStatusText.textContent = `@${username} loaded`;
+          ghStatusText.style.color = 'var(--accent)';
+
         } catch (err) {
-          ghContent.innerHTML = `<div class="gh-note">Couldn't load @${username} from the GitHub API (rate limit, network, or the username doesn't exist). No placeholder numbers are shown in its place.</div>`;
+          ghContent.innerHTML = `
+            <div class="github-error">
+              <span class="error-icon">⚠</span>
+              <p>Couldn't load @${username} — ${err.message || 'network or rate-limit issue'}</p>
+              <p style="font-size:12px;color:var(--muted-2);margin-top:8px;">Try a different username or wait a moment.</p>
+            </div>
+          `;
+          ghStatusText.textContent = 'Error';
+          ghStatusText.style.color = 'var(--danger)';
+        } finally {
+          ghLoadBtn.classList.remove('loading');
+          ghLoadBtn.querySelector('.btn-label').textContent = 'Load';
         }
       }
-      ghLoadBtn.addEventListener("click", () =>
-        loadGithub(ghUsernameInput.value.trim()),
-      );
-      ghUsernameInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") loadGithub(ghUsernameInput.value.trim());
+
+      ghLoadBtn.addEventListener('click', () => loadGithub(ghUsernameInput.value.trim()));
+      ghUsernameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') loadGithub(ghUsernameInput.value.trim());
       });
 
-      /* Mobile nav toggle (simple show/hide of links as a stacked menu) */
-      document
-        .getElementById("navToggle")
-        .addEventListener("click", function () {
-          const links = document.querySelector(".nav-links");
-          const isShown = links.style.display === "flex";
-          links.style.display = isShown ? "none" : "flex";
-          links.style.cssText += isShown
-            ? ""
-            : "position:fixed;top:76px;left:0;right:0;background:var(--surface);flex-direction:column;padding:24px 32px;border-bottom:1px solid var(--border);gap:18px;";
-        });
+      // Load default username on page load (optional)
+      // Uncomment below to auto-load a default username
+      // window.addEventListener('DOMContentLoaded', () => {
+      //   ghUsernameInput.value = 'muhammadharmain';
+      //   loadGithub('muhammadharmain');
+      // });
+
+      /* Mobile nav toggle */
+      document.getElementById('navToggle').addEventListener('click', function() {
+        const links = document.querySelector('.nav-links');
+        const isShown = links.style.display === 'flex';
+        links.style.display = isShown ? 'none' : 'flex';
+        links.style.cssText += isShown ? '' : 'position:fixed;top:76px;left:0;right:0;background:var(--surface);flex-direction:column;padding:24px 32px;border-bottom:1px solid var(--border);gap:18px;';
+      });
     </script>
   </body>
 </html>
