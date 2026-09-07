@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /admin/
 Disallow: /config/
 Disallow: /includes/
 Disallow: /vendor/
+Disallow: /tools/
+Sitemap: http://localhost/portfolio/sitemap.xml

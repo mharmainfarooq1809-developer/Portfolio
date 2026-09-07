@@ -167,6 +167,11 @@
     scroll-behavior: smooth;
 }
 
+[data-theme="light"] #terminal-section .terminal-body,
+[data-theme="light"] #terminal-section .terminal-input-row input {
+    color: var(--text);
+}
+
 .terminal-body::-webkit-scrollbar{ width: 8px; }
 .terminal-body::-webkit-scrollbar-track{ background: transparent; }
 .terminal-body::-webkit-scrollbar-thumb{
@@ -409,6 +414,16 @@
        COMMAND IMPLEMENTATIONS
     ----------------------------------------------------------------*/
     var COMMANDS = ["help","about","whoami","projects","skills","services","github","contact","resume","hire","status","date","neofetch","clear"];
+    var remoteCommands = {};
+    fetch("api/terminal.php", { headers: { "Accept": "application/json" } })
+        .then(function(response){ return response.json(); })
+        .then(function(payload){
+            remoteCommands = payload.commands || {};
+            Object.keys(remoteCommands).forEach(function(command){
+                if (COMMANDS.indexOf(command) === -1) COMMANDS.push(command);
+            });
+        })
+        .catch(function(){});
 
     function cmdHelp(){
         heading("AVAILABLE COMMANDS");
@@ -569,7 +584,7 @@
         heading("RESUME");
         rule(30);
         spacer();
-        html('<a class="terminal-resume-link" href="Muhammad_Harmain_NovExa_Executive_CV.pdf" download="Harmain_Resume.pdf">Download Harmain_Resume.pdf</a>');
+        html('<a class="terminal-resume-link" href="<?= htmlspecialchars(getResumeUrl(), ENT_QUOTES, 'UTF-8') ?>" download="Harmain_Resume.pdf">Download Harmain_Resume.pdf</a>');
         spacer();
         line("Resume PDF ready for download as Harmain_Resume.pdf.", "dim2");
     }
@@ -644,6 +659,11 @@
         }
 
         echoCommand(raw);
+
+        if (remoteCommands[cmd] && COMMANDS.indexOf(cmd) !== -1 && ["help","about","projects","skills","services","contact","resume","clear"].indexOf(cmd) === -1) {
+            line(remoteCommands[cmd], "dim");
+            return;
+        }
 
         switch (cmd){
             case "help": cmdHelp(); break;

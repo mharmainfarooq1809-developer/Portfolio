@@ -12,8 +12,10 @@ $projects = getProjects();
  * ============================================================
  */
 $narrativeSectionKeys = [
-    'overview', 'problem', 'approach', 'architecture',
-    'database', 'features', 'technical', 'challenges', 'results',
+    'overview', 'problem', 'research', 'planning', 'uiux', 'approach',
+    'architecture', 'database', 'roles', 'auth', 'api', 'features',
+    'technical', 'challenges', 'lessons', 'future', 'techstack', 'results',
+    'timeline',
 ];
 
 $jsProjects = [];
@@ -45,13 +47,25 @@ foreach ($projects as $index => $project) {
                 $metrics[] = ['value' => (string) $m, 'label' => ''];
             }
         }
+        if (array_keys($content['metrics']) !== range(0, count($content['metrics']) - 1)) {
+            $metrics = [];
+            foreach ($content['metrics'] as $label => $value) {
+                $metrics[] = ['value' => (string) $value, 'label' => (string) $label];
+            }
+        }
     }
 
     // Narrative sections — only include keys that exist and are non-empty
     $sections = [];
     foreach ($narrativeSectionKeys as $key) {
-        if (!empty($content[$key]) && is_string($content[$key]) && trim($content[$key]) !== '') {
-            $sections[$key] = trim($content[$key]);
+        if (!empty($content[$key])) {
+            if (is_array($content[$key])) {
+                $sections[$key] = $key === 'timeline'
+                    ? implode("\n", array_map('strval', $content[$key]))
+                    : json_encode($content[$key], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            } else {
+                $sections[$key] = trim((string) $content[$key]);
+            }
         }
     }
     // Fall back to the card's own description for Overview if nothing was set explicitly
@@ -64,6 +78,12 @@ foreach ($projects as $index => $project) {
         'cover' => null,
         'gallery' => [],
     ];
+    $projectImage = trim((string) ($project['image'] ?? ''));
+    if ($projectImage !== '') {
+        $images['cover'] = strpos($projectImage, '/') === false
+            ? '/portfolio/uploads/projects/' . rawurlencode($projectImage)
+            : $projectImage;
+    }
     if (!empty($content['cover_image']) && is_string($content['cover_image'])) {
         $images['cover'] = $content['cover_image'];
     }
@@ -104,7 +124,7 @@ foreach ($projects as $index => $project) {
         </div>
 
         <div class="projects-grid" id="projectsGrid">
-            <?php foreach ($projects as $index => $project): ?>
+            <?php foreach (array_slice($projects, 0, 4) as $index => $project): ?>
             <?php
                 $content = [];
                 if (!empty($project['content'])) {
@@ -114,12 +134,15 @@ foreach ($projects as $index => $project) {
                 $description = (string) ($project['description'] ?? '');
                 $shortDescription = (string) ($project['short_description'] ?? ($description !== '' ? substr($description, 0, 150) . '...' : ''));
                 $image = trim((string) ($project['image'] ?? ''));
+                $imageUrl = $image !== '' && strpos($image, '/') === false
+                    ? (is_file(__DIR__ . '/../' . $image) ? '/portfolio/' . rawurlencode($image) : '/portfolio/uploads/projects/' . rawurlencode($image))
+                    : $image;
             ?>
             <div class="project-card" data-project-id="<?= (int) ($project['id'] ?? 0) ?>" data-index="<?= (int) $index ?>">
                 <div class="project-card-inner">
                     <?php if ($image !== ''): ?>
                     <div class="project-image-wrap">
-                        <img class="project-image" src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?> project preview" loading="lazy">
+                        <img class="project-image" src="<?= htmlspecialchars($imageUrl, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?> project preview" loading="lazy">
                     </div>
                     <?php endif; ?>
                     <div class="project-top">
@@ -158,8 +181,27 @@ foreach ($projects as $index => $project) {
             </div>
             <?php endforeach; ?>
         </div>
+        <?php if (count($projects) > 4): ?>
+        <div class="projects-more-row">
+            <button type="button" class="projects-more-link" id="projectsMoreButton" aria-haspopup="dialog" aria-controls="allProjectsOverlay">
+                More projects <span aria-hidden="true">↗</span>
+            </button>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
+
+<?php if (count($projects) > 4): ?>
+<div class="all-projects-overlay" id="allProjectsOverlay" role="dialog" aria-modal="true" aria-labelledby="allProjectsTitle" hidden>
+    <div class="all-projects-dialog">
+        <div class="all-projects-header">
+            <div><span class="eyebrow">Complete archive</span><h2 id="allProjectsTitle">More systems, briefly.</h2><p>Open any system to read the full case study.</p></div>
+            <button type="button" class="all-projects-close" id="allProjectsClose" aria-label="Close all projects">&times;</button>
+        </div>
+        <div class="all-projects-grid" id="allProjectsGrid"></div>
+    </div>
+</div>
+<?php endif; ?>
 
 <style>
 .project-image-wrap {
@@ -182,6 +224,104 @@ foreach ($projects as $index => $project) {
 .project-card:hover .project-image {
     transform: scale(1.04);
 }
+
+.projects-more-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.projects-more-link {
+    border: 0;
+    border-bottom: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    padding: 4px 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.projects-more-link span,
+.more-case-study-arrow {
+    display: inline-block;
+    margin-left: 6px;
+    transition: transform 0.25s ease;
+}
+
+.projects-more-link:hover span,
+.more-case-study:hover .more-case-study-arrow {
+    transform: translate(3px, -2px);
+}
+
+.all-projects-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(5, 5, 5, 0.82);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.all-projects-overlay.open { opacity: 1; }
+
+.all-projects-dialog {
+    width: min(920px, 100%);
+    max-height: min(760px, calc(100vh - 48px));
+    overflow: auto;
+    padding: clamp(24px, 4vw, 46px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.all-projects-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.all-projects-header h2 { margin: 8px 0; }
+.all-projects-header p { color: var(--muted); margin: 0; }
+
+.all-projects-close {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.all-projects-grid { display: grid; gap: 10px; }
+
+.more-case-study {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 17px 0;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+}
+
+.more-case-study-number { color: var(--accent); font-family: var(--font-mono); }
+.more-case-study-copy { display: grid; gap: 4px; }
+.more-case-study-copy strong { font-size: 16px; }
+.more-case-study-copy span { color: var(--muted); font-size: 13px; }
+.more-case-study:hover .more-case-study-copy strong { color: var(--accent); }
 </style>
 
 <!-- ============================================================ -->
@@ -222,6 +362,9 @@ foreach ($projects as $index => $project) {
     const closeBtn = document.getElementById('caseStudyClose');
     const content = document.getElementById('caseStudyContent');
     const dataEl = document.getElementById('projectsData');
+    const allProjectsOverlay = document.getElementById('allProjectsOverlay');
+    const allProjectsGrid = document.getElementById('allProjectsGrid');
+    const allProjectsClose = document.getElementById('allProjectsClose');
 
     if (!overlay || !overlayInner || !content || !dataEl) {
         console.warn('Case study overlay elements not found');
@@ -248,10 +391,20 @@ foreach ($projects as $index => $project) {
         database: 'Database',
         features: 'Features',
         technical: 'Technical Implementation',
+        research: 'Research',
+        planning: 'Planning',
+        uiux: 'UI/UX Decisions',
+        roles: 'Roles',
+        auth: 'Authentication',
+        api: 'API Structure',
         challenges: 'Challenges',
+        lessons: 'Lessons Learned',
+        future: 'Future Improvements',
+        techstack: 'Tech Stack Details',
+        timeline: 'Timeline',
         results: 'Results'
     };
-    const SECTION_ORDER = ['overview', 'problem', 'approach', 'architecture', 'database', 'features', 'technical', 'challenges', 'results'];
+    const SECTION_ORDER = ['overview', 'problem', 'research', 'planning', 'uiux', 'approach', 'architecture', 'database', 'roles', 'auth', 'api', 'features', 'technical', 'challenges', 'lessons', 'future', 'techstack', 'timeline', 'results'];
 
     // Escape any dynamic value before it goes into innerHTML
     function esc(str) {
@@ -465,11 +618,55 @@ foreach ($projects as $index => $project) {
         });
     }
 
+    function renderAllProjects() {
+        if (!allProjectsGrid) return;
+        allProjectsGrid.innerHTML = projectData.map(project => `
+            <button type="button" class="more-case-study" data-project-id="${esc(project.id)}">
+                <span class="more-case-study-number">${esc(String(project.index + 1).padStart(2, '0'))}</span>
+                <span class="more-case-study-copy">
+                    <strong>${esc(project.title)}</strong>
+                    <span>${esc(project.short_description || project.description || '')}</span>
+                </span>
+                <span class="more-case-study-arrow" aria-hidden="true">→</span>
+            </button>
+        `).join('');
+    }
+
+    function openAllProjects() {
+        if (!allProjectsOverlay) return;
+        renderAllProjects();
+        allProjectsOverlay.hidden = false;
+        requestAnimationFrame(() => allProjectsOverlay.classList.add('open'));
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAllProjects() {
+        if (!allProjectsOverlay) return;
+        allProjectsOverlay.classList.remove('open');
+        setTimeout(() => { allProjectsOverlay.hidden = true; }, 250);
+        if (!isOpen) document.body.style.overflow = '';
+    }
+
     // ============================================================
     // EVENT LISTENERS
     // ============================================================
 
     document.addEventListener('click', function(e) {
+        if (e.target.closest('#projectsMoreButton')) {
+            e.preventDefault();
+            openAllProjects();
+            return;
+        }
+
+        const moreCaseStudy = e.target.closest('.more-case-study');
+        if (moreCaseStudy) {
+            e.preventDefault();
+            const projectId = parseInt(moreCaseStudy.dataset.projectId, 10);
+            closeAllProjects();
+            if (Number.isFinite(projectId) && projectId > 0) openCaseStudy(projectId);
+            return;
+        }
+
         const btn = e.target.closest('.project-open-btn');
         if (btn) {
             e.preventDefault();
@@ -494,6 +691,13 @@ foreach ($projects as $index => $project) {
 
     if (closeBtn) {
         closeBtn.addEventListener('click', closeCaseStudy);
+    }
+
+    if (allProjectsClose) allProjectsClose.addEventListener('click', closeAllProjects);
+    if (allProjectsOverlay) {
+        allProjectsOverlay.addEventListener('click', function(e) {
+            if (e.target === allProjectsOverlay) closeAllProjects();
+        });
     }
 
     overlay.addEventListener('click', function(e) {

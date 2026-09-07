@@ -12,6 +12,10 @@ if (empty($query)) {
 function getLocalReply($query)
 {
     $q = strtolower(trim($query));
+    foreach (getKnowledge() as $knowledge) {
+        $pattern = trim($knowledge['question_pattern'] ?? '');
+        if ($pattern !== '' && @preg_match('/' . $pattern . '/i', $q)) return $knowledge['answer'];
+    }
     $kb = [
         'bio' => 'Muhammad Harmain is a full stack developer focused on PHP and Laravel, building business management systems, dashboards and portals designed for daily, repeated use rather than one-time demos. Based in Pakistan.',
         'projects' => ['Union Enterprises', 'Online Movie Booking System', 'Jewelry Website', 'Aniwear — Digital Wardrobe + AI Stylist'],

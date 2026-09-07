@@ -48,7 +48,7 @@ try {
     $_SESSION['ai_history'] = array_slice($_SESSION['ai_history'], -8);
     $payload = ['success' => true, 'message' => $answer['message'], 'intent' => $answer['intent'], 'sources' => $answer['sources'], 'provider' => 'local'];
     if ($answer['intent'] === 'resume') {
-        $payload['resume_url'] = 'Muhammad_Harmain_NovExa_Executive_CV.pdf';
+        $payload['resume_url'] = getResumeUrl();
         $payload['resume_name'] = 'Harmain_Resume.pdf';
     }
     assistantRespond($payload);

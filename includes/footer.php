@@ -7,32 +7,69 @@ if (!defined('ROOT_PATH')) {
 
 <footer id="siteFooter">
     <div class="container">
-        <div class="footer-top">
-            <div class="logo" style="font-family: var(--font-head); font-weight: 600; font-size: 18px;">
-                <span style="color: var(--accent);">HARMAIN</span>
+        <div class="footer-grid">
+            <!-- ===== BRAND COLUMN with logo ===== -->
+            <div class="footer-brand">
+                <div class="brand-wrapper">
+                    <!-- Logo mark (SVG) -->
+                    <div class="logo-mark">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="48" height="48" rx="12" fill="url(#footerLogoGrad)" />
+                            <text x="24" y="33" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="-1">H</text>
+                            <defs>
+                                <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00d4ff" />
+                                    <stop offset="1" stop-color="#3b82f6" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="logo-text">HARMAIN</div>
+                </div>
+                <p class="footer-tagline">Full Stack Developer · Pakistan</p>
             </div>
-            <div class="footer-links">
-                <div class="footer-col">
-                    <span>Navigate</span>
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#projects">Work</a>
-                    <a href="#stack">Stack</a>
+
+            <!-- ===== SOCIAL PLATFORMS (logos + names) ===== -->
+            <div class="footer-social-wrapper">
+                <span class="social-title">Connect with me</span>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/muhammad-harmain-9616743ab/" target="_blank" rel="noopener" class="social-link linkedin">
+                        <i class="fab fa-linkedin-in"></i> LinkedIn
+                    </a>
+                    <a href="https://wa.me/923143927745" target="_blank" rel="noopener" class="social-link whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                    <a href="https://www.instagram.com/m.ha_rmain/" target="_blank" rel="noopener" class="social-link instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61555912632505&rdid=FB157zhmUtYzKRIu&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BqTrHdXEm%2F#" target="_blank" rel="noopener" class="social-link facebook">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                    <a href="https://github.com/mharmainfarooq1809-developer" target="_blank" rel="noopener" class="social-link github">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
                 </div>
-                <div class="footer-col">
-                    <span>Connect</span>
-                    <a href="#contact">Contact</a>
-                    <a href="#assistant">AI Assistant</a>
-                    <a href="#github">GitHub</a>
-                    <a href="#blog">Blog</a>
-                </div>
-                <div class="footer-col">
-                    <span>Legal</span>
-                    <a href="#" style="cursor: default;">© <?= date('Y') ?></a>
-                    <a href="#" style="cursor: default;">Built with PHP · Laravel · MySQL</a>
-                </div>
+            </div>
+
+            <!-- ===== NAVIGATE COLUMN ===== -->
+            <div class="footer-col">
+                <span class="footer-col-title">Navigate</span>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#work">Work</a>
+                <a href="#stack">Stack</a>
+            </div>
+
+            <!-- ===== LEGAL COLUMN ===== -->
+            <div class="footer-col">
+                <span class="footer-col-title">Legal</span>
+                <a href="#" style="cursor: default;">© <?= date('Y') ?></a>
+                <a href="#" style="cursor: default;">Built with PHP · Laravel · MySQL</a>
+                <a href="#" style="cursor: default; font-size: 12px; opacity: 0.6;">All rights reserved</a>
             </div>
         </div>
+
+        <!-- ===== BOTTOM BAR ===== -->
         <div class="footer-bottom">
             <span>Muhammad Harmain — Full Stack Developer</span>
             <span>Pakistan · Remote</span>
@@ -41,426 +78,247 @@ if (!defined('ROOT_PATH')) {
 </footer>
 
 <!-- ============================================================ -->
-<!-- CASE STUDY OVERLAY — Full-Screen Experience (fixed position)  -->
-<!-- Hidden by default, appears when "Open case study" is clicked -->
+<!-- CASE STUDY OVERLAY (unchanged)                               -->
 <!-- ============================================================ -->
 <div class="case-study-overlay" id="caseStudyOverlay" role="dialog" aria-modal="true" aria-label="Project case study">
     <button class="case-study-close" id="caseStudyClose" aria-label="Close case study">×</button>
     <div class="case-study-overlay-inner" id="caseStudyInner">
         <div class="case-study-content" id="caseStudyContent">
-            <!-- Content populated dynamically by JavaScript -->
+            <!-- Content populated dynamically -->
         </div>
     </div>
 </div>
 
 <!-- ============================================================ -->
-<!-- CASE STUDY JAVASCRIPT & STYLES                                -->
+<!-- ENHANCED FOOTER STYLES                                       -->
 <!-- ============================================================ -->
 <style>
-/* Case Study Overlay - hidden by default, fixed position */
-.case-study-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: var(--bg, #050505);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.5s cubic-bezier(0.16, 0.84, 0.44, 1),
-                visibility 0.5s cubic-bezier(0.16, 0.84, 0.44, 1);
-    overflow: hidden;
+/* ─── Footer grid ─────────────────────────────────────────────── */
+#siteFooter {
+    position: relative;
+    z-index: 1;
+    background: var(--surface, #0c1428);
+    border-top: 1px solid var(--border, rgba(0,180,255,0.10));
+    padding: 48px 0 24px;
+    margin-top: 60px;
 }
 
-.case-study-overlay.open {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr;
+    gap: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border, rgba(0,180,255,0.08));
 }
 
-.case-study-overlay-inner {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 80px 32px 100px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+/* ─── Brand column ────────────────────────────────────────────── */
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.case-study-overlay-inner::-webkit-scrollbar {
-    width: 4px;
-}
-
-.case-study-overlay-inner::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.case-study-overlay-inner::-webkit-scrollbar-thumb {
-    background: var(--accent, #1677FF);
-    border-radius: 2px;
-}
-
-.case-study-close {
-    position: fixed;
-    top: 24px;
-    right: 32px;
-    z-index: 10000;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 1px solid var(--border, rgba(255,255,255,0.08));
-    background: var(--surface, #0d0d0d);
-    color: var(--muted, #9ca3af);
-    font-size: 24px;
-    font-weight: 300;
+.brand-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 0.84, 0.44, 1);
-    opacity: 0;
-    transform: scale(0.8) rotate(-90deg);
-    pointer-events: none;
-    backdrop-filter: blur(8px);
-    font-family: var(--font-body, Inter, sans-serif);
-    line-height: 1;
+    gap: 14px;
 }
 
-.case-study-overlay.open .case-study-close {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-    pointer-events: auto;
+.logo-mark {
+    flex-shrink: 0;
+    line-height: 0;
 }
 
-.case-study-close:hover {
-    border-color: var(--accent, #1677FF);
-    color: var(--text, #ffffff);
-    transform: scale(1.05) rotate(90deg);
+.logo-mark svg {
+    display: block;
+    width: 48px;
+    height: 48px;
 }
 
-.case-study-content {
-    max-width: 1000px;
-    margin: 0 auto;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s cubic-bezier(0.16, 0.84, 0.44, 1),
-                transform 0.6s cubic-bezier(0.16, 0.84, 0.44, 1);
-}
-
-.case-study-overlay.open .case-study-content {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 0.15s;
-}
-
-/* Case study internal styles */
-.case-study-hero {
-    margin-bottom: 64px;
-    padding-top: 20px;
-}
-
-.case-study-hero .case-number {
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 13px;
-    color: var(--accent, #1677FF);
-    letter-spacing: 0.12em;
-}
-
-.case-study-hero h1 {
-    font-family: var(--font-head, "Space Grotesk", sans-serif);
-    font-size: clamp(40px, 6vw, 72px);
+.logo-text {
+    font-family: var(--font-head, Inter, sans-serif);
     font-weight: 700;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    margin: 16px 0 20px;
-    color: var(--text, #ffffff);
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    color: var(--accent, #00d4ff);
 }
 
-.case-study-hero .case-subtitle {
-    font-size: 18px;
-    line-height: 1.6;
-    color: var(--muted, #9ca3af);
-    max-width: 640px;
+.footer-tagline {
+    color: var(--muted, #94a9cf);
+    font-size: 14px;
+    margin: 0;
 }
 
-.case-tech-stack {
+/* ─── Social platforms (logos + names) ─────────────────────────── */
+.footer-social-wrapper {
     display: flex;
+    flex-direction: column;
     gap: 12px;
+}
+
+.social-title {
+    font-weight: 600;
+    color: var(--text, #f0f4ff);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-social {
+    display: flex;
     flex-wrap: wrap;
-    margin: 24px 0 32px;
+    gap: 10px;
 }
 
-.case-tech-stack .tech-pill {
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--muted-2, #6b7280);
-    padding: 6px 16px;
-    border: 1px solid var(--border, rgba(255,255,255,0.08));
-    border-radius: 100px;
-    background: rgba(255,255,255,0.02);
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: var(--surface2, #18233a);
+    color: var(--muted, #94a9cf);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--border, rgba(0,180,255,0.08));
+    transition: all 0.25s cubic-bezier(0.16, 0.84, 0.44, 1);
 }
 
-.case-metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px;
-    margin: 32px 0 48px;
-    padding: 32px 0;
-    border-top: 1px solid var(--border, rgba(255,255,255,0.08));
-    border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
-}
-
-.case-metric-item {
+.social-link i {
+    font-size: 16px;
+    width: 20px;
     text-align: center;
 }
 
-.case-metric-item .metric-value {
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--accent, #1677FF);
-    display: block;
-    line-height: 1.2;
+/* Brand-specific hover colors */
+.social-link.linkedin:hover {
+    background: #0A66C2;
+    color: #fff;
+    border-color: #0A66C2;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(10, 102, 194, 0.35);
+}
+.social-link.whatsapp:hover {
+    background: #25D366;
+    color: #fff;
+    border-color: #25D366;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+}
+.social-link.instagram:hover {
+    background: radial-gradient(circle at 30% 30%, #fdf497, #fd5949, #d6249f);
+    color: #fff;
+    border-color: #d6249f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(214, 36, 159, 0.35);
+}
+.social-link.facebook:hover {
+    background: #1877F2;
+    color: #fff;
+    border-color: #1877F2;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(24, 119, 242, 0.35);
+}
+.social-link.github:hover {
+    background: #f0f4ff;
+    color: #0c1428;
+    border-color: #f0f4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,255,255,0.15);
 }
 
-.case-metric-item .metric-label {
-    font-size: 12px;
-    color: var(--muted-2, #6b7280);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    margin-top: 4px;
-}
-
-.case-section {
-    margin-bottom: 56px;
-}
-
-.case-section-label {
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent, #1677FF);
-    margin-bottom: 12px;
-    display: block;
-}
-
-.case-section h2 {
-    font-family: var(--font-head, "Space Grotesk", sans-serif);
-    font-size: clamp(24px, 3vw, 36px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-    color: var(--text, #ffffff);
-}
-
-.case-section p {
-    color: var(--muted, #9ca3af);
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 720px;
-}
-
-.case-gallery {
-    display: grid;
-    gap: 16px;
-    margin: 32px 0;
-}
-
-.case-gallery-item {
-    border-radius: var(--radius-md, 16px);
-    overflow: hidden;
-}
-
-.case-gallery-item.placeholder {
-    background: var(--surface-2, #111213);
-    border: 1px solid var(--border, rgba(255,255,255,0.08));
+/* ─── Footer columns ───────────────────────────────────────────── */
+.footer-col {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    color: var(--muted-2, #6b7280);
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 12px;
-}
-
-.case-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid var(--border, rgba(255,255,255,0.08));
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.case-nav-btn {
-    background: none;
-    border: none;
-    color: var(--muted, #9ca3af);
-    font-family: var(--font-body, Inter, sans-serif);
-    font-size: 14px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 0.84, 0.44, 1);
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
-    border-radius: 8px;
 }
 
-.case-nav-btn:hover {
-    color: var(--text, #ffffff);
-    background: var(--surface-2, #111213);
+.footer-col-title {
+    font-weight: 600;
+    color: var(--text, #f0f4ff);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
 }
 
-.case-nav-btn .nav-arrow {
-    display: inline-block;
-    transition: transform 0.3s cubic-bezier(0.16, 0.84, 0.44, 1);
+.footer-col a {
+    color: var(--muted, #94a9cf);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s, transform 0.2s;
 }
 
-.case-nav-btn:hover .nav-arrow {
+.footer-col a:hover {
+    color: var(--accent, #00d4ff);
     transform: translateX(4px);
 }
 
-.case-nav-btn.prev:hover .nav-arrow {
-    transform: translateX(-4px);
+/* ─── Bottom bar ───────────────────────────────────────────────── */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    font-size: 13px;
+    color: var(--muted-2, #5a72a0);
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-.case-nav-back {
-    color: var(--accent, #1677FF);
-    font-weight: 500;
+.footer-bottom span:last-child {
+    text-align: right;
 }
 
-.case-nav-back:hover {
-    color: var(--accent-2, #00C8FF);
+/* ─── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .case-study-overlay-inner {
-        padding: 72px 20px 60px;
+@media (max-width: 640px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
     }
-
-    .case-study-close {
-        top: 16px;
-        right: 16px;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
+    .footer-brand {
+        grid-column: 1;
     }
-
-    .case-study-hero h1 {
-        font-size: clamp(32px, 5vw, 44px);
-    }
-
-    .case-study-hero .case-subtitle {
-        font-size: 16px;
-    }
-
-    .case-metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 24px 0;
-    }
-
-    .case-metric-item .metric-value {
-        font-size: 28px;
-    }
-
-    .case-gallery {
-        grid-template-columns: 1fr !important;
-    }
-
-    .case-gallery-item {
-        min-height: 180px !important;
-    }
-
-    .case-section {
-        margin-bottom: 40px;
-    }
-
-    .case-section h2 {
-        font-size: clamp(22px, 4vw, 30px);
-    }
-
-    .case-section p {
-        font-size: 15px;
-    }
-
-    .case-navigation {
+    .footer-social {
         flex-direction: column;
         align-items: stretch;
-        gap: 12px;
     }
-
-    .case-nav-btn {
+    .social-link {
         justify-content: center;
-        padding: 12px 16px;
+        padding: 10px 16px;
     }
-}
-
-@media (max-width: 480px) {
-    .case-study-overlay-inner {
-        padding: 64px 16px 48px;
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
     }
-
-    .case-study-close {
-        top: 12px;
-        right: 12px;
-        width: 36px;
-        height: 36px;
-        font-size: 18px;
+    .footer-bottom span:last-child {
+        text-align: center;
     }
-
-    .case-study-hero h1 {
-        font-size: clamp(28px, 6vw, 36px);
+    .logo-mark svg {
+        width: 40px;
+        height: 40px;
     }
-
-    .case-metrics-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-
-    .case-metric-item .metric-value {
-        font-size: 24px;
-    }
-
-    .case-tech-stack .tech-pill {
-        font-size: 10px;
-        padding: 4px 12px;
-    }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    .case-study-overlay {
-        transition: opacity 0.3s ease;
-    }
-
-    .case-study-overlay.open .case-study-content {
-        transition: opacity 0.3s ease;
-        opacity: 1 !important;
-        transform: none !important;
-    }
-
-    .case-study-close {
-        transition: opacity 0.3s ease;
-    }
-
-    .case-study-close:hover {
-        transform: none !important;
-    }
-
-    .case-nav-btn .nav-arrow {
-        transition: none !important;
+    .logo-text {
+        font-size: 22px;
     }
 }
 </style>
 
+<!-- ============================================================ -->
+<!-- CASE STUDY JAVASCRIPT (unchanged)                            -->
+<!-- ============================================================ -->
 <script>
 (function() {
     'use strict';

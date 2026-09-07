@@ -10,15 +10,16 @@ $faqs = getFaqs();
         </div>
         <div class="faq-list">
             <?php foreach ($faqs as $faq): ?>
-            <div class="faq-item">
-                <button class="faq-q">
+            <article class="faq-item">
+                <?php $faqId = 'faq-' . (int) ($faq['id'] ?? 0); ?>
+                <button class="faq-q" type="button" aria-expanded="false" aria-controls="<?= htmlspecialchars($faqId, ENT_QUOTES, 'UTF-8') ?>">
                     <?= htmlspecialchars($faq['question']) ?>
                     <span class="plus">+</span>
                 </button>
-                <div class="faq-a">
+                <div class="faq-a" id="<?= htmlspecialchars($faqId, ENT_QUOTES, 'UTF-8') ?>" hidden>
                     <p><?= htmlspecialchars($faq['answer']) ?></p>
                 </div>
-            </div>
+            </article>
             <?php endforeach; ?>
         </div>
     </div>

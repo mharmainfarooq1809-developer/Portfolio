@@ -4,12 +4,62 @@ require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/csrf.php';
 $siteTitle = getSetting('site_title') ?: 'Muhammad Harmain — Full Stack Developer';
 $siteDescription = getSetting('site_description') ?: 'Full stack developer building business management systems, dashboards and portals with Laravel, MySQL and REST APIs.';
-$siteUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/\\');
-$siteUrl = rtrim($siteUrl, '/');
+$homepageStats = getStats();
+if (!$homepageStats) {
+    $homepageStats = [
+        ['number_value' => 4, 'label' => 'Shipped systems'],
+        ['number_value' => 2, 'label' => 'Multi-role platforms'],
+        ['number_value' => 1, 'label' => 'Core framework — Laravel'],
+        ['number_value' => 100, 'label' => '% remote-friendly delivery'],
+    ];
+}
+$siteUrl = rtrim(SITE_URL, '/');
 $projectsForSchema = getProjects();
+$homepageProjects = [];
+foreach ($projectsForSchema as $project) {
+    $content = is_array($project['content'] ?? null) ? $project['content'] : (json_decode((string) ($project['content'] ?? '{}'), true) ?: []);
+    $rawTags = $project['tags'] ?? '';
+    $tags = is_array($rawTags) ? $rawTags : array_values(array_filter(array_map('trim', explode(',', (string) $rawTags))));
+    $metrics = [];
+    foreach (($content['metrics'] ?? []) as $label => $value) {
+        if (is_array($value)) {
+            $metrics[] = ['value' => (string) ($value['value'] ?? ''), 'label' => (string) ($value['label'] ?? '')];
+        } else {
+            $metrics[] = ['value' => (string) $value, 'label' => is_string($label) ? $label : ''];
+        }
+    }
+    $image = trim((string) ($project['image'] ?? ''));
+    $imageUrl = $image === '' ? '' : (strpos($image, '/') === false ? (is_file(__DIR__ . '/' . $image) ? $image : 'uploads/projects/' . rawurlencode($image)) : $image);
+    $homepageProjects[] = [
+        'id' => 'project-' . (int) ($project['id'] ?? 0),
+        'title' => (string) ($project['title'] ?? 'Untitled project'),
+        'image' => $imageUrl,
+        'short_description' => (string) ($project['short_description'] ?? $project['description'] ?? ''),
+        'description' => (string) ($project['description'] ?? ''),
+        'technologies' => $tags,
+        'metrics' => $metrics,
+        'status' => (string) ($project['status'] ?? 'Completed'),
+        'overview' => (string) ($content['overview'] ?? $project['description'] ?? ''),
+        'problem' => (string) ($content['problem'] ?? ''),
+        'research' => (string) ($content['research'] ?? ''),
+        'planning' => (string) ($content['planning'] ?? ''),
+        'uiux' => (string) ($content['uiux'] ?? ''),
+        'architecture' => (string) ($content['architecture'] ?? ''),
+        'database' => (string) ($content['database'] ?? ''),
+        'auth' => (string) ($content['auth'] ?? ''),
+        'api' => (string) ($content['api'] ?? ''),
+        'features' => (string) ($content['features'] ?? ''),
+        'challenges' => (string) ($content['challenges'] ?? ''),
+        'lessons' => (string) ($content['lessons'] ?? ''),
+        'future' => (string) ($content['future'] ?? ''),
+        'techstack' => (string) ($content['techstack'] ?? ''),
+        'results' => (string) ($content['results'] ?? ''),
+    ];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+<script>(function(){try{var theme=localStorage.getItem('portfolio-theme');if(theme==='light'||theme==='dark')document.documentElement.setAttribute('data-theme',theme);}catch(_){}})();</script>
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,36 +67,85 @@ $projectsForSchema = getProjects();
     <meta name="author" content="Muhammad Harmain" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#050505" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="<?= htmlspecialchars($siteUrl . '/', ENT_QUOTES, 'UTF-8') ?>" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?>" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="<?= htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8') ?>" />
     <meta property="og:description" content="<?= htmlspecialchars($siteDescription, ENT_QUOTES, 'UTF-8') ?>" />
     <meta property="og:url" content="<?= htmlspecialchars($siteUrl . '/', ENT_QUOTES, 'UTF-8') ?>" />
     <meta property="og:image" content="<?= htmlspecialchars($siteUrl . '/pic.png', ENT_QUOTES, 'UTF-8') ?>" />
+    <meta property="og:image:alt" content="Muhammad Harmain, full-stack web developer" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="<?= htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8') ?>" />
     <meta name="twitter:description" content="<?= htmlspecialchars($siteDescription, ENT_QUOTES, 'UTF-8') ?>" />
     <meta name="twitter:image" content="<?= htmlspecialchars($siteUrl . '/pic.png', ENT_QUOTES, 'UTF-8') ?>" />
+    <meta name="twitter:image:alt" content="Muhammad Harmain, full-stack web developer" />
+    <link rel="manifest" href="manifest.json" />
     <title><?= htmlspecialchars($siteTitle) ?></title>
-    <script type="application/ld+json"><?= json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'Person',
-        'name' => 'Muhammad Harmain',
-        'jobTitle' => 'Full Stack Web Developer',
-        'description' => $siteDescription,
-        'email' => 'mailto:mharmainfarooq@gmail.com',
-        'url' => $siteUrl . '/',
-        'image' => $siteUrl . '/pic.png',
-        'sameAs' => ['https://github.com/mharmainfarooq1809-developer'],
-        'worksFor' => ['@type' => 'Organization', 'name' => 'NovExa Tech'],
-        'knowsAbout' => ['PHP', 'Laravel', 'MySQL', 'JavaScript', 'Bootstrap', 'REST APIs', 'AI integration'],
-        'hasOccupation' => ['@type' => 'Occupation', 'name' => 'Full Stack Web Developer'],
-        'subjectOf' => array_map(static fn (array $project): array => [
-            '@type' => 'CreativeWork',
-            'name' => (string) ($project['title'] ?? ''),
-            'description' => (string) ($project['description'] ?? ''),
-        ], $projectsForSchema),
-    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+    <?php
+    $servicesForSchema = getServices();
+    $faqsForSchema = getFaqs();
+    $schemaGraph = [
+        [
+            '@type' => 'Person',
+            '@id' => $siteUrl . '/#person',
+            'name' => 'Muhammad Harmain',
+            'jobTitle' => 'Full Stack Web Developer',
+            'description' => $siteDescription,
+            'email' => 'mailto:mharmainfarooq1809@gmail.com',
+            'url' => $siteUrl . '/',
+            'image' => $siteUrl . '/pic.png',
+            'sameAs' => ['https://github.com/mharmainfarooq1809-developer'],
+            'knowsAbout' => ['PHP', 'Laravel', 'MySQL', 'JavaScript', 'Bootstrap', 'REST APIs', 'AI integration'],
+            'hasOccupation' => ['@type' => 'Occupation', 'name' => 'Full Stack Web Developer'],
+            'makesOffer' => array_map(static fn (array $service): array => [
+                '@type' => 'Offer',
+                'itemOffered' => ['@type' => 'Service', 'name' => (string) ($service['title'] ?? ''), 'description' => (string) ($service['description'] ?? '')],
+            ], $servicesForSchema),
+            'subjectOf' => array_map(static fn (array $project): array => [
+                '@type' => 'CreativeWork',
+                'name' => (string) ($project['title'] ?? ''),
+                'description' => (string) ($project['description'] ?? ''),
+                'keywords' => is_array($project['tags'] ?? null) ? implode(', ', $project['tags']) : (string) ($project['tags'] ?? ''),
+            ], $projectsForSchema),
+        ],
+        [
+            '@type' => 'WebSite',
+            '@id' => $siteUrl . '/#website',
+            'url' => $siteUrl . '/',
+            'name' => $siteTitle,
+            'description' => $siteDescription,
+            'inLanguage' => 'en',
+            'publisher' => ['@id' => $siteUrl . '/#person'],
+        ],
+        [
+            '@type' => ['WebPage', 'ProfilePage'],
+            '@id' => $siteUrl . '/#webpage',
+            'url' => $siteUrl . '/',
+            'name' => $siteTitle,
+            'description' => $siteDescription,
+            'isPartOf' => ['@id' => $siteUrl . '/#website'],
+            'about' => ['@id' => $siteUrl . '/#person'],
+            'mainEntity' => ['@id' => $siteUrl . '/#person'],
+            'inLanguage' => 'en',
+        ],
+    ];
+    if ($faqsForSchema) {
+        $schemaGraph[] = [
+            '@type' => 'FAQPage',
+            '@id' => $siteUrl . '/#faq',
+            'isPartOf' => ['@id' => $siteUrl . '/#webpage'],
+            'mainEntity' => array_map(static fn (array $faq): array => [
+                '@type' => 'Question',
+                'name' => (string) ($faq['question'] ?? ''),
+                'acceptedAnswer' => ['@type' => 'Answer', 'text' => (string) ($faq['answer'] ?? '')],
+            ], $faqsForSchema),
+        ];
+    }
+    ?>
+    <script type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@graph' => $schemaGraph], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -77,6 +176,8 @@ $projectsForSchema = getProjects();
             --muted: #9ca3af;
             --muted-2: #6b7280;
             --danger: #ff5c5c;
+            --overlay-bg: rgba(5, 5, 5, 0.88);
+            --terminal-bg: #000000;
             --font-head: "Space Grotesk", sans-serif;
             --font-body: "Inter", sans-serif;
             --font-mono: "JetBrains Mono", monospace;
@@ -98,6 +199,8 @@ $projectsForSchema = getProjects();
             --text: #080D14;
             --muted: #536274;
             --muted-2: #748298;
+            --overlay-bg: rgba(247, 248, 247, 0.92);
+            --terminal-bg: #eef2f0;
         }
         * {
             margin: 0;
@@ -118,13 +221,17 @@ $projectsForSchema = getProjects();
             }
         }
         body {
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg) !important;
+            color: var(--text) !important;
             font-family: var(--font-body);
             overflow-x: hidden;
             line-height: 1.5;
             transition: background 0.4s ease, color 0.4s ease;
             cursor: none;
+        }
+        [data-theme="light"] body {
+            background: #f7f8f7 !important;
+            color: #080d14 !important;
         }
         /* ===== NOVEXA CURSOR — SINGLE CONTROLLER ===== */
         .cursor-dot,
@@ -2277,14 +2384,11 @@ $projectsForSchema = getProjects();
 
         /* ===== TERMINAL ===== */
         .terminal {
-            background: #000;
+            background: var(--terminal-bg);
             border: 1px solid var(--border-strong);
             border-radius: 14px;
             overflow: hidden;
             font-family: var(--font-mono);
-        }
-        [data-theme="light"] .terminal {
-            background: #0d0f0e;
         }
         .terminal-bar {
             display: flex;
@@ -4078,6 +4182,32 @@ $projectsForSchema = getProjects();
             transform: translateY(-10px) scale(0.992);
         }
 
+        [data-theme="light"] #loader.loader-screen {
+            background: #f7f8f7;
+            color: #080d14;
+        }
+        [data-theme="light"] #loader.loader-screen::before {
+            background-image:
+                linear-gradient(rgba(8,13,20,0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(8,13,20,0.035) 1px, transparent 1px),
+                radial-gradient(circle, rgba(18,102,214,0.12), transparent 68%);
+        }
+        [data-theme="light"] #loader.loader-screen::after {
+            background: repeating-linear-gradient(180deg, transparent 0, transparent 2px, rgba(8,13,20,0.035) 3px);
+        }
+        [data-theme="light"] #loader.loader-screen .loader-shell {
+            border-color: rgba(8,13,20,0.12);
+            background: rgba(255,255,255,0.9);
+            box-shadow: inset 0 0 30px rgba(18,102,214,0.05), 0 25px 80px rgba(8,13,20,0.16);
+        }
+        [data-theme="light"] #loader.loader-screen .loader-diagnostics,
+        [data-theme="light"] #loader.loader-screen .loader-status-row {
+            border-color: rgba(8,13,20,0.1);
+        }
+        [data-theme="light"] #loader.loader-screen .loader-bar {
+            background: rgba(8,13,20,0.12);
+        }
+
         @media (max-width: 640px) {
             #loader.loader-screen .loader-shell {
                 padding: 26px 20px;
@@ -4153,7 +4283,7 @@ $projectsForSchema = getProjects();
             .ai-float-trigger { touch-action:manipulation; }
             .hero-copy, .abt-section .container, .novexa-section .container, .exp-header,
             #process > .container > .section-head, #stack > .container > .section-head,
-            #services .services-header, #projects > .container > .section-head,
+            #services .services-header, #work > .container > .section-head,
             #work .sw-head, #context .container, #blog > .container > .section-head,
             #faq > .container > .section-head, #contact .channel-top { text-align:center; }
             .hero-copy .eyebrow, .abt-eyebrow-row, .hero-actions, .hero-stats,
@@ -4500,7 +4630,7 @@ $projectsForSchema = getProjects();
         })();
     </script>
 
-    <main>
+    <main id="main-content">
         <!-- ===== HERO SECTION ===== -->
         <section class="hero" id="home">
             <div class="hero-bg-word" aria-hidden="true">HARMAIN</div>
@@ -4783,10 +4913,9 @@ $projectsForSchema = getProjects();
                     <h2>Truthful, not inflated.</h2>
                 </div>
                 <div class="achieve-grid">
-                    <div class="achieve-cell"><b data-count="4">0</b><span>Shipped systems</span></div>
-                    <div class="achieve-cell"><b data-count="2">0</b><span>Multi-role platforms</span></div>
-                    <div class="achieve-cell"><b data-count="1">0</b><span>Core framework — Laravel</span></div>
-                    <div class="achieve-cell"><b data-count="100">0</b><span>% remote-friendly delivery</span></div>
+                    <?php foreach ($homepageStats as $stat): ?>
+                        <div class="achieve-cell"><b data-count="<?= (int) ($stat['number_value'] ?? 0) ?>">0</b><span><?= htmlspecialchars((string) ($stat['label'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span></div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
@@ -4837,7 +4966,7 @@ $projectsForSchema = getProjects();
                             <div class="sw-visual">
                                 <div class="sw-visual-inner">
                                     <?php if ($selectedWorkImages['union'] !== ''): ?>
-                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['union'], ENT_QUOTES, 'UTF-8') ?>" alt="Union Enterprises project preview" loading="lazy">
+                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['union'], ENT_QUOTES, 'UTF-8') ?>" alt="Union Enterprises logistics platform preview" width="1830" height="924" loading="lazy" decoding="async">
                                     <?php else: ?>
                                     <div class="mockup">
                                         <div class="mockup-window">
@@ -4879,7 +5008,7 @@ $projectsForSchema = getProjects();
                             <div class="sw-visual">
                                 <div class="sw-visual-inner">
                                     <?php if ($selectedWorkImages['movie'] !== ''): ?>
-                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['movie'], ENT_QUOTES, 'UTF-8') ?>" alt="Online Movie Booking System project preview" loading="lazy">
+                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['movie'], ENT_QUOTES, 'UTF-8') ?>" alt="Online Movie Booking System booking interface preview" width="1893" height="913" loading="lazy" decoding="async">
                                     <?php else: ?>
                                     <div class="mockup">
                                         <div class="mockup-window">
@@ -4938,7 +5067,7 @@ $projectsForSchema = getProjects();
                             <div class="sw-compact-visual">
                                 <div class="sw-visual-inner">
                                     <?php if ($selectedWorkImages['jewelry'] !== ''): ?>
-                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['jewelry'], ENT_QUOTES, 'UTF-8') ?>" alt="Jewelry Website project preview" loading="lazy">
+                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['jewelry'], ENT_QUOTES, 'UTF-8') ?>" alt="Jewelry Website product catalogue preview" width="1838" height="933" loading="lazy" decoding="async">
                                     <?php else: ?>
                                     <div class="mockup">
                                         <div class="mockup-window">
@@ -4982,7 +5111,7 @@ $projectsForSchema = getProjects();
                             <div class="sw-compact-visual">
                                 <div class="sw-visual-inner">
                                     <?php if ($selectedWorkImages['aniwear'] !== ''): ?>
-                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['aniwear'], ENT_QUOTES, 'UTF-8') ?>" alt="Aniwear digital wardrobe and AI stylist project preview" loading="lazy">
+                                        <img class="sw-image" src="<?= htmlspecialchars($selectedWorkImages['aniwear'], ENT_QUOTES, 'UTF-8') ?>" alt="Aniwear digital wardrobe and AI stylist preview" width="1873" height="892" loading="lazy" decoding="async">
                                     <?php else: ?>
                                     <div class="mockup">
                                         <div class="mockup-window">
@@ -5023,8 +5152,21 @@ $projectsForSchema = getProjects();
                     </div>
 
                 </div>
+                <?php if (count($projectsForSchema) > 4): ?>
+                    <div class="sw-more-wrap"><button type="button" class="sw-more-button" id="swMoreProjects" aria-haspopup="dialog" aria-controls="swMoreOverlay">More projects <span aria-hidden="true">↗</span></button></div>
+                <?php endif; ?>
             </div>
         </section>
+
+        <?php if (count($projectsForSchema) > 4): ?>
+        <div class="sw-more-overlay" id="swMoreOverlay" role="dialog" aria-modal="true" aria-labelledby="swMoreTitle" hidden>
+            <div class="sw-more-dialog"><div class="sw-more-dialog-head"><div><span class="sw-eyebrow">Complete archive</span><h2 id="swMoreTitle">More systems, briefly.</h2><p>Click any system to open the full breakdown.</p></div><button type="button" id="swMoreClose" class="sw-more-close" aria-label="Close more projects">&times;</button></div><div id="swMoreList" class="sw-more-list"></div></div>
+        </div>
+        <?php endif; ?>
+        <style>
+            .sw-more-wrap{display:flex;justify-content:center;margin-top:28px}.sw-more-button{border:0;border-bottom:1px solid var(--accent);background:transparent;color:var(--accent);padding:5px 0;font:inherit;cursor:pointer}.sw-more-button span{display:inline-block;margin-left:6px;transition:transform .25s ease}.sw-more-button:hover span{transform:translate(3px,-2px)}
+            .sw-more-overlay[hidden]{display:none!important}.sw-more-overlay{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;padding:24px;background:rgba(5,5,5,.84);backdrop-filter:blur(12px);opacity:0;transition:opacity .25s ease}.sw-more-overlay.open{opacity:1}.sw-more-dialog{width:min(900px,100%);max-height:min(760px,calc(100vh - 48px));overflow:auto;padding:clamp(24px,4vw,46px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)}.sw-more-dialog-head{display:flex;justify-content:space-between;gap:20px;margin-bottom:24px}.sw-more-dialog-head h2{margin:8px 0}.sw-more-dialog-head p{color:var(--muted);margin:0}.sw-more-close{width:42px;height:42px;border:1px solid var(--border);border-radius:50%;background:transparent;color:var(--text);font-size:24px;cursor:pointer}.sw-more-list{display:grid;gap:0}.sw-more-item{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:16px;width:100%;padding:17px 0;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--text);text-align:left;cursor:pointer}.sw-more-item:hover strong{color:var(--accent)}.sw-more-number{color:var(--accent);font-family:var(--font-mono)}.sw-more-copy{display:grid;gap:5px}.sw-more-copy span{color:var(--muted);font-size:13px}.sw-more-arrow{transition:transform .25s ease}.sw-more-item:hover .sw-more-arrow{transform:translateX(4px)}
+        </style>
 
         <!-- ===== INDUSTRIES / TOOLS / LEARNING ===== -->
         <section class="section" id="context">
@@ -5325,10 +5467,14 @@ if (!window.gsap || !window.ScrollTrigger) {
     // THEME
     // ============================================================
     const ThemeModule = (() => {
-        let current = "dark";
+        let current = localStorage.getItem("portfolio-theme") || "dark";
         function apply(theme) {
+            if (theme !== "light" && theme !== "dark") theme = "dark";
             current = theme;
             document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("portfolio-theme", theme);
+            const themeColor = document.querySelector('meta[name="theme-color"]');
+            if (themeColor) themeColor.setAttribute("content", theme === "light" ? "#f7f8f7" : "#050505");
         }
         function toggle() {
             apply(current === "dark" ? "light" : "dark");
@@ -5336,6 +5482,7 @@ if (!window.gsap || !window.ScrollTrigger) {
         function get() { return current; }
         return { apply, toggle, get };
     })();
+    ThemeModule.apply(ThemeModule.get());
     const themeToggle = document.getElementById("themeToggle");
     if (themeToggle) themeToggle.addEventListener("click", ThemeModule.toggle);
 
@@ -5462,10 +5609,14 @@ if (!window.gsap || !window.ScrollTrigger) {
             const isOpen = item.classList.contains("open");
             document.querySelectorAll(".faq-item").forEach((i) => {
                 i.classList.remove("open");
+                i.querySelector(".faq-q").setAttribute("aria-expanded", "false");
+                i.querySelector(".faq-a").hidden = true;
                 i.querySelector(".faq-a").style.maxHeight = null;
             });
             if (!isOpen) {
                 item.classList.add("open");
+                q.setAttribute("aria-expanded", "true");
+                a.hidden = false;
                 a.style.maxHeight = a.scrollHeight + "px";
             }
         });
@@ -5640,7 +5791,7 @@ if (!window.gsap || !window.ScrollTrigger) {
         // ============================================================
         // PROJECT DATA - Hardcoded for the editorial section
         // ============================================================
-        const projectData = [
+        const legacyProjectData = [
             {
                 id: 'union',
                 title: 'Union Enterprises',
@@ -5716,6 +5867,9 @@ if (!window.gsap || !window.ScrollTrigger) {
                 status: 'Live'
             }
         ];
+        const homepageProjectData = <?= json_encode($homepageProjects, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+        const dynamicProjectData = homepageProjectData.filter(project => !legacyProjectData.some(legacy => legacy.title === project.title));
+        const projectData = legacyProjectData.concat(dynamicProjectData);
 
         // ============================================================
         // BUILD CASE STUDY HTML
@@ -5900,6 +6054,51 @@ if (!window.gsap || !window.ScrollTrigger) {
             }
         });
 
+        const moreOverlay = document.getElementById('swMoreOverlay');
+        const moreList = document.getElementById('swMoreList');
+        const moreButton = document.getElementById('swMoreProjects');
+        const moreClose = document.getElementById('swMoreClose');
+        function escapeMoreValue(value) {
+            return String(value || '').replace(/[&<>"']/g, function(character) {
+                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character];
+            });
+        }
+        function renderMoreProjects() {
+            if (!moreList) return;
+            moreList.innerHTML = projectData.map(function(project, index) {
+                return '<button type="button" class="sw-more-item" data-more-project="' + escapeMoreValue(project.id) + '">' +
+                    '<span class="sw-more-number">' + String(index + 1).padStart(2, '0') + '</span>' +
+                    '<span class="sw-more-copy"><strong>' + escapeMoreValue(project.title) + '</strong><span>' + escapeMoreValue(project.short_description || project.description) + '</span></span>' +
+                    '<span class="sw-more-arrow" aria-hidden="true">→</span></button>';
+            }).join('');
+        }
+        function openMoreProjects() {
+            if (!moreOverlay) return;
+            renderMoreProjects();
+            moreOverlay.hidden = false;
+            requestAnimationFrame(function() { moreOverlay.classList.add('open'); });
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMoreProjects() {
+            if (!moreOverlay) return;
+            moreOverlay.classList.remove('open');
+            window.setTimeout(function() { moreOverlay.hidden = true; }, 250);
+            if (!isOpen) document.body.style.overflow = '';
+        }
+        if (moreButton) moreButton.addEventListener('click', openMoreProjects);
+        if (moreClose) moreClose.addEventListener('click', closeMoreProjects);
+        if (moreOverlay) {
+            moreOverlay.addEventListener('click', function(e) {
+                if (e.target === moreOverlay) closeMoreProjects();
+                const item = e.target.closest('[data-more-project]');
+                if (item) {
+                    const projectId = item.dataset.moreProject;
+                    closeMoreProjects();
+                    window.setTimeout(function() { openCaseStudy(projectId); }, 260);
+                }
+            });
+        }
+
         // Close button
         if (closeBtn) {
             closeBtn.addEventListener('click', closeCaseStudy);
@@ -5961,30 +6160,20 @@ if (!window.gsap || !window.ScrollTrigger) {
     const cmdkList = document.getElementById("cmdkList");
 
     const cmdkCommands = [
-        { label: "Search Projects", hint: "↵", action: () => scrollToSection("#projects") },
+        { label: "Search Projects", hint: "↵", action: () => scrollToSection("#work") },
         { label: "Search Skills", hint: "↵", action: () => scrollToSection("#stack") },
-        { label: "Download Resume", hint: "↵", action: () => { closeCmdk(); const link = document.createElement("a"); link.href = "Muhammad_Harmain_NovExa_Executive_CV.pdf"; link.download = "Harmain_Resume.pdf"; document.body.appendChild(link); link.click(); link.remove(); } },
+        { label: "Download Resume", hint: "↵", action: () => { closeCmdk(); const link = document.createElement("a"); link.href = "<?= htmlspecialchars(getResumeUrl(), ENT_QUOTES, 'UTF-8') ?>"; link.download = "Harmain_Resume.pdf"; document.body.appendChild(link); link.click(); link.remove(); } },
         { label: "Open GitHub", hint: "↵", action: () => scrollToSection("#github") },
         { label: "GitHub Activity", hint: "↵", action: () => scrollToSection("#github") },
         { label: "Contact", hint: "↵", action: () => scrollToSection("#contact") },
         { label: "AI Assistant", hint: "↵", action: () => scrollToSection("#assistant") },
         { label: "Navigate: About", hint: "↵", action: () => scrollToSection("#about") },
-        { label: "Navigate: Work", hint: "↵", action: () => scrollToSection("#projects") },
+        { label: "Navigate: Work", hint: "↵", action: () => scrollToSection("#work") },
         { label: "Navigate: Services", hint: "↵", action: () => scrollToSection("#services") },
         { label: "Navigate: Blog", hint: "↵", action: () => scrollToSection("#blog") },
         { label: "Toggle Dark Mode", hint: "↵", action: () => ThemeModule.apply("dark") },
         { label: "Toggle Light Mode", hint: "↵", action: () => ThemeModule.apply("light") },
     ];
-
-    document.querySelectorAll('.project-card[data-open-project]').forEach((card) => {
-        const id = card.dataset.openProject;
-        const name = card.querySelector('h3')?.textContent || 'Project';
-        cmdkCommands.push({
-            label: `Open case study: ${name}`,
-            hint: "↵",
-            action: () => { closeCmdk(); openCaseStudy(id); }
-        });
-    });
 
     function scrollToSection(sel) {
         closeCmdk();

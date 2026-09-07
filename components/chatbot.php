@@ -20,12 +20,14 @@ $assistantCsrf = generateCsrfToken();
 <style>
 .ai-float-trigger { position:fixed; right:24px; bottom:24px; z-index:1100; width:56px; height:56px; border:1px solid var(--border-strong); border-radius:50%; background:var(--surface); color:var(--accent); font:600 12px var(--font-mono); letter-spacing:.04em; cursor:pointer; box-shadow:0 12px 30px rgba(0,0,0,.22); transition:transform .3s ease, border-color .3s ease, background .3s ease; }
 .ai-float-trigger:hover, .ai-float-trigger:focus-visible { transform:translateY(-4px); border-color:var(--accent); background:var(--surface-2); outline:none; }
-.ai-float-trigger.is-hidden { opacity:0; pointer-events:none; transform:scale(.9); }
 .ai-widget-section { position:fixed; right:24px; bottom:96px; z-index:1099; width:min(430px, calc(100vw - 48px)); padding:0; opacity:0; visibility:hidden; pointer-events:none; transform:translateY(18px) scale(.97); transform-origin:bottom right; transition:opacity .3s ease, transform .3s ease, visibility .3s ease; }
+.ai-widget-section { isolation:isolate; }
 .ai-widget-section.is-open { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) scale(1); }
 .ai-widget-section .container { width:100%; max-width:none; min-width:0; padding:0; }
 .ai-widget-section .section-head { display:none; }
 .ai-widget-section .ai-panel { width:100%; max-width:100%; height:min(480px, calc(100dvh - 120px)); max-height:calc(100dvh - 120px); display:flex; flex-direction:column; box-shadow:0 18px 50px rgba(0,0,0,.28); }
+.ai-widget-section .ai-panel { position:relative; z-index:1; background:rgba(13,13,13,.92); backdrop-filter:blur(24px) saturate(1.15); -webkit-backdrop-filter:blur(24px) saturate(1.15); overflow:hidden; }
+[data-theme="light"] .ai-widget-section .ai-panel { background:rgba(255,255,255,.9); }
 .ai-widget-section .ai-header { min-width:0; flex:0 0 auto; flex-wrap:wrap; }
 .ai-widget-section .ai-header .ai-dot { flex:0 0 auto; margin-left:0; }
 .ai-widget-section .ai-header b { min-width:0; overflow-wrap:anywhere; }
@@ -38,6 +40,7 @@ $assistantCsrf = generateCsrfToken();
 .ai-widget-section .ai-input-row input { min-width:0; width:0; }
 .ai-widget-section .ai-input-row button { flex:0 0 auto; }
 .ai-widget-section .ai-security-note { overflow-wrap:anywhere; }
+.ai-widget-section .ai-security-note { display:none; }
 .ai-close-btn { margin-left:8px; width:28px; height:28px; padding:0; border:1px solid var(--border); border-radius:50%; background:none; color:var(--muted); font:20px/1 var(--font-body); cursor:pointer; }
 .ai-close-btn:hover, .ai-close-btn:focus-visible { color:var(--text); border-color:var(--accent); outline:none; }
 .ai-clear-btn { margin-left:auto; background:none; border:1px solid var(--border); color:var(--muted); padding:6px 12px; border-radius:999px; font:11px var(--font-mono); }
@@ -49,9 +52,10 @@ $assistantCsrf = generateCsrfToken();
   const api = 'api/portfolio-assistant.php', clearApi = 'api/portfolio-assistant-clear.php', healthApi = 'api/portfolio-assistant-health.php';
     const section = document.getElementById('assistant'), trigger = document.getElementById('aiFloatTrigger'), closeBtn = document.getElementById('aiCloseBtn'), body = document.getElementById('aiBody'), form = document.getElementById('aiForm'), input = document.getElementById('aiInput'), send = document.getElementById('aiSendBtn'), suggestions = document.getElementById('aiSuggestions'), clear = document.getElementById('aiClearBtn'), status = document.getElementById('aiOnlineLabel');
     let busy = false, typing;
-    function setOpen(open) { section.classList.toggle('is-open', open); section.setAttribute('aria-hidden', String(!open)); trigger.setAttribute('aria-expanded', String(open)); trigger.classList.toggle('is-hidden', open); if (open) input.focus(); else trigger.focus(); }
+    function setOpen(open) { section.classList.toggle('is-open', open); section.setAttribute('aria-hidden', String(!open)); trigger.setAttribute('aria-expanded', String(open)); if (open) input.focus(); else trigger.focus(); }
     trigger.addEventListener('click', () => setOpen(true));
     closeBtn.addEventListener('click', () => setOpen(false));
+    document.querySelectorAll('a[href="#assistant"]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); setOpen(true); history.replaceState(null, '', '#assistant'); }));
     document.addEventListener('pointerdown', event => { if (section.classList.contains('is-open') && !section.contains(event.target)) setOpen(false); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && section.classList.contains('is-open')) setOpen(false); });
   const scroll = () => body.scrollTo({top: body.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
